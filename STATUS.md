@@ -20,7 +20,11 @@ This is the authoritative high-level completion register.
 
 ## Current activity
 
-Creating the complete repository scaffold and instructional placeholders.
+The complete initial repository scaffold has been created on branch `scaffold/repository-foundation`.
+
+The scaffold currently contains 171 versioned files covering repository controls, Cursor rules, subagents, skills, architecture, standards, knowledge packs, schemas, templates, examples, evaluations, and validation scripts.
+
+All generated files remain placeholders unless explicitly marked otherwise. Placeholder Cursor rules cannot apply, placeholder subagents must not be delegated work, and placeholder skills do not yet contain active Cursor skill frontmatter.
 
 ## Status definitions
 
@@ -52,9 +56,22 @@ Creating the complete repository scaffold and instructional placeholders.
 | 12 | Evaluation and validation | PLACEHOLDER |
 | 13 | Integration and release | PLACEHOLDER |
 
+## Completed scaffold groups
+
+- Repository controls and top-level project files
+- Four safe, non-applying Cursor rule placeholders
+- Three non-operational Cursor subagent placeholders
+- Forty-nine Cursor skill placeholders across nine capability groups
+- Architecture, standards, and planning placeholders
+- Audience, P&R, consulting, visual-design, visualisation, and Power BI knowledge placeholders
+- Eight output schemas and nine output templates
+- Audience and format example locations
+- Five benchmark scenarios with expected-result locations
+- Five validation-script placeholders
+
 ## Immediate next steps
 
-1. Commit all planned placeholder files.
-2. Verify the tree against `BUILD-ORDER.md`.
-3. Complete repository standards in Phase 0.
-4. Create a detailed file-level status index.
+1. Review and merge the scaffold pull request.
+2. Complete Phase 0 standards in the order defined by `BUILD-ORDER.md`.
+3. Replace generic phase and dependency metadata with file-specific values.
+4. Build the detailed machine-validated dependency and status index.
