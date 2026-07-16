@@ -1,0 +1,22 @@
+# PLACEHOLDER SCHEMA
+#
+# Purpose
+# Reserve an authoritative machine-readable contract at this path.
+#
+# Complete this file by:
+# - defining the schema version and object purpose;
+# - listing required and optional fields;
+# - specifying types, enums, formats, defaults, and validation rules;
+# - mapping each field to the corresponding template;
+# - adding valid and invalid examples;
+# - documenting backward-compatibility and migration rules;
+# - validating the schema with the repository validation script.
+#
+# Dependencies
+# Consult BUILD-ORDER.md and DEPENDENCIES.md before authoring.
+#
+# Completion gate
+# This placeholder is not a valid production schema and must not be consumed by skills until approved.
+status: PLACEHOLDER
+schema_version: 0.0.0
+artifact_path_defines_subject: true
