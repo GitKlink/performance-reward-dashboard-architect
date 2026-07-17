@@ -1,0 +1,207 @@
+page_id: PAGE-EXEC-FIXED-001
+title: Fixed-reward investment decision summary
+display_order: 1
+status: DRAFT
+content_version: 0.1.0
+dashboard_brief_id: BRIEF-EXEC-FIXED-001
+page_role: summary
+audience:
+  - executive
+  - reward-partner
+decision_supported: Endorse or redirect the proposed fixed-reward investment before final allocation.
+actions_supported:
+  - endorse the proposed investment
+  - redirect investment toward material risks
+  - request a revised scenario
+governing_message_or_question: Is the forecast investment within the approved envelope, and what requires executive action?
+action_title: Forecast investment is within the draft envelope, but market remediation is concentrated in two portfolios.
+subtitle_or_scope_line: Governed fixed-reward population; current executive scenario; annualised FTE investment.
+expected_reading_time: three minutes
+consumption_mode: hybrid
+scope_context:
+  population: Employees eligible for the selected fixed-reward cycle.
+  time_period: Current reward cycle and selected forecast snapshot.
+  organisational_scope: Governed enterprise portfolio.
+  currency_or_unit: Reporting currency and percentage variance.
+  filter_context_visible: true
+  comparison_context:
+    - approved budget
+    - previous executive forecast
+content_hierarchy:
+  - level: 1
+    purpose: conclusion
+    content: Budget status and executive implication.
+    dominant: true
+    reading_order: 1
+  - level: 2
+    purpose: evidence
+    content: Forecast, budget, and variance KPIs.
+    dominant: false
+    reading_order: 2
+  - level: 2
+    purpose: driver
+    content: Investment-component variance bridge.
+    dominant: false
+    reading_order: 3
+  - level: 3
+    purpose: action
+    content: Material portfolio risks requiring redirection or scenario review.
+    dominant: false
+    reading_order: 4
+measures:
+  - kpi_id: KPI-FIXED-001
+    role: outcome
+    display_priority: primary
+    comparator: Approved fixed-reward budget.
+    target_or_tolerance: Organisation-approved budget tolerance.
+    display_format: Currency variance and percentage variance.
+    commentary_required: true
+  - kpi_id: KPI-FIXED-002
+    role: driver
+    display_priority: secondary
+    comparator: Investment-component contribution to total variance.
+    target_or_tolerance: Material contribution threshold.
+    display_format: Currency contribution.
+    commentary_required: false
+visual_ids:
+  - VISUAL-EXEC-FIXED-001
+  - VISUAL-EXEC-FIXED-002
+  - VISUAL-EXEC-FIXED-003
+commentary:
+  required: true
+  purpose: implication
+  source: authored
+  maximum_length: 60
+interactions:
+  filtering:
+    - filter: organisational portfolio
+      scope: report
+      persistence: report
+      default: enterprise total
+    - filter: forecast scenario
+      scope: report
+      persistence: session
+      default: current executive scenario
+  cross_filtering: false
+  navigation:
+    - destination: fixed-reward driver page
+      trigger: button
+      context_preserved: true
+    - destination: portfolio diagnostic page
+      trigger: drill-through
+      context_preserved: true
+  detail_access:
+    - tooltip
+    - drill-through
+    - export
+  reset_behavior: A visible reset control returns all filters to the governed enterprise scenario.
+  scenario_or_input_controls:
+    - forecast scenario selector
+  static_fallback: PDF and PowerPoint exports show the selected scenario, scope, headline variance, driver bridge, and action summary without requiring hover.
+layout:
+  canvas:
+    width: 1280
+    height: 720
+    unit: pixels
+    aspect_ratio: '16:9'
+  grid:
+    columns: 12
+    rows: 12
+    outer_margin: 32
+    gutter: 16
+    baseline: 8
+  zones:
+    - zone_id: title-zone
+      purpose: title
+      x: 32
+      y: 24
+      width: 1216
+      height: 72
+      contained_visual_ids: []
+    - zone_id: kpi-zone
+      purpose: kpi
+      x: 32
+      y: 112
+      width: 1216
+      height: 112
+      contained_visual_ids:
+        - VISUAL-EXEC-FIXED-001
+    - zone_id: driver-zone
+      purpose: primary-exhibit
+      x: 32
+      y: 240
+      width: 760
+      height: 384
+      contained_visual_ids:
+        - VISUAL-EXEC-FIXED-002
+    - zone_id: action-zone
+      purpose: action
+      x: 808
+      y: 240
+      width: 440
+      height: 384
+      contained_visual_ids:
+        - VISUAL-EXEC-FIXED-003
+  whitespace_strategy: Use separation and alignment rather than borders; reserve clear whitespace around the dominant driver exhibit and action area.
+  responsive_or_mobile_notes: Mobile layout is outside scope for the executive summary.
+accessibility:
+  reading_order:
+    - page title and scope
+    - budget status KPI
+    - driver bridge
+    - material actions
+    - source and data-as-of note
+  colour_independence: Budget status uses text, sign, and variance labels in addition to semantic colour.
+  keyboard_and_focus: Navigation and filters follow the declared reading order and remain keyboard accessible.
+  alternative_text: Summarise forecast versus budget, primary driver, and material action for each exhibit.
+  contrast_requirements: Text and status elements meet the approved accessibility contrast standard.
+  text_size_requirements: Executive content remains readable in meeting-room and exported formats.
+  cognitive_load_notes: Limit the summary to one outcome, one driver exhibit, and no more than three material actions.
+power_bi:
+  feasibility_status: requires-prototype
+  required_features:
+    - native cards or KPI elements
+    - waterfall or variance bridge
+    - report-level slicers
+    - drill-through
+    - export to PDF and PowerPoint
+  model_dependencies:
+    - governed reward case fact
+    - budget fact or allocation table
+    - organisation dimension
+    - scenario dimension
+  measure_dependencies:
+    - KPI-FIXED-001
+    - investment-component contribution measures
+  performance_risks:
+    - multiple unfiltered scenarios could double count forecast investment
+  security_requirements:
+    - executive view exposes aggregate data only
+    - diagnostic drill-through follows authorised portfolio access
+  export_behavior: Export preserves the summary conclusion, scope, selected scenario, and direct labels.
+  implementation_notes: Prototype the waterfall and export layout before finalising the page grid.
+sources_and_definitions:
+  visible_source_note: Source: governed reward planning and approved budget datasets.
+  definition_access: methodology-page
+  data_as_of_label: Data as of the selected executive scenario refresh.
+quality_checks:
+  - check: Audience and decision fit
+    status: pass
+    finding: The page is conclusion-led and supports an explicit executive endorsement decision.
+  - check: Metric integrity
+    status: not-run
+    finding: Budget and forecast reconciliation remains required.
+  - check: Story and hierarchy
+    status: pass
+    finding: One outcome, one driver exhibit, and one action area establish a clear reading order.
+  - check: Accessibility
+    status: not-run
+    finding: Contrast and keyboard behaviour require implementation testing.
+  - check: Power BI feasibility
+    status: not-run
+    finding: Waterfall formatting and static export require a prototype.
+assumptions:
+  - The action title is illustrative and must be generated from validated data rather than treated as a fixed conclusion.
+open_questions:
+  - What approved tolerance determines the budget-status label?
+superseded_by: null
