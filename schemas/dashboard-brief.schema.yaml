@@ -1,22 +1,373 @@
-# PLACEHOLDER SCHEMA
-#
-# Purpose
-# Reserve an authoritative machine-readable contract at this path.
-#
-# Complete this file by:
-# - defining the schema version and object purpose;
-# - listing required and optional fields;
-# - specifying types, enums, formats, defaults, and validation rules;
-# - mapping each field to the corresponding template;
-# - adding valid and invalid examples;
-# - documenting backward-compatibility and migration rules;
-# - validating the schema with the repository validation script.
-#
-# Dependencies
-# Consult BUILD-ORDER.md and DEPENDENCIES.md before authoring.
-#
-# Completion gate
-# This placeholder is not a valid production schema and must not be consumed by skills until approved.
-status: PLACEHOLDER
-schema_version: 0.0.0
-artifact_path_defines_subject: true
+$schema: https://json-schema.org/draft/2020-12/schema
+$id: urn:performance-reward-dashboard-architect:schema:dashboard-brief:0.1.0
+title: Dashboard brief
+description: >-
+  Contract for the agreed business, audience, analytical, experience, data,
+  governance, and implementation foundations of a dashboard or static reporting
+  product.
+type: object
+additionalProperties: false
+x-repository:
+  artifact_id: SCHEMA-CORE-002
+  status: DRAFT
+  phase: 2
+  schema_version: 0.1.0
+  content_version: 0.1.0
+  owner: docs/architecture/agent-architecture.md
+required:
+  - brief_id
+  - title
+  - status
+  - objective
+  - audience_decision_profile
+  - business_context
+  - scope
+  - performance_reward_framing
+  - analytical_requirements
+  - experience
+  - data
+  - governance
+  - deliverables
+  - assumptions
+  - open_questions
+  - success_criteria
+properties:
+  brief_id:
+    type: string
+    pattern: ^BRIEF-[A-Z0-9-]+-[0-9]{3}$
+  title:
+    type: string
+    minLength: 5
+    maxLength: 160
+  status:
+    enum: [DRAFT, IN REVIEW, APPROVED, SUPERSEDED]
+  content_version:
+    type: string
+    pattern: ^[0-9]+\.[0-9]+\.[0-9]+$
+    default: 0.1.0
+  objective:
+    type: string
+    minLength: 10
+  audience_decision_profile:
+    type: object
+    additionalProperties: false
+    required: [profile_id, primary_audience, decision_owner, decision_mode, decision, actions_supported]
+    properties:
+      profile_id:
+        type: string
+      primary_audience:
+        type: string
+      secondary_audiences:
+        type: array
+        items:
+          type: string
+      decision_owner:
+        type: string
+      decision_mode:
+        type: string
+      decision:
+        type: string
+      actions_supported:
+        type: array
+        minItems: 1
+        items:
+          type: string
+  business_context:
+    type: object
+    additionalProperties: false
+    required: [situation, why_now, cadence]
+    properties:
+      situation:
+        type: string
+      why_now:
+        type: string
+      cadence:
+        enum: [real-time, daily, weekly, monthly, quarterly, cycle-based, annual, ad-hoc]
+      decision_deadline:
+        type: [string, 'null']
+        format: date
+      current_process_or_product:
+        type: string
+      known_pain_points:
+        type: array
+        items:
+          type: string
+  scope:
+    type: object
+    additionalProperties: false
+    required: [included, excluded, populations, time_horizon]
+    properties:
+      included:
+        type: array
+        minItems: 1
+        items:
+          type: string
+      excluded:
+        type: array
+        items:
+          type: string
+      populations:
+        type: array
+        minItems: 1
+        items:
+          type: string
+      organisations_or_markets:
+        type: array
+        items:
+          type: string
+      time_horizon:
+        type: string
+      jurisdictions:
+        type: array
+        items:
+          type: string
+  performance_reward_framing:
+    type: object
+    additionalProperties: false
+    required: [primary_domain, business_condition, primary_questions]
+    properties:
+      primary_domain:
+        type: string
+      supporting_domains:
+        type: array
+        items:
+          type: string
+      value_driver_branch:
+        type: string
+      business_condition:
+        enum: [bau, non-bau, mixed]
+      primary_questions:
+        type: array
+        minItems: 1
+        items:
+          type: string
+      secondary_questions:
+        type: array
+        items:
+          type: string
+      governance_questions:
+        type: array
+        items:
+          type: string
+  analytical_requirements:
+    type: object
+    additionalProperties: false
+    required: [measure_roles, kpi_ids, comparisons, diagnostics]
+    properties:
+      measure_roles:
+        type: array
+        uniqueItems: true
+        items:
+          enum: [outcome, driver, leading-signal, activity, control, context, diagnostic]
+      kpi_ids:
+        type: array
+        uniqueItems: true
+        items:
+          type: string
+      comparisons:
+        type: array
+        uniqueItems: true
+        items:
+          enum: [prior-period, target, budget, forecast, market, peer, policy, distribution, scenario, none]
+      diagnostics:
+        type: array
+        uniqueItems: true
+        items:
+          enum: [variance, contribution, mix-versus-rate, trend, distribution, cohort, segmentation, outlier, concentration, correlation, scenario, sensitivity, reconciliation, none]
+      required_segments:
+        type: array
+        items:
+          type: string
+      grain_and_population_notes:
+        type: string
+      causal_constraints:
+        type: string
+  experience:
+    type: object
+    additionalProperties: false
+    required: [consumption_mode, experience_mode, page_roles, interaction_requirements, export_requirements]
+    properties:
+      consumption_mode:
+        enum: [interactive, static, hybrid]
+      experience_mode:
+        enum: [executive-decision, business-partner-diagnostic, manager-action, specialist-analytical, operational]
+      expected_reading_time:
+        type: string
+      page_roles:
+        type: array
+        minItems: 1
+        items:
+          enum: [summary, driver, diagnostic, detail, action, methodology, appendix]
+      navigation_depth:
+        type: integer
+        minimum: 1
+        maximum: 5
+      interaction_requirements:
+        type: array
+        uniqueItems: true
+        items:
+          type: string
+      export_requirements:
+        type: array
+        uniqueItems: true
+        items:
+          enum: [none, pdf, powerpoint, excel, csv, print, image]
+      mobile_required:
+        type: boolean
+      accessibility_requirements:
+        type: array
+        items:
+          type: string
+  data:
+    type: object
+    additionalProperties: false
+    required: [available_sources, required_grain, effective_dating, known_gaps]
+    properties:
+      available_sources:
+        type: array
+        minItems: 1
+        items:
+          type: string
+      required_grain:
+        type: string
+      effective_dating:
+        type: string
+      history_available:
+        type: string
+      model_or_dataset:
+        type: string
+      known_gaps:
+        type: array
+        items:
+          type: string
+      data_quality_requirements:
+        type: array
+        items:
+          type: string
+      refresh_requirement:
+        type: string
+  governance:
+    type: object
+    additionalProperties: false
+    required: [sensitivity, access_model, privacy_requirements, policy_dependencies]
+    properties:
+      sensitivity:
+        enum: [public, internal, confidential, highly-confidential]
+      access_model:
+        type: string
+      privacy_requirements:
+        type: array
+        items:
+          type: string
+      policy_dependencies:
+        type: array
+        items:
+          type: string
+      regulatory_dependencies:
+        type: array
+        items:
+          type: string
+      export_restrictions:
+        type: array
+        items:
+          type: string
+      audit_or_control_requirements:
+        type: array
+        items:
+          type: string
+  power_bi_constraints:
+    type: object
+    additionalProperties: false
+    properties:
+      target_environment:
+        type: string
+      implementation_deadline:
+        type: [string, 'null']
+        format: date
+      existing_model_constraints:
+        type: array
+        items:
+          type: string
+      visual_or_interaction_constraints:
+        type: array
+        items:
+          type: string
+      performance_constraints:
+        type: array
+        items:
+          type: string
+      theme_or_brand_constraints:
+        type: array
+        items:
+          type: string
+  deliverables:
+    type: array
+    minItems: 1
+    uniqueItems: true
+    items:
+      enum:
+        - audience-decision-profile
+        - kpi-definitions
+        - analytical-plan
+        - page-architecture
+        - page-specifications
+        - visual-specifications
+        - interaction-specification
+        - executive-storyline
+        - design-review
+        - implementation-handoff
+        - power-bi-review
+  assumptions:
+    type: array
+    items:
+      type: object
+      additionalProperties: false
+      required: [assumption, materiality, status]
+      properties:
+        assumption:
+          type: string
+        materiality:
+          enum: [high, medium, low]
+        status:
+          enum: [unvalidated, accepted, rejected, superseded]
+        owner:
+          type: string
+        validation_action:
+          type: string
+  open_questions:
+    type: array
+    items:
+      type: object
+      additionalProperties: false
+      required: [question, owner, resolution_required_before]
+      properties:
+        question:
+          type: string
+        owner:
+          type: string
+        materiality:
+          enum: [high, medium, low]
+        resolution_required_before:
+          enum: [analysis, design, implementation, review, release, not-blocking]
+  success_criteria:
+    type: array
+    minItems: 1
+    items:
+      type: string
+  approvals:
+    type: object
+    additionalProperties: false
+    properties:
+      product_owner:
+        type: string
+      business_owner:
+        type: string
+      data_owner:
+        type: string
+      approval_status:
+        enum: [not-requested, pending, approved, rejected]
+      approved_date:
+        type: [string, 'null']
+        format: date
+  next_action:
+    type: string
