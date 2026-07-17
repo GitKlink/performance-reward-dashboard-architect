@@ -1,22 +1,316 @@
-# PLACEHOLDER SCHEMA
-#
-# Purpose
-# Reserve an authoritative machine-readable contract at this path.
-#
-# Complete this file by:
-# - defining the schema version and object purpose;
-# - listing required and optional fields;
-# - specifying types, enums, formats, defaults, and validation rules;
-# - mapping each field to the corresponding template;
-# - adding valid and invalid examples;
-# - documenting backward-compatibility and migration rules;
-# - validating the schema with the repository validation script.
-#
-# Dependencies
-# Consult BUILD-ORDER.md and DEPENDENCIES.md before authoring.
-#
-# Completion gate
-# This placeholder is not a valid production schema and must not be consumed by skills until approved.
-status: PLACEHOLDER
-schema_version: 0.0.0
-artifact_path_defines_subject: true
+$schema: https://json-schema.org/draft/2020-12/schema
+$id: urn:performance-reward-dashboard-architect:schema:research-record:0.1.0
+title: Research record
+description: >-
+  Contract for evidence work that supports a repository decision, knowledge
+  artifact, skill, architecture decision, or current-product claim.
+type: object
+additionalProperties: false
+x-repository:
+  artifact_id: SCHEMA-CORE-001
+  status: DRAFT
+  phase: 2
+  schema_version: 0.1.0
+  content_version: 0.1.0
+  owner: docs/standards/research-standard.md
+required:
+  - record_id
+  - title
+  - status
+  - research_question
+  - decisions_supported
+  - intended_consumers
+  - scope
+  - source_requirements
+  - findings
+  - claims
+  - sources
+  - limitations
+  - repository_treatment
+  - review
+properties:
+  record_id:
+    type: string
+    pattern: ^RESEARCH-[A-Z0-9-]+-[0-9]{3}$
+  title:
+    type: string
+    minLength: 5
+    maxLength: 180
+  status:
+    enum:
+      - RESEARCH IN PROGRESS
+      - DRAFT
+      - IN REVIEW
+      - APPROVED
+      - SUPERSEDED
+  content_version:
+    type: string
+    pattern: ^[0-9]+\.[0-9]+\.[0-9]+$
+    default: 0.1.0
+  research_question:
+    type: string
+    minLength: 10
+  decisions_supported:
+    type: array
+    minItems: 1
+    uniqueItems: true
+    items:
+      type: string
+      minLength: 3
+  intended_consumers:
+    type: array
+    minItems: 1
+    uniqueItems: true
+    items:
+      type: string
+      minLength: 3
+  audiences:
+    type: array
+    uniqueItems: true
+    items:
+      $ref: '#/$defs/audience'
+  domains:
+    type: array
+    uniqueItems: true
+    items:
+      $ref: '#/$defs/domain'
+  consumption_modes:
+    type: array
+    uniqueItems: true
+    items:
+      enum: [interactive, static, hybrid, not-applicable]
+  jurisdictions:
+    type: array
+    uniqueItems: true
+    items:
+      type: string
+      minLength: 2
+  as_of_date:
+    type: string
+    format: date
+  scope:
+    type: object
+    additionalProperties: false
+    required: [included, excluded]
+    properties:
+      included:
+        type: array
+        minItems: 1
+        items:
+          type: string
+      excluded:
+        type: array
+        items:
+          type: string
+  source_requirements:
+    type: object
+    additionalProperties: false
+    required: [required_source_types, freshness_requirement]
+    properties:
+      required_source_types:
+        type: array
+        minItems: 1
+        uniqueItems: true
+        items:
+          enum:
+            - primary-authoritative
+            - authoritative-synthesis
+            - practitioner-evidence
+            - discovery-only
+      freshness_requirement:
+        type: string
+        minLength: 3
+      required_primary_sources:
+        type: integer
+        minimum: 0
+      triangulation_required:
+        type: boolean
+        default: false
+  assumptions:
+    type: array
+    items:
+      $ref: '#/$defs/assumption'
+  open_questions:
+    type: array
+    items:
+      type: string
+      minLength: 3
+  findings:
+    type: array
+    minItems: 1
+    items:
+      type: object
+      additionalProperties: false
+      required: [finding_id, finding, confidence, applicability]
+      properties:
+        finding_id:
+          type: string
+          pattern: ^F-[0-9]{3}$
+        finding:
+          type: string
+          minLength: 5
+        confidence:
+          $ref: '#/$defs/confidence'
+        applicability:
+          type: string
+          minLength: 3
+        implications:
+          type: array
+          items:
+            type: string
+  claims:
+    type: array
+    minItems: 1
+    items:
+      $ref: '#/$defs/claim'
+  sources:
+    type: array
+    minItems: 1
+    uniqueItems: true
+    items:
+      type: string
+      pattern: ^[a-z0-9]+(?:-[a-z0-9]+)*$
+  conflicts_and_gaps:
+    type: array
+    items:
+      type: object
+      additionalProperties: false
+      required: [description, treatment]
+      properties:
+        description:
+          type: string
+        treatment:
+          enum: [resolved, accepted-limitation, further-research, user-decision, rejected]
+        rationale:
+          type: string
+  limitations:
+    type: array
+    minItems: 1
+    items:
+      type: string
+      minLength: 3
+  repository_treatment:
+    type: object
+    additionalProperties: false
+    required: [recommended_changes, downstream_revalidation]
+    properties:
+      recommended_changes:
+        type: array
+        items:
+          type: object
+          additionalProperties: false
+          required: [artifact, change]
+          properties:
+            artifact:
+              type: string
+            change:
+              type: string
+            priority:
+              enum: [critical, high, medium, low]
+      downstream_revalidation:
+        type: array
+        items:
+          type: string
+  review:
+    type: object
+    additionalProperties: false
+    required: [review_status, last_reviewed, next_review_trigger]
+    properties:
+      review_status:
+        enum: [not-reviewed, internal-review, independent-review, approved]
+      reviewers:
+        type: array
+        items:
+          type: string
+      last_reviewed:
+        type: string
+        format: date
+      next_review_date:
+        type: [string, 'null']
+        format: date
+      next_review_trigger:
+        type: string
+        minLength: 3
+      reviewed_source_ids:
+        type: array
+        items:
+          type: string
+          pattern: ^[a-z0-9]+(?:-[a-z0-9]+)*$
+$defs:
+  audience:
+    enum:
+      - executive
+      - board-or-committee
+      - business-partner
+      - people-manager
+      - reward-partner
+      - performance-reward-specialist
+      - people-analytics-or-reporting
+      - operational-team
+      - general
+  domain:
+    enum:
+      - cross-domain-performance-reward
+      - performance-management
+      - fixed-reward
+      - variable-reward
+      - market-competitiveness
+      - job-architecture
+      - pay-equity
+      - talent-and-retention
+      - total-rewards
+      - governance-and-controls
+      - consulting-communication
+      - visual-design
+      - data-visualisation
+      - dashboard-experience
+      - power-bi
+      - repository-governance
+  confidence:
+    enum: [established, supported-synthesis, preliminary, inference, project-decision, unresolved, rejected]
+  assumption:
+    type: object
+    additionalProperties: false
+    required: [assumption, materiality, treatment]
+    properties:
+      assumption:
+        type: string
+      materiality:
+        enum: [high, medium, low]
+      treatment:
+        enum: [proceed-labelled, validate, user-decision, stop-until-resolved]
+  claim:
+    type: object
+    additionalProperties: false
+    required:
+      - claim_id
+      - claim
+      - claim_type
+      - source_ids
+      - confidence
+      - repository_treatment
+    properties:
+      claim_id:
+        type: string
+        pattern: ^[A-Z]+-[0-9]{3}$
+      claim:
+        type: string
+        minLength: 5
+      claim_type:
+        enum: [factual, methodological, causal, predictive, interpretive, project-decision]
+      source_ids:
+        type: array
+        uniqueItems: true
+        items:
+          type: string
+          pattern: ^[a-z0-9]+(?:-[a-z0-9]+)*$
+      confidence:
+        $ref: '#/$defs/confidence'
+      applicability:
+        type: string
+      limitations:
+        type: array
+        items:
+          type: string
+      repository_treatment:
+        enum: [publish-evidence, publish-synthesis, label-inference, record-decision, unresolved, reject]
