@@ -1,40 +1,49 @@
 ---
+artifact_id: ARCH-CORE-004
 status: PLACEHOLDER
-phase: TBD
-priority: TBD
-depends_on: []
-blocks: []
+phase: 1
+priority: high
+depends_on:
+  - artifact_id: ARCH-CORE-001
+    path: agent-architecture.md
+  - artifact_id: STD-CORE-001
+    path: ../standards/naming-standard.md
+blocks:
+  - repository navigation
+  - release packaging
+content_version: 0.0.0
 last_reviewed: 2026-07-17
+next_review: 2026-08-17
 ---
 
-# Placeholder Architecture or Standards Artifact
+# Repository information architecture
 
 ## Purpose
 
-This file reserves an authoritative repository location. Its final purpose is defined by its path, `BUILD-ORDER.md`, and `DEPENDENCIES.md`.
+Define how contributors and Cursor agents locate authoritative instructions, knowledge, examples, schemas, evaluations, and release assets.
 
-## What must be completed
+## What this file must establish
 
-- Define the artifact's scope and boundaries.
-- Identify authoritative upstream dependencies and downstream consumers.
-- Conduct the research required by `docs/standards/research-standard.md`.
-- Apply the naming, citation, and authoring standards.
-- Record decisions, assumptions, exclusions, and unresolved questions.
-- Replace generic instructions with artifact-specific acceptance criteria.
+- Repository navigation model
+- Authoritative locations for each artifact type
+- Cross-linking and index conventions
+- Boundaries between `.cursor`, `knowledge`, `docs`, `schemas`, `templates`, `examples`, `evaluations`, and `scripts`
+- Rules for local skill references versus shared knowledge packs
+- How approved, draft, placeholder, and superseded content is surfaced
+- Navigation for contributors who should not need to understand the entire internal structure
 
-## Required sections in the finished artifact
+## Required outputs
 
-- Purpose
-- Scope and exclusions
-- Definitions
-- Method or standard
-- Decision rules
-- Dependencies
-- Examples where relevant
-- Anti-patterns and risks
-- Acceptance criteria
-- Sources and review record
+- Repository map
+- Artifact-location decision table
+- Navigation entry points by contributor task
+- Index-generation requirements
+- Duplication and misplaced-content checklist
 
-## Completion gate
+## Acceptance criteria
 
-Do not change the status from `PLACEHOLDER` until dependencies are confirmed and an artifact-specific plan has been written. Do not mark `APPROVED` until independent review and relevant validation are complete.
+- A new contributor can locate the current authority for a concept without relying on chat history
+- Runtime and development artifacts remain clearly separated
+- Shared knowledge is not duplicated into multiple skill folders
+- Generated indexes cannot become competing authorities
+- Release packaging can identify required support files deterministically
