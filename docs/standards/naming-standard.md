@@ -4,25 +4,27 @@ status: DRAFT
 phase: 0
 priority: critical
 depends_on:
-  - BUILD-ORDER.md
-  - DEPENDENCIES.md
+  - artifact_id: CTRL-CORE-001
+    path: ../../BUILD-ORDER.md
+  - artifact_id: CTRL-CORE-002
+    path: ../../DEPENDENCIES.md
 blocks:
-  - docs/standards/research-standard.md
-  - docs/standards/citation-standard.md
-  - docs/standards/skill-authoring-standard.md
-  - all named repository artifacts
-content_version: 0.1.0
+  - STD-CORE-002
+  - STD-CORE-003
+  - STD-CORE-004
+  - all named governed artifacts
+content_version: 0.2.0
 last_reviewed: 2026-07-17
 next_review: 2026-08-17
 ---
 
-# Naming Standard
+# Naming standard
 
 ## Purpose
 
-This standard establishes stable, predictable names for repository paths, Cursor components, artifact identifiers, metadata fields, branches, commits, versions, and Performance & Reward terminology.
+This standard establishes stable and predictable names for repository paths, Cursor components, artifact identifiers, metadata, branches, commits, versions, and Performance & Reward terminology.
 
-Consistent naming is required because Cursor discovers some components from specific paths and filenames, while humans and validation scripts need names that remain interpretable without relying on conversation history.
+Consistent naming matters because Cursor discovers some components from reserved paths and filenames, while contributors and validators need names that remain interpretable without conversation history. Cursor documents project rules under `.cursor/rules`; its Agent Skills use `SKILL.md` packages.[^cursor-rules][^cursor-skills]
 
 ## Scope
 
@@ -31,26 +33,27 @@ This standard applies to:
 - directories and files;
 - Cursor rules, skills, subagents, and future commands;
 - artifact identifiers and frontmatter keys;
-- schemas, templates, examples, evaluations, and scripts;
+- schemas, templates, examples, evaluations, infrastructure, tests, and scripts;
 - branches, commits, releases, and tags;
-- headings, abbreviations, dates, and status values.
+- headings, abbreviations, dates, and controlled status values.
 
-It does not prescribe Power BI semantic-model naming. That will be defined in the Power BI knowledge and skill layers.
+Power BI semantic-model naming will be defined in the Power BI knowledge and skill layers.
 
 ## Governing principles
 
-1. **Names describe purpose, not temporary implementation.**
-2. **One concept has one canonical name.** Aliases may be recorded, but duplicate names must not create competing authorities.
-3. **Paths are stable interfaces.** Rename an approved path only with a documented migration.
-4. **Names are readable by humans and deterministic for scripts.**
-5. **Public-repository names must not expose confidential organisation, employee, client, or project information.**
-6. **Product-specific reserved filenames and locations take precedence over general project conventions.**
+1. Names describe durable purpose rather than temporary implementation.
+2. One concept has one canonical name.
+3. Paths are interfaces and approved paths change only through a migration.
+4. Names must be readable by people and deterministic for validators.
+5. Public names must not expose confidential organisations, people, systems, or projects.
+6. Product-reserved paths and filenames override general conventions.
+7. Artifact IDs remain stable when paths or titles change.
 
-## Character and case rules
+## Paths and filenames
 
-### Default path convention
+### Default convention
 
-Use lowercase kebab-case for ordinary directories and files:
+Use lowercase kebab-case for ordinary directories and filenames:
 
 ```text
 fixed-reward-analysis
@@ -59,7 +62,7 @@ power-bi-feasibility
 executive-fixed-reward-summary.md
 ```
 
-Allowed characters are:
+Ordinary paths may contain:
 
 ```text
 a-z 0-9 hyphen period
@@ -69,7 +72,7 @@ Do not use spaces, underscores, camelCase, PascalCase, repeated hyphens, or trai
 
 ### Reserved filenames
 
-The following names retain their conventional casing:
+The following names retain their required or conventional casing:
 
 ```text
 README.md
@@ -81,13 +84,16 @@ CONTRIBUTING.md
 BUILD-ORDER.md
 DEPENDENCIES.md
 STATUS.md
+ARTIFACT-REGISTER.yaml
 ```
 
-Cursor project rules use the `.mdc` extension. Cursor project skills use the exact filename `SKILL.md`. Cursor project rules are stored under `.cursor/rules`, and skills are loaded dynamically rather than being persistent rules. The final implementation must be checked against current Cursor documentation before activation.
+Root-level machine-readable controls may use uppercase descriptive names only when this standard explicitly reserves them.
 
-## Directory names
+Cursor project rules use `.mdc` files under `.cursor/rules`.[^cursor-rules] Cursor Agent Skills use the exact filename `SKILL.md`.[^cursor-skills] Product-sensitive details must be reverified before activation.
 
-Directory names must identify a durable capability, domain, audience, artifact class, or workflow.
+### Directory names
+
+Directory names identify a durable capability, domain, audience, artifact class, or workflow.
 
 Preferred:
 
@@ -111,18 +117,11 @@ stuff
 temp2
 ```
 
-Use singular names for a single bounded concept and plural names for collections:
+Use singular names for one bounded concept and plural names for collections.
 
-```text
-knowledge/audiences/
-knowledge/performance-reward/fixed-reward.md
-schemas/
-templates/
-```
+### File names
 
-## File names
-
-A filename must identify the artifact subject without requiring its parent folder for basic interpretation.
+A filename must identify its subject without relying entirely on the parent directory.
 
 Preferred:
 
@@ -133,11 +132,11 @@ executive-storytelling.md
 validate-skill-frontmatter.py
 ```
 
-Avoid date prefixes unless the artifact is inherently time-bound. Use metadata for review dates and versions rather than filenames such as `final-v2-new.md`.
+Do not encode lifecycle status or informal version labels in filenames.
 
-### Acronyms in filenames
+### Acronyms
 
-Use lowercase acronyms within kebab-case:
+Use lowercase acronyms in paths:
 
 ```text
 ibcs-standard.md
@@ -145,27 +144,27 @@ dax-patterns.md
 kpi-definition.schema.yaml
 ```
 
-Use `power-bi`, not `powerbi` or `pbi`, in public path names unless the shorter code is part of a formal artifact identifier.
+Use `power-bi`, not `powerbi` or `pbi`, in public paths unless a formal identifier requires the shorter code.
 
-Use `performance-reward`, not `pr`, in names where `pr` could be confused with pull request.
+Use `performance-reward`, not `pr`, in paths where `pr` could mean pull request.
 
-### Required migration
+### Required scaffold migration
 
-The scaffold path:
+Rename:
 
 ```text
 .cursor/skills/performance-reward/holistic-pr-value-drivers/
 ```
 
-must be renamed during Phase 4 to:
+to:
 
 ```text
 .cursor/skills/performance-reward/holistic-performance-reward-value-drivers/
 ```
 
-The rename must update all references in the same pull request.
+before Phase 4. Update all references in the same pull request.
 
-## Cursor component naming
+## Cursor component names
 
 ### Rules
 
@@ -175,12 +174,7 @@ Path:
 .cursor/rules/<rule-name>.mdc
 ```
 
-Convention:
-
-- lower-kebab-case;
-- noun phrase or bounded standard;
-- name describes what the rule governs;
-- one concern per rule.
+Rules use lower-kebab-case, describe one bounded concern, and do not add `rule` to the name unless needed for clarity.
 
 Examples:
 
@@ -190,8 +184,6 @@ evidence-and-source-standard.mdc
 quality-gates.mdc
 ```
 
-Do not include `rule` in the filename unless needed to distinguish the concept.
-
 ### Skills
 
 Path:
@@ -200,14 +192,12 @@ Path:
 .cursor/skills/<capability-group>/<skill-name>/SKILL.md
 ```
 
-The final skill frontmatter `name` must exactly match `<skill-name>`.
-
-Skill names must:
+The active skill `name` must match `<skill-name>` exactly. Skill names:
 
 - use lowercase letters, numbers, and hyphens;
 - describe a reusable capability or workflow;
-- distinguish analysis, design, review, and implementation where materially different;
-- avoid vague names such as `dashboard-helper` or `expert`.
+- distinguish analysis, design, review, and implementation where material;
+- avoid vague persona labels.
 
 Preferred patterns:
 
@@ -219,16 +209,7 @@ Preferred patterns:
 <relationship>-visualisation
 ```
 
-Examples:
-
-```text
-fixed-reward-analysis
-kpi-measure-design
-visual-hierarchy-design
-review-dashboard
-```
-
-Only frontmatter fields verified against current official Cursor documentation may be activated. At minimum, active skills require a valid `name` and a precise `description` that explains both capability and invocation conditions.
+Only fields verified against current official Cursor documentation may be activated.
 
 ### Subagents
 
@@ -246,11 +227,11 @@ dashboard-design-critic.md
 power-bi-verifier.md
 ```
 
-Do not use personal names, model names, or seniority theatre such as `super-genius-agent`.
+Do not use personal names, model names, or inflated seniority labels.
 
 ### Commands
 
-If reusable Cursor commands are added later, use:
+When commands are added, use:
 
 ```text
 .cursor/commands/<imperative-workflow>.md
@@ -264,13 +245,11 @@ create-dashboard-brief.md
 run-evaluations.md
 ```
 
-Commands are distinct from skills. A command is an explicit reusable workflow; a skill is a reusable capability that may be selected dynamically.
+Commands represent explicit workflows; skills represent reusable capabilities that may be selected dynamically.
 
 ## Artifact identifiers
 
-Every substantive governed artifact must receive an immutable identifier in frontmatter.
-
-Format:
+Every substantive governed artifact receives an immutable ID:
 
 ```text
 <TYPE>-<DOMAIN>-<NNN>
@@ -284,6 +263,8 @@ ARCH-CORE-001
 KNOW-FIXED-001
 SKILL-VIZ-003
 EVAL-EXEC-001
+TEST-QA-001
+INFRA-CORE-001
 ```
 
 ### Type codes
@@ -300,13 +281,13 @@ EVAL-EXEC-001
 | `KNOW` | Governed knowledge artifact |
 | `SCHEMA` | Machine-readable schema |
 | `TPL` | Output template |
-| `EX` | Worked example |
-| `EVAL` | Evaluation scenario or expected result |
-| `SCRIPT` | Validation or generation script |
+| `EX` | Worked example or evidence trial |
+| `EVAL` | Evaluation scenario, result, or review record |
+| `SCRIPT` | Validation or generation script and its runtime dependency manifest |
+| `TEST` | Automated test module or fixture set |
+| `INFRA` | CI workflow or repository automation infrastructure |
 
 ### Domain codes
-
-Use a short uppercase code from the controlled register. Initial codes are:
 
 | Code | Domain |
 |---|---|
@@ -327,16 +308,16 @@ Use a short uppercase code from the controlled register. Initial codes are:
 | `VIZ` | Data visualisation |
 | `UX` | Dashboard experience |
 | `PBI` | Power BI implementation |
-| `QA` | Assurance and quality |
+| `QA` | Assurance, testing, and quality |
 | `EXEC` | Executive benchmark or example |
 | `BP` | Business Partner benchmark or example |
 | `MGR` | Manager benchmark or example |
 
-New codes require an update to this standard. Existing IDs are never renumbered after publication.
+New codes require an update to this standard. Existing IDs are never renumbered.
 
-## Frontmatter keys
+## Metadata keys
 
-Use lowercase snake_case for metadata keys because keys are machine-oriented rather than path names.
+Use lowercase snake_case for machine-oriented metadata.
 
 Required governed-artifact keys:
 
@@ -352,13 +333,22 @@ last_reviewed:
 next_review:
 ```
 
-Optional keys must use the same convention:
+Canonical dependencies use objects:
+
+```yaml
+depends_on:
+  - artifact_id: STD-CORE-001
+    path: docs/standards/naming-standard.md
+```
+
+Optional keys use the same convention:
 
 ```yaml
 owner:
 reviewers:
 source_as_of:
 applicable_jurisdictions:
+superseded_by:
 ```
 
 Dates use ISO 8601 calendar format:
@@ -367,11 +357,11 @@ Dates use ISO 8601 calendar format:
 YYYY-MM-DD
 ```
 
-Use YAML lists for multiple values. Do not encode lists as comma-separated strings.
+Use YAML lists rather than comma-separated strings.
 
-## Status values
+## Lifecycle and priority values
 
-Use only these uppercase values:
+Allowed statuses:
 
 ```text
 PLACEHOLDER
@@ -382,11 +372,9 @@ APPROVED
 SUPERSEDED
 ```
 
-`SUPERSEDED` requires a `superseded_by` field containing an artifact ID and relative path.
+`SUPERSEDED` requires `superseded_by` with an artifact ID and relative path.
 
-## Priority values
-
-Use only:
+Allowed priorities:
 
 ```text
 critical
@@ -395,13 +383,9 @@ medium
 low
 ```
 
-Priority is lower-case because it is a sortable metadata value, not a lifecycle state.
+## Versioning
 
-## Version names
-
-### Repository releases
-
-Use Semantic Versioning tags:
+Repository releases use Semantic Versioning tags:
 
 ```text
 v0.1.0
@@ -409,21 +393,19 @@ v0.2.0
 v1.0.0
 ```
 
-### Artifact content versions
-
-Use `content_version` without a leading `v`:
+Artifact versions omit the leading `v`:
 
 ```yaml
-content_version: 0.1.0
+content_version: 0.2.0
 ```
 
 Increment:
 
 - major for incompatible scope, schema, or method changes;
 - minor for meaningful backward-compatible additions;
-- patch for corrections that do not alter intended use.
+- patch for corrections that preserve intended use.
 
-## Branch names
+## Branches
 
 Format:
 
@@ -434,6 +416,7 @@ Format:
 Allowed types:
 
 ```text
+scaffold
 research
 docs
 feat
@@ -444,20 +427,23 @@ chore
 release
 ```
 
+`scaffold` is limited to pre-release repository-foundation work and should not be used after the initial foundation is merged.
+
 Examples:
 
 ```text
+scaffold/repository-foundation
 docs/phase-0-standards
 research/fixed-reward-value-drivers
 feat/executive-storyline-skill
 fix/dependency-validator
 ```
 
-Keep branch names under 60 characters where practical.
+Keep names under 60 characters where practical.
 
-## Commit messages
+## Commits and pull requests
 
-Format:
+Commit format:
 
 ```text
 <type>: <imperative summary>
@@ -473,21 +459,13 @@ fix
 refactor
 test
 chore
+review
+ci
 ```
 
-Examples:
+Pull-request titles describe the delivered result rather than the activity or tool.
 
-```text
-docs: define repository naming standard
-research: add fixed reward source matrix
-feat: implement KPI definition schema
-```
-
-A commit summary must describe the result, not the activity duration or tool used.
-
-## Pull-request titles
-
-Use a result-oriented title that can become useful release history:
+Preferred:
 
 ```text
 Define Phase 0 research and citation standards
@@ -503,69 +481,70 @@ Cursor changes
 Final version
 ```
 
-## Headings and terminology
+## Prose and terminology
 
 - Use sentence case for Markdown headings.
 - Use `Performance & Reward` in prose.
-- Define an abbreviation on first use before using it repeatedly.
-- Use `Business Partner` when referring to the audience archetype; use the controlled code `BP` only in identifiers.
-- Use `people manager` unless referring to a formally named product audience.
-- Use `Power BI`, `Cursor`, `DAX`, `IBCS`, and `KPI` with their accepted casing.
-- Use `data visualisation` in prose and `visualisation` in paths, following Australian English.
-- Use `organisation`, `labour`, `colour`, and other Australian English spellings unless quoting a source or using a product-defined field.
+- Define abbreviations on first use.
+- Use `Business Partner` for the audience and `BP` only in controlled IDs.
+- Use `people manager` unless a formal product name differs.
+- Preserve accepted casing for `Power BI`, `Cursor`, `DAX`, `IBCS`, and `KPI`.
+- Use Australian English, including `visualisation`, `organisation`, `labour`, and `colour`, except in quotations or product-defined fields.
 
 ## Public-repository restrictions
 
-Names must not include:
+Names must not contain:
 
 - employee names or identifiers;
-- confidential organisational names, codes, or internal systems unless authorised;
+- confidential organisational names, codes, or systems without approval;
 - unreleased program names;
 - credentials, tokens, tenant identifiers, or private URLs;
 - client-specific terminology presented as universal practice.
 
-Use neutral examples and clearly marked fictional values.
+Use neutral names and fictional values.
 
 ## Rename and deprecation procedure
 
 For an approved artifact:
 
-1. Record the reason for rename.
-2. Identify all inbound and outbound references.
+1. Record the reason.
+2. Identify inbound and outbound references.
 3. Rename the path and update references in one pull request.
-4. Preserve the immutable artifact ID.
-5. Add a changelog entry.
-6. Run internal-link and dependency validation.
-7. Where external links may exist, leave a short redirect file only when useful and safe.
+4. Preserve the artifact ID.
+5. Update the changelog.
+6. Run link and dependency validation.
+7. Add a redirect file only where useful and safe.
 
 ## Anti-patterns
 
-- Encoding status in filenames: `draft-`, `final-`, `approved-`.
-- Encoding version in filenames unless distributing a release artifact.
-- Reusing one artifact ID for a different concept.
+- Encoding lifecycle status in filenames.
+- Informal names such as `final-v2-new.md`.
+- Reusing an artifact ID for another concept.
 - Creating aliases without declaring an authority.
 - Naming skills after broad personas rather than bounded capabilities.
-- Using `PR` in paths where it can mean either Performance & Reward or pull request.
-- Renaming approved files only to improve aesthetics.
+- Using `PR` in ordinary paths where it is ambiguous.
+- Renaming approved files only for aesthetics.
+- Registering an active artifact type that is absent from this standard.
 
 ## Acceptance criteria
 
 This standard can move to `IN REVIEW` when:
 
-- all scaffold paths have been checked for conformance;
-- required exceptions and migrations are recorded;
-- the artifact-ID register has been created;
-- validation rules can be implemented without unresolved naming ambiguity;
-- Cursor-specific conventions have been verified against current official documentation.
+- all scaffold paths and registered artifact IDs have been checked;
+- exceptions and required migrations are recorded;
+- the artifact register includes every active Phase 0 artifact;
+- validators can enforce the naming rules without unresolved ambiguity;
+- Cursor-sensitive conventions have current official support;
+- representative rule, skill, knowledge, schema, evaluation, test, infrastructure, and pull-request names have been trialled.
 
-It can move to `APPROVED` after independent review and a successful trial against at least one skill, one knowledge pack, one schema, one evaluation, and one pull request.
+It can move to `APPROVED` after independent review and correction of all critical and major findings. The standard must be reviewed again after the first active Cursor skill and first formal schema are implemented; that review does not prevent initial Phase 0 approval.
 
-## Sources and review notes
+## Sources
 
-This project convention is informed by Cursor's official rule documentation, which places project rules in `.cursor/rules`, uses MDC metadata, and recommends focused, composable rules. Cursor's official 2.4 release material describes Agent Skills as `SKILL.md` packages that are dynamically discovered and can include instructions and scripts.
+[^cursor-rules]: Cursor, “Rules,” updated date not stated, retrieved 2026-07-17, https://docs.cursor.com/context/rules. Central source ID: `cursor-rules`.
 
-- [Cursor Rules](https://docs.cursor.com/context/rules), Cursor, retrieved 2026-07-17.
-- [Cursor 2.4: Subagents, Skills, and Image Generation](https://cursor.com/changelog/2-4), Cursor, retrieved 2026-07-17.
-- [Best practices for coding with agents](https://cursor.com/blog/agent-best-practices), Cursor, retrieved 2026-07-17.
+[^cursor-skills]: Cursor, “Subagents, Skills, and Image Generation,” release 2.4, 2026, retrieved 2026-07-17, https://cursor.com/changelog/2-4. Central source ID: `cursor-2-4-subagents-skills`.
 
-Product-specific details must be reverified before the standard is approved because Cursor capabilities and metadata may change.
+## Review notes
+
+Product-specific details must be reverified before activation because Cursor capabilities and metadata may change. The internal Phase 0 pre-review added `TEST` and `INFRA`, documented the initial `scaffold` branch exception, reserved `ARTIFACT-REGISTER.yaml`, and removed the previous approval dependency on later phases.
