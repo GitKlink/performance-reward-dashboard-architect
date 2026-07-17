@@ -1,40 +1,61 @@
 ---
+artifact_id: STD-CORE-004
 status: PLACEHOLDER
-phase: TBD
-priority: TBD
-depends_on: []
-blocks: []
+phase: 1
+priority: critical
+depends_on:
+  - artifact_id: ARCH-CORE-001
+    path: ../architecture/agent-architecture.md
+  - artifact_id: ARCH-CORE-002
+    path: ../architecture/context-management-strategy.md
+  - artifact_id: ARCH-CORE-003
+    path: ../architecture/skill-routing-model.md
+  - artifact_id: STD-CORE-001
+    path: naming-standard.md
+  - artifact_id: STD-CORE-002
+    path: research-standard.md
+  - artifact_id: STD-CORE-003
+    path: citation-standard.md
+blocks:
+  - all active Cursor skills
+content_version: 0.0.0
 last_reviewed: 2026-07-17
+next_review: 2026-08-17
 ---
 
-# Placeholder Architecture or Standards Artifact
+# Skill-authoring standard
 
 ## Purpose
 
-This file reserves an authoritative repository location. Its final purpose is defined by its path, `BUILD-ORDER.md`, and `DEPENDENCIES.md`.
+Define the mandatory structure, invocation logic, evidence boundaries, context strategy, and quality requirements for every active Cursor skill.
 
-## What must be completed
+## What this file must establish
 
-- Define the artifact's scope and boundaries.
-- Identify authoritative upstream dependencies and downstream consumers.
-- Conduct the research required by `docs/standards/research-standard.md`.
-- Apply the naming, citation, and authoring standards.
-- Record decisions, assumptions, exclusions, and unresolved questions.
-- Replace generic instructions with artifact-specific acceptance criteria.
+- Current supported Cursor skill metadata
+- Folder and `SKILL.md` naming rules
+- Required purpose, triggers, exclusions, inputs, method, outputs, references, examples, anti-patterns, and quality checks
+- Automatic versus explicit invocation treatment
+- How skills reference shared knowledge without duplicating it
+- Context-loading and script-use rules
+- Status and activation controls
+- Versioning and compatibility requirements
 
-## Required sections in the finished artifact
+## Required outputs
 
-- Purpose
-- Scope and exclusions
-- Definitions
-- Method or standard
-- Decision rules
-- Dependencies
-- Examples where relevant
-- Anti-patterns and risks
-- Acceptance criteria
-- Sources and review record
+- Canonical skill template
+- Frontmatter schema
+- Description-writing rules for reliable routing
+- Required and optional sections
+- Activation checklist
+- Worked valid and invalid examples
+- Validation requirements
 
-## Completion gate
+## Acceptance criteria
 
-Do not change the status from `PLACEHOLDER` until dependencies are confirmed and an artifact-specific plan has been written. Do not mark `APPROVED` until independent review and relevant validation are complete.
+- Active skill metadata is verified against current official Cursor documentation
+- Folder name and skill name agree
+- Invocation and non-invocation conditions are testable
+- Each skill has a bounded responsibility and structured output contract
+- Supporting knowledge remains authoritative outside the skill where appropriate
+- At least two benchmark scenarios pass before approval
+- Placeholder skills cannot be discovered as active capabilities
