@@ -13,7 +13,7 @@ depends_on:
 blocks:
   - repository validation workflow
   - Phase 0 review
-content_version: 0.1.0
+content_version: 0.2.0
 last_reviewed: 2026-07-17
 next_review: 2026-08-17
 ---
@@ -22,148 +22,146 @@ next_review: 2026-08-17
 
 ## Purpose
 
-This directory contains deterministic validation and generation utilities for repository governance. Scripts must enforce approved standards; they must not silently invent or rewrite policy.
+This directory contains deterministic validation and generation utilities for repository governance. Scripts enforce approved standards; they do not silently invent, reinterpret, or rewrite policy.
 
 ## Development environment
 
 Use Python 3.11 or later.
 
-Install development dependencies from the repository root:
-
 ```bash
-python -m pip install -r requirements-dev.txt
+python3 -m pip install -r requirements-dev.txt
 ```
 
-Initial dependency:
+Run the full test suite:
 
-```text
-PyYAML
+```bash
+python3 -m unittest discover -s tests -p "test_*.py"
 ```
 
 ## Script contract
 
 Every active script must define:
 
-- purpose and authoritative inputs;
-- supported Python version;
+- authoritative inputs;
+- supported runtime;
 - command-line arguments;
 - read and write behaviour;
 - exit codes;
 - deterministic validation rules;
-- actionable error messages;
+- actionable findings;
 - tests and fixtures;
 - limitations and non-goals.
 
-Scripts must default to read-only behaviour unless generation or mutation is explicitly part of their documented purpose.
+Scripts default to read-only behaviour unless mutation is explicitly documented and approved.
 
-## Exit-code convention
+## Exit codes
 
 | Code | Meaning |
 |---:|---|
-| `0` | Validation or generation completed successfully |
+| `0` | Validation completed successfully |
 | `1` | Validation failed or required input was invalid |
-| `2` | Warnings were promoted to errors by command-line option |
+| `2` | Warnings were promoted to errors |
 | `3` | Environment or dependency failure |
-
-A script may use additional codes only when documented in its module docstring and this file.
 
 ## Active scripts
 
 ### `validate-dependencies.py`
 
-Status: `DRAFT`
+Validates:
+
+- artifact-ID and path uniqueness;
+- registered-file existence;
+- required register fields;
+- lifecycle statuses;
+- dependency references and cycles;
+- frontmatter/register agreement;
+- dependency maturity for `IN REVIEW` and `APPROVED` artifacts.
+
+```bash
+python3 scripts/validate-dependencies.py
+```
+
+The validator accepts canonical dependency objects and temporarily recognises legacy Phase 0 forms with warnings.
+
+### `validate-source-register.py`
 
 Validates:
 
-- uniqueness of artifact IDs and paths;
-- existence of registered files;
-- required register fields;
-- supported status values;
-- dependency references;
-- dependency cycles;
-- agreement between Markdown/MDC frontmatter and `ARTIFACT-REGISTER.yaml`;
-- minimum dependency maturity for `IN REVIEW` and `APPROVED` artifacts.
-
-Run:
+- required source-record fields;
+- source-ID and URL uniqueness;
+- source quality and lifecycle enums;
+- publication, update, and retrieval dates;
+- current-product freshness warnings;
+- relevant-artifact references;
+- central source IDs cited by research-register Markdown files.
 
 ```bash
-python scripts/validate-dependencies.py
+python3 scripts/validate-source-register.py
 ```
 
-Specify another repository root:
+### `check-internal-links.py`
+
+Validates repository-local Markdown and MDC links while ignoring external URLs, anchor-only links, and fenced-code examples.
 
 ```bash
-python scripts/validate-dependencies.py --root /path/to/repository
+python3 scripts/check-internal-links.py
 ```
-
-Promote warnings to errors:
-
-```bash
-python scripts/validate-dependencies.py --warnings-as-errors
-```
-
-The validator accepts the canonical dependency structure:
-
-```yaml
-depends_on:
-  - artifact_id: STD-CORE-001
-    path: docs/standards/naming-standard.md
-```
-
-During Phase 0 migration it also recognises legacy string and one-key mapping forms. New or materially edited artifacts must use the canonical structure.
 
 ## Planned scripts
 
 ### `validate-skill-frontmatter.py`
 
-Will validate active Cursor skill metadata, folder/name agreement, invocation descriptions, placeholder safety, and required authoring sections. It remains blocked by the skill-authoring standard and current Cursor schema verification.
+Blocked by the skill-authoring standard and current Cursor schema verification.
 
 ### `validate-schemas.py`
 
-Will validate repository schemas and template-to-schema alignment. It remains blocked by Phase 2 schema design.
-
-### `check-internal-links.py`
-
-Will validate relative Markdown links, registered paths, source references, and renamed-artifact migrations.
+Blocked by Phase 2 schema design.
 
 ### `generate-status-index.py`
 
-Will generate a human-readable status summary from `ARTIFACT-REGISTER.yaml`. Generated output must never become a competing source of truth.
+Will generate a human-readable index from `ARTIFACT-REGISTER.yaml`. Generated output must never become a competing source of truth.
 
-## Testing
+## Continuous integration
 
-Tests live under:
+`.github/workflows/repository-validation.yml` runs:
 
-```text
-tests/
-```
+1. development-dependency installation;
+2. all unit tests;
+3. artifact dependency validation;
+4. source-register validation;
+5. internal-link validation.
 
-Run all tests:
+The workflow currently runs for pushes to `main` and `scaffold/repository-foundation` and for pull requests targeting `main`.
 
-```bash
-python -m unittest discover -s tests -p "test_*.py"
-```
+## Test coverage
 
-A validation script cannot move to `IN REVIEW` until tests cover:
+Current tests cover:
 
-- a valid repository;
-- missing registered path;
-- duplicate ID;
-- unresolved dependency;
-- dependency cycle;
-- frontmatter/register mismatch;
-- invalid status progression.
+- valid and invalid artifact graphs;
+- missing paths, duplicate IDs, unresolved dependencies, and cycles;
+- frontmatter/register mismatch and approval maturity;
+- valid, external, anchor, fenced-code, root-relative, and missing Markdown links;
+- valid and duplicate source records;
+- invalid evidence levels;
+- unknown artifact and central source references;
+- legacy descriptive source-to-artifact references.
 
 ## Safety rules
 
-- Never execute arbitrary content from repository files.
 - Use safe YAML loading.
+- Never execute repository content as code.
 - Do not follow external links during core validation.
-- Do not mutate source artifacts during validation.
-- Do not refresh review dates automatically.
-- Do not expose credentials, environment variables, or private paths in normal output.
-- Return all detectable errors in one run where practical.
+- Do not mutate authoritative files during validation.
+- Do not refresh dates automatically.
+- Do not expose credentials, environment variables, or private paths.
+- Return all detectable findings in one run where practical.
 
 ## Acceptance criteria
 
-This artifact can move to `IN REVIEW` when the dependency validator and its tests pass locally and against the active branch, the artifact register includes all active scripts, and output is suitable for future CI use.
+This artifact can move to `IN REVIEW` when:
+
+- all active scripts and the workflow are registered;
+- all tests and branch-wide validators pass;
+- remaining legacy metadata is either migrated or explicitly accepted for the review period;
+- validator outputs are suitable for future required status checks;
+- independent review confirms that scripts enforce rather than redefine the standards.
