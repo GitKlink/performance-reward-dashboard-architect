@@ -6,57 +6,67 @@ priority: critical
 depends_on: []
 blocks:
   - all repository implementation work
-content_version: 0.2.0
+content_version: 0.3.0
 last_reviewed: 2026-07-17
-next_review: 2026-07-24
+next_review: 2026-08-17
 ---
 
-# Authoritative Build Order
+# Authoritative build order
 
-This file defines the mandatory sequence for researching, authoring, validating, and releasing the Performance & Reward Dashboard Architect.
+This file defines the development sequence for the Performance & Reward Dashboard Architect.
 
-A later phase may be explored for planning, but no dependent artifact may be treated as authoritative or activated in Cursor until its prerequisite gate is satisfied.
+The sequence protects architectural dependencies without requiring every phase to complete a formal approval ceremony before useful development can continue. Comprehensive independent testing and approval occur before the first release.
+
+## Development model
+
+### During development
+
+- `PLACEHOLDER` records planned scope only.
+- `DRAFT` may be used by downstream development when its assumptions and limitations are visible.
+- Automated validation runs continuously.
+- Each phase performs only the checks needed to avoid building on an obviously broken foundation.
+- Findings discovered through later implementation may revise earlier drafts.
+
+### Before release
+
+- Runtime components and their mandatory dependencies must reach `APPROVED`.
+- Independent architecture, evidence, security, privacy, accessibility, and release reviews must be complete.
+- The complete benchmark and regression suite must pass.
 
 ## Gate rules
 
-1. `PLACEHOLDER` never satisfies a dependency.
-2. `DRAFT` may support prototyping only where this file explicitly permits it.
-3. `IN REVIEW` may support controlled evaluation but not release.
-4. `APPROVED` is required for release dependencies.
-5. A dependent artifact must use the current approved version of each prerequisite.
-6. Work that reveals a flawed prerequisite returns to the earlier phase rather than adding local workarounds.
-7. Status and dependencies must agree with `ARTIFACT-REGISTER.yaml` and `DEPENDENCIES.md`.
+1. `PLACEHOLDER` does not provide substantive authority.
+2. `DRAFT` is sufficient for controlled downstream authoring and prototyping.
+3. A downstream artifact must identify material assumptions inherited from a draft dependency.
+4. Automated repository validation must remain green while development continues.
+5. No `PLACEHOLDER` may be activated as a Cursor rule, skill, subagent, command, or release dependency.
+6. `APPROVED` is required for the release package, not for every intermediate development step.
+7. Critical defects return to the owning upstream artifact rather than being hidden in local workarounds.
+8. `ARTIFACT-REGISTER.yaml`, `DEPENDENCIES.md`, and `STATUS.md` must remain consistent.
 
-## Phase 0 — Repository controls
+## Phase 0 — Repository foundation
 
-Complete in this order:
+### Deliverables
 
-1. `CTRL-CORE-001` — `BUILD-ORDER.md`
-2. `CTRL-CORE-002` — `DEPENDENCIES.md`
-3. `CTRL-CORE-003` — `STATUS.md`
-4. `STD-CORE-001` — `docs/standards/naming-standard.md`
-5. `STD-CORE-002` — `docs/standards/research-standard.md`
-6. `STD-CORE-003` — `docs/standards/citation-standard.md`
-7. `CTRL-CORE-004` — `ARTIFACT-REGISTER.yaml`
+1. Build order, dependency model, and status register
+2. Naming, research, and citation standards
+3. Artifact and source registers
+4. Representative evidence and decision trials
+5. Repository validation scripts, tests, and CI
+6. Safe non-operational scaffold for later components
 
-### Current Phase 0 state
+### Development gate
 
-- Initial scaffold: complete on `scaffold/repository-foundation`
-- Naming standard: `DRAFT`
-- Research standard: `DRAFT`
-- Citation standard: `DRAFT`
-- Artifact register: `DRAFT`
+Phase 0 is provisionally complete when:
 
-### Phase 0 gate
+- the scaffold and control artifacts exist;
+- standards are substantive drafts;
+- representative trials have exercised the standards;
+- known internal critical and major defects are resolved;
+- dependency, source, link, and unit-test validation pass;
+- placeholders cannot activate accidentally.
 
-Phase 0 is complete when:
-
-- control files and standards have immutable artifact IDs;
-- status and dependency records agree;
-- naming, research, and citation standards pass representative trials;
-- identified scaffold naming migrations are recorded;
-- internal-link and dependency validation requirements are implementable;
-- the control artifacts are independently reviewed and marked `APPROVED`.
+An independent Phase 0-only review is not required to begin Phase 1. The Phase 0 artifacts remain `DRAFT` and are included in the comprehensive pre-release review.
 
 ## Phase 1 — Architecture and authoring standards
 
@@ -65,7 +75,7 @@ Complete in this order:
 1. `ARCH-CORE-001` — agent architecture
 2. `ARCH-CORE-002` — context-management strategy
 3. `ARCH-CORE-003` — skill-routing model
-4. `ARCH-CORE-004` — information architecture
+4. `ARCH-CORE-004` — repository information architecture
 5. `ARCH-CORE-005` — release architecture
 6. `STD-CORE-004` — skill-authoring standard
 7. `STD-CORE-005` — example-authoring standard
@@ -74,13 +84,20 @@ Complete in this order:
 10. `PLAN-CORE-002` — implementation roadmap
 11. `PLAN-CORE-003` — release plan
 
-### Phase 1 gate
+### Development gate
 
-Component boundaries, context strategy, source-of-truth rules, routing logic, skill format, evaluation principles, and release boundaries are approved.
+The draft architecture must define component boundaries, context strategy, routing logic, source-of-truth ownership, skill format, evaluation approach, and release boundary clearly enough to support schemas and foundational skills.
+
+Minimum checks:
+
+- no obvious authority overlap or circular dependency;
+- current Cursor claims use official evidence;
+- three representative dashboard workflows can be traced through the architecture;
+- placeholder runtime components remain disabled.
 
 ## Phase 2 — Schemas and templates
 
-Complete schemas before templates:
+Create schemas before their templates:
 
 1. Research record
 2. Audience and decision profile
@@ -91,25 +108,26 @@ Complete schemas before templates:
 7. Design review
 8. Implementation handoff
 
-Complete the corresponding template only after its schema reaches `IN REVIEW`.
+### Development gate
 
-### Phase 2 gate
-
-Schemas validate, templates map one-to-one to schema fields, and migration/version rules are defined.
+- Schemas parse and validate representative records.
+- Templates map to schema fields.
+- Versioning and migration rules are explicit.
+- At least one end-to-end draft workflow uses the contracts.
 
 ## Phase 3 — Audience and decision foundation
 
 1. Audience archetypes
 2. Decision modes
 3. Consumption modes
-4. Audience-specific knowledge files
+4. Audience-specific knowledge
 5. `audience-decision-framing`
 6. `dashboard-discovery`
 7. `grill-dashboard-requirements`
 
-### Phase 3 gate
+### Development gate
 
-The agent can distinguish executive, Business Partner, people-manager, Reward Partner, and specialist needs; identify the decision mode; and select interactive, static, or hybrid consumption appropriately.
+The agent can distinguish executive, Business Partner, people-manager, Reward Partner, and specialist needs and can select interactive, static, or hybrid consumption appropriately.
 
 ## Phase 4 — Holistic Performance & Reward foundation
 
@@ -120,158 +138,182 @@ The agent can distinguish executive, Business Partner, people-manager, Reward Pa
 5. KPI classification framework
 6. Holistic Performance & Reward value-driver skill
 
-### Phase 4 gate
+### Development gate
 
-The cross-domain value-driver architecture is approved and specialist domain boundaries do not materially overlap or conflict.
+The cross-domain value-driver model is coherent enough to prevent specialist packs from creating materially overlapping or contradictory definitions.
 
-## Phase 5 — Specialist P&R domain packs
+## Phase 5 — Specialist Performance & Reward domains
 
-Research and complete:
+Develop:
 
-- Performance management
-- Fixed reward
-- Variable reward
-- Market competitiveness
-- Job architecture
-- Pay equity
-- Talent and retention
-- Benefits and recognition
-- Governance and controls
+- performance management;
+- fixed reward;
+- variable reward;
+- market competitiveness;
+- job architecture;
+- pay equity;
+- talent and retention;
+- benefits and recognition;
+- governance and controls.
 
-Each pack must include:
+Each domain pack includes:
 
 - value-driver branch;
 - business-question catalogue;
-- KPI catalogue;
-- calculation definitions;
+- KPI catalogue and calculation definitions;
 - diagnostic patterns;
 - audience-specific treatment;
-- BAU use cases;
-- non-BAU use cases;
+- BAU and non-BAU use cases;
 - governance risks and anti-patterns.
 
-### Phase 5 gate
+### Development gate
 
-Each domain pack passes evidence review, metric-definition review, overlap review, and at least two audience-specific benchmark tests.
+Each pack passes local evidence and metric-definition checks and works in at least one representative audience scenario. Full cross-domain contradiction testing occurs in Phase 12.
 
 ## Phase 6 — Consulting communication
 
-1. Technique catalogue
-2. Pyramid Principle
-3. SCQA
-4. Issue trees
-5. Action titles
-6. Executive storytelling
-7. Technique-selection matrix
-8. Corresponding Cursor skills
+Develop:
 
-### Phase 6 gate
+- technique catalogue;
+- Pyramid Principle;
+- SCQA;
+- issue trees;
+- action titles;
+- executive storytelling;
+- technique-selection matrix;
+- corresponding skills.
 
-The agent can distinguish published methodology, published examples, observed conventions, general consulting practice, and project synthesis, then select techniques based on audience and decision rather than aesthetics.
+### Development gate
+
+The agent distinguishes published methodology, published examples, observed conventions, general practice, and project synthesis and selects techniques based on audience and decision.
 
 ## Phase 7 — Visual-design foundation
 
-1. Visual perception and hierarchy
-2. Gestalt principles
-3. Preattentive processing
-4. Typography
-5. Colour
-6. Layout and grids
-7. Data-ink ratio
-8. Accessibility
-9. Corresponding skills
+Develop:
 
-### Phase 7 gate
+- visual perception and hierarchy;
+- Gestalt principles;
+- preattentive processing;
+- typography;
+- colour;
+- layout and grids;
+- data-ink ratio;
+- accessibility;
+- corresponding skills.
 
-Visual recommendations are evidence-grounded, accessible, audience-appropriate, and expressed as selection rules rather than universal style preferences.
+### Development gate
+
+Recommendations are evidence-grounded, accessible, audience-appropriate, and expressed as selection rules rather than universal aesthetic preferences.
 
 ## Phase 8 — Visualisation patterns
 
-1. Analytical-relationship map
-2. Chart-pattern catalogue
-3. Executive exhibit patterns
-4. IBCS standard
-5. Visualisation anti-patterns
-6. Chart-selection and exhibit skills
+Develop:
 
-### Phase 8 gate
+- analytical-relationship map;
+- chart-pattern catalogue;
+- executive exhibit patterns;
+- current IBCS guidance;
+- visualisation anti-patterns;
+- chart-selection and exhibit skills.
 
-Every visual pattern identifies the analytical relationship, required data, appropriate audience, comparison logic, Power BI feasibility, and misuse conditions.
+### Development gate
+
+Each visual pattern identifies the analytical relationship, required data, audience, comparison logic, Power BI feasibility, and misuse conditions.
 
 ## Phase 9 — Dashboard experience
 
-1. Information architecture
-2. Guided versus exploratory design
-3. Interactive dashboard UX
-4. Static deck-style design
-5. Executive decision patterns
-6. Business Partner diagnostic patterns
-7. Manager action patterns
+Develop:
 
-### Phase 9 gate
+- dashboard information architecture;
+- guided versus exploratory design;
+- interactive dashboard UX;
+- static deck-style design;
+- executive decision patterns;
+- Business Partner diagnostic patterns;
+- manager action patterns.
 
-The agent can design distinct information architectures for executives, Business Partners, and managers rather than reskinning one report.
+### Development gate
+
+The agent produces materially different designs for executives, Business Partners, and managers rather than reskinning one report.
 
 ## Phase 10 — Power BI implementation
 
-1. Feasibility rules
-2. Interaction patterns
-3. Static export patterns
-4. Semantic-model patterns
-5. DAX patterns
-6. Performance patterns
-7. Security
-8. Accessibility
-9. Theme design
+Develop:
 
-### Phase 10 gate
+- feasibility rules;
+- interaction and export patterns;
+- semantic-model and DAX patterns;
+- performance guidance;
+- security;
+- accessibility;
+- theme design.
 
-Implementation guidance supports the approved design architecture and passes feasibility, security, accessibility, performance, and export review.
+### Development gate
+
+Implementation guidance can realise the draft design architecture without obvious security, accessibility, performance, or export failures.
 
 ## Phase 11 — Orchestrator and subagents
 
+Develop:
+
 1. Main Cursor project rule
-2. Repository-wide `AGENTS.md`
+2. Repository-wide `AGENTS.md` only where it does not duplicate the project rule
 3. Research synthesiser
 4. Dashboard design critic
 5. Power BI verifier
 6. Evidence and authoring rules
-7. Quality gates
+7. Runtime quality gates
 
-### Phase 11 gate
+### Development gate
 
-Persistent rules are concise, skill routing is reliable, subagent handoffs are bounded, and no placeholder component can be invoked accidentally.
+- Persistent instructions remain concise.
+- Skill routing works across benchmark prompts.
+- Subagent handoffs are bounded.
+- No placeholder can be invoked accidentally.
+- The source repository can generate the intended release package.
 
-## Phase 12 — Evaluation and validation
+## Phase 12 — Comprehensive evaluation and correction
 
-1. Evaluation rubric
-2. Benchmark scenarios
-3. Expected results
-4. Validation scripts
-5. Regression process
-6. Release criteria
+This is the main testing phase.
 
-### Phase 12 gate
+Run:
 
-The agent passes the agreed benchmark suite with no critical audience, metric, evidence, visual, accessibility, or implementation failures.
+- independent architecture review;
+- complete benchmark suite;
+- automatic and explicit skill-routing tests;
+- context-load and handoff tests;
+- cross-skill contradiction and duplication analysis;
+- executive, Business Partner, manager, specialist, interactive, and static scenarios;
+- metric and calculation review;
+- Power BI feasibility, security, accessibility, performance, and export review;
+- evidence, citation, privacy, licensing, and public-repository review;
+- regression testing after corrections.
+
+### Gate
+
+No critical failure remains. Major failures are resolved or explicitly accepted by the release authority. Runtime components and mandatory release dependencies are ready to move to `APPROVED`.
 
 ## Phase 13 — Integration and release
 
 - Resolve release-blocking placeholders.
-- Validate artifact IDs, dependencies, schemas, and internal links.
-- Verify skill discovery and explicit invocation.
-- Run benchmark scenarios and regression tests.
-- Review the public package for confidential or licensed material.
+- Approve runtime components and mandatory dependencies.
+- Validate artifact IDs, dependencies, schemas, sources, and links.
+- Verify skill discovery and explicit invocation in current Cursor.
+- Run the final benchmark and regression suite.
+- Review package contents for confidential or licensed material.
+- Produce the release manifest and migration notes.
 - Prepare and tag `v0.1.0`.
 
-## Minimum status required to unblock dependants
+## Status requirements
 
-| Artifact class | Prototyping | Release dependency |
-|---|---|---|
-| Controls and standards | `IN REVIEW` | `APPROVED` |
-| Architecture | `IN REVIEW` | `APPROVED` |
-| Schemas | `IN REVIEW` | `APPROVED` |
-| Knowledge packs | `DRAFT` where explicitly authorised | `APPROVED` |
-| Skills | `DRAFT` in controlled testing | `APPROVED` |
-| Examples | `DRAFT` | `APPROVED` when shipped publicly |
-| Evaluations | `DRAFT` for test development | `APPROVED` for release gates |
+| Activity | Minimum status |
+|---|---|
+| Planning scope | `PLACEHOLDER` |
+| Controlled authoring and prototyping | `DRAFT` |
+| Formal review candidate | `IN REVIEW` |
+| Runtime or mandatory release dependency | `APPROVED` |
+| Public release | All included runtime artifacts and mandatory dependencies `APPROVED` |
+
+## Review timing
+
+Independent review is concentrated in Phase 12 and final release approval in Phase 13. Earlier independent review remains optional when a decision is high-risk, legally sensitive, security-sensitive, or difficult to reverse.
