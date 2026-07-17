@@ -2,19 +2,21 @@
 #
 # Status: DRAFT
 # Phase: 0
-# Content version: 0.1.0
+# Content version: 0.2.0
 # Last reviewed: 2026-07-17
 #
-# This register starts with repository controls and Phase 0/1 artifacts. Additional
-# placeholders receive immutable IDs when they enter active work. IDs must never
-# be reused or renumbered after publication.
+# This register starts with repository controls, Phase 0 evidence governance,
+# standards trials, and Phase 1 architecture. Additional placeholders receive
+# immutable IDs when they enter active work. IDs must never be reused or
+# renumbered after publication.
 
 register:
   artifact_id: CTRL-CORE-004
   status: DRAFT
-  content_version: 0.1.0
+  content_version: 0.2.0
   last_reviewed: 2026-07-17
   naming_standard: STD-CORE-001
+  dependency_standard: CTRL-CORE-002
 
 status_values:
   - PLACEHOLDER
@@ -122,9 +124,77 @@ artifacts:
       - STD-CORE-001
       - STD-CORE-002
     blocks:
+      - KNOW-CORE-001
+      - KNOW-CORE-002
       - research-record schema
-      - central source register
       - evidence-based knowledge approval
+
+  - artifact_id: KNOW-CORE-001
+    path: knowledge/research-register/README.md
+    type: KNOW
+    domain: CORE
+    phase: 0
+    status: DRAFT
+    minimum_status_to_unblock: APPROVED
+    depends_on:
+      - STD-CORE-001
+      - STD-CORE-002
+      - STD-CORE-003
+    blocks:
+      - KNOW-CORE-002
+      - source freshness reporting
+      - evidence review of knowledge artifacts
+
+  - artifact_id: KNOW-CORE-002
+    path: knowledge/research-register/sources.yaml
+    type: KNOW
+    domain: CORE
+    phase: 0
+    status: DRAFT
+    minimum_status_to_unblock: IN REVIEW
+    depends_on:
+      - KNOW-CORE-001
+      - STD-CORE-002
+      - STD-CORE-003
+    blocks:
+      - EX-CORE-001
+      - EX-FIXED-001
+      - reusable source provenance
+
+  - artifact_id: EX-CORE-001
+    path: knowledge/research-register/trials/cursor-rules-and-skills-trial.md
+    type: EX
+    domain: CORE
+    phase: 0
+    status: DRAFT
+    minimum_status_to_unblock: IN REVIEW
+    depends_on:
+      - STD-CORE-001
+      - STD-CORE-002
+      - STD-CORE-003
+      - KNOW-CORE-001
+      - KNOW-CORE-002
+    blocks:
+      - Phase 0 current-product evidence review
+      - ARCH-CORE-001
+      - ARCH-CORE-002
+
+  - artifact_id: EX-FIXED-001
+    path: knowledge/research-register/trials/new-hire-premium-kpi-trial.md
+    type: EX
+    domain: FIXED
+    phase: 0
+    status: DRAFT
+    minimum_status_to_unblock: IN REVIEW
+    depends_on:
+      - STD-CORE-001
+      - STD-CORE-002
+      - STD-CORE-003
+      - KNOW-CORE-001
+      - KNOW-CORE-002
+    blocks:
+      - Phase 0 KPI evidence review
+      - future fixed-reward KPI catalogue
 
   - artifact_id: ARCH-CORE-001
     path: docs/architecture/agent-architecture.md
@@ -137,6 +207,7 @@ artifacts:
       - STD-CORE-001
       - STD-CORE-002
       - STD-CORE-003
+      - EX-CORE-001
     blocks:
       - ARCH-CORE-002
       - ARCH-CORE-003
@@ -154,6 +225,7 @@ artifacts:
       - ARCH-CORE-001
       - STD-CORE-001
       - STD-CORE-002
+      - EX-CORE-001
     blocks:
       - ARCH-CORE-003
       - Cursor rules
@@ -231,6 +303,8 @@ artifacts:
       - STD-CORE-001
       - STD-CORE-002
       - STD-CORE-003
+      - EX-CORE-001
+      - EX-FIXED-001
     blocks:
       - worked examples
       - benchmark scenarios
@@ -261,6 +335,7 @@ artifacts:
       - STD-CORE-002
       - STD-CORE-003
       - ARCH-CORE-001
+      - KNOW-CORE-001
     blocks:
       - domain research waves
 
@@ -310,3 +385,4 @@ validation_requirements:
   - depends_on values must resolve to registered artifact IDs
   - circular dependencies are prohibited
   - SUPERSEDED artifacts must identify superseded_by
+  - approved artifacts cannot depend on lower-status mandatory prerequisites
