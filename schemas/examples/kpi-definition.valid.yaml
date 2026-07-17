@@ -138,7 +138,7 @@ privacy:
 display_guidance:
   default_format: Currency variance with percentage variance and approved tolerance.
   preferred_comparison: Forecast versus approved budget.
-  recommended_visual_relationship: actual-versus-target
+  recommended_visual_relationship: comparison
   headline_suitable: true
   tooltip_or_definition_text: Forecast annualised FTE fixed-reward investment compared with approved budget for the same governed population and pay basis.
 implementation_notes:
@@ -158,6 +158,6 @@ ownership:
   definition_owner: Performance & Reward Product Owner
   data_owner: Reward Data Owner
   review_cadence: Each reward cycle and whenever budget methodology changes.
-  last_reviewed: 2026-07-17
+  last_reviewed: '2026-07-17'
   next_review_trigger: Change to eligible population, pay-component scope, FX method, or budget-control process.
 superseded_by: null
