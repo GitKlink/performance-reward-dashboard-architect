@@ -1,0 +1,57 @@
+profile_id: AUD-EXEC-FIXED-001
+status: DRAFT
+content_version: 0.1.0
+primary_audience: executive
+secondary_audiences:
+  - reward-partner
+decision_owner: Executive Reward Committee
+decision_mode: decide
+decision: Endorse or redirect the proposed fixed-reward investment before final allocation.
+actions_supported:
+  - endorse the proposed investment
+  - redirect investment toward material market or fairness risks
+  - request a revised scenario
+consequences_of_error: high
+primary_questions:
+  - Is the proposed investment within the approved financial tolerance?
+  - Which material drivers and workforce risks explain the forecast outcome?
+secondary_questions:
+  - Where are significant exceptions concentrated?
+exclusions:
+  - employee-level approval decisions
+performance_reward_domains:
+  - fixed-reward
+consumption_mode: hybrid
+experience_mode: executive-decision
+detail_level: summary-with-drivers
+interaction_requirements:
+  - filter
+  - export
+comparison_requirements:
+  - budget
+  - forecast
+  - market
+  - policy
+data_granularity_required: Aggregate portfolio summary with controlled drill-through to approved diagnostic segments.
+privacy_and_access:
+  sensitivity: confidential
+  employee_level_required: false
+  row_level_security_required: true
+  export_restrictions:
+    - static exports must exclude employee-level detail
+  minimum_cell_or_suppression_required: true
+success_criteria:
+  - The committee can identify the forecast position, primary driver, material risk, and required decision within three minutes.
+assumptions:
+  - assumption: Approved budget and forecast measures are available on a consistent pay basis.
+    materiality: high
+    status: unvalidated
+    owner: Reward Product Owner
+    validation_action: Confirm metric definitions before page design.
+open_questions:
+  - question: Is the committee approving total investment or only discretionary allocation?
+    materiality: high
+    owner: Reward Product Owner
+    resolution_required_before: design
+confirmed_by: []
+last_updated: 2026-07-17
