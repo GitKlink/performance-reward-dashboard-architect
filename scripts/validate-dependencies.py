@@ -1,25 +1,28 @@
 #!/usr/bin/env python3
 """Validate artifact IDs, paths, dependencies, statuses, and frontmatter.
 
-Requires PyYAML. Run from the repository root:
+Run from the repository root:
 
     python scripts/validate-dependencies.py
+
+The validator is read-only. It accepts the canonical dependency-object format and
+legacy Phase 0 string forms while those files are being migrated.
 """
 
 from __future__ import annotations
 
 import argparse
+import re
 import sys
 from dataclasses import dataclass
-from pathlib import Path
-from typing import Any, Iterable
+from pathlib import Path, PurePosixPath
+from typing import Any
 
 try:
     import yaml
-except ImportError as exc:  # pragma: no cover - environment failure
+except ImportError as exc:  # pragma: no cover
     raise SystemExit(
-        "PyYAML is required. Install development dependencies with "
-        "`python -m pip install -r requirements-dev.txt`."
+        "PyYAML is required. Run `python -m pip install -r requirements-dev.txt`."
     ) from exc
 
 
@@ -31,8 +34,8 @@ STATUS_ORDER = {
     "APPROVED": 4,
     "SUPERSEDED": -1,
 }
-
-REQUIRED_REGISTER_FIELDS = {
+ARTIFACT_ID_PATTERN = re.compile(r"^[A-Z]+-[A-Z]+-[0-9]{3}$")
+REQUIRED_FIELDS = {
     "artifact_id",
     "path",
     "type",
@@ -46,8 +49,6 @@ REQUIRED_REGISTER_FIELDS = {
 
 @dataclass(frozen=True)
 class Finding:
-    """One validation result."""
-
     level: str
     message: str
 
@@ -56,29 +57,22 @@ class Finding:
 
 
 def load_yaml(path: Path) -> Any:
-    """Safely load one YAML file."""
-
     try:
         return yaml.safe_load(path.read_text(encoding="utf-8"))
-    except FileNotFoundError:
-        raise
     except yaml.YAMLError as exc:
         raise ValueError(f"invalid YAML in {path}: {exc}") from exc
 
 
 def parse_frontmatter(path: Path) -> dict[str, Any] | None:
-    """Return YAML frontmatter for Markdown or MDC files, when present."""
-
     if path.suffix.lower() not in {".md", ".mdc"}:
         return None
 
-    text = path.read_text(encoding="utf-8")
-    lines = text.splitlines()
+    lines = path.read_text(encoding="utf-8").splitlines()
     if not lines or lines[0].strip() != "---":
         return None
 
     try:
-        closing_index = next(
+        closing = next(
             index
             for index, line in enumerate(lines[1:], start=1)
             if line.strip() == "---"
@@ -86,9 +80,8 @@ def parse_frontmatter(path: Path) -> dict[str, Any] | None:
     except StopIteration as exc:
         raise ValueError(f"unterminated YAML frontmatter in {path}") from exc
 
-    raw = "\n".join(lines[1:closing_index])
     try:
-        parsed = yaml.safe_load(raw) or {}
+        parsed = yaml.safe_load("\n".join(lines[1:closing])) or {}
     except yaml.YAMLError as exc:
         raise ValueError(f"invalid YAML frontmatter in {path}: {exc}") from exc
 
@@ -97,41 +90,85 @@ def parse_frontmatter(path: Path) -> dict[str, Any] | None:
     return parsed
 
 
-def dependency_id(value: Any) -> str:
-    """Return an artifact ID from canonical or legacy dependency syntax."""
+def normalise_path(value: str) -> str:
+    """Normalise a repository-relative POSIX path without touching the file system."""
 
-    if isinstance(value, str):
-        return value.split(":", 1)[0].strip()
+    parts: list[str] = []
+    for part in PurePosixPath(value).parts:
+        if part in {"", "."}:
+            continue
+        if part == "..":
+            if parts:
+                parts.pop()
+            continue
+        parts.append(part)
+    return "/".join(parts)
+
+
+def resolve_dependency(
+    value: Any,
+    *,
+    by_id: dict[str, dict[str, Any]],
+    by_path: dict[str, str],
+) -> tuple[str, bool]:
+    """Return ``(artifact_id, used_legacy_syntax)`` for one declaration."""
 
     if isinstance(value, dict):
         if "artifact_id" in value:
-            result = value["artifact_id"]
-            if not isinstance(result, str):
-                raise ValueError(f"dependency artifact_id must be a string: {value!r}")
-            return result.strip()
+            artifact_id = value["artifact_id"]
+            if not isinstance(artifact_id, str) or not artifact_id.strip():
+                raise ValueError(f"invalid dependency artifact_id: {value!r}")
+            return artifact_id.strip(), False
 
-        # Legacy YAML from `- ID: path` parses as a single-key mapping.
+        # Legacy `- ARTIFACT-ID: path` YAML form.
         if len(value) == 1:
-            key = next(iter(value))
-            if isinstance(key, str):
-                return key.strip()
+            key, path_value = next(iter(value.items()))
+            if isinstance(key, str) and key in by_id:
+                return key, True
+            if isinstance(path_value, str):
+                resolved = by_path.get(normalise_path(path_value))
+                if resolved:
+                    return resolved, True
+
+    if isinstance(value, str):
+        candidate = value.split(":", 1)[0].strip()
+        if candidate in by_id:
+            return candidate, candidate != value.strip()
+
+        resolved = by_path.get(normalise_path(value.strip()))
+        if resolved:
+            return resolved, True
+
+        return candidate, True
 
     raise ValueError(f"unsupported dependency declaration: {value!r}")
 
 
-def iter_dependency_ids(values: Any) -> Iterable[str]:
-    """Yield dependency IDs from a YAML list."""
-
+def resolve_dependencies(
+    values: Any,
+    *,
+    by_id: dict[str, dict[str, Any]],
+    by_path: dict[str, str],
+) -> tuple[tuple[str, ...], bool]:
     if values is None:
-        return ()
+        return (), False
     if not isinstance(values, list):
         raise ValueError("depends_on must be a YAML list")
-    return tuple(dependency_id(value) for value in values)
+
+    resolved: list[str] = []
+    used_legacy = False
+    for value in values:
+        artifact_id, legacy = resolve_dependency(
+            value,
+            by_id=by_id,
+            by_path=by_path,
+        )
+        resolved.append(artifact_id)
+        used_legacy = used_legacy or legacy
+    return tuple(resolved), used_legacy
 
 
 def find_cycles(graph: dict[str, tuple[str, ...]]) -> list[list[str]]:
-    """Return dependency cycles using depth-first search."""
-
     cycles: list[list[str]] = []
     state: dict[str, int] = {}
     stack: list[str] = []
@@ -140,7 +177,9 @@ def find_cycles(graph: dict[str, tuple[str, ...]]) -> list[list[str]]:
         marker = state.get(node, 0)
         if marker == 1:
             start = stack.index(node)
-            cycles.append(stack[start:] + [node])
+            cycle = stack[start:] + [node]
+            if cycle not in cycles:
+                cycles.append(cycle)
             return
         if marker == 2:
             return
@@ -160,26 +199,22 @@ def find_cycles(graph: dict[str, tuple[str, ...]]) -> list[list[str]]:
 
 
 def validate_repository(root: Path) -> list[Finding]:
-    """Validate the repository and return every detected finding."""
-
     findings: list[Finding] = []
     register_path = root / "ARTIFACT-REGISTER.yaml"
-
     if not register_path.exists():
         return [Finding("ERROR", "ARTIFACT-REGISTER.yaml does not exist")]
 
     try:
         payload = load_yaml(register_path)
-    except (ValueError, FileNotFoundError) as exc:
+    except ValueError as exc:
         return [Finding("ERROR", str(exc))]
 
-    if not isinstance(payload, dict) or not isinstance(payload.get("artifacts"), list):
+    artifacts = payload.get("artifacts") if isinstance(payload, dict) else None
+    if not isinstance(artifacts, list):
         return [Finding("ERROR", "artifact register must contain an `artifacts` list")]
 
-    artifacts = payload["artifacts"]
     by_id: dict[str, dict[str, Any]] = {}
     by_path: dict[str, str] = {}
-    graph: dict[str, tuple[str, ...]] = {}
 
     for index, artifact in enumerate(artifacts, start=1):
         prefix = f"artifact entry {index}"
@@ -187,7 +222,7 @@ def validate_repository(root: Path) -> list[Finding]:
             findings.append(Finding("ERROR", f"{prefix} must be a mapping"))
             continue
 
-        missing = sorted(REQUIRED_REGISTER_FIELDS - artifact.keys())
+        missing = sorted(REQUIRED_FIELDS - artifact.keys())
         if missing:
             findings.append(
                 Finding("ERROR", f"{prefix} missing fields: {', '.join(missing)}")
@@ -198,7 +233,9 @@ def validate_repository(root: Path) -> list[Finding]:
         path_value = artifact["path"]
         status = artifact["status"]
 
-        if not isinstance(artifact_id, str) or not artifact_id:
+        if not isinstance(artifact_id, str) or not ARTIFACT_ID_PATTERN.fullmatch(
+            artifact_id
+        ):
             findings.append(Finding("ERROR", f"{prefix} has invalid artifact_id"))
             continue
         if artifact_id in by_id:
@@ -206,29 +243,53 @@ def validate_repository(root: Path) -> list[Finding]:
         else:
             by_id[artifact_id] = artifact
 
-        if not isinstance(path_value, str) or not path_value:
+        if not isinstance(path_value, str) or not path_value.strip():
             findings.append(Finding("ERROR", f"{artifact_id} has invalid path"))
             continue
-        if path_value in by_path:
+        canonical_path = normalise_path(path_value)
+        if canonical_path != path_value:
             findings.append(
                 Finding(
                     "ERROR",
-                    f"duplicate path {path_value} for {artifact_id} and {by_path[path_value]}",
+                    f"{artifact_id} path is not canonical: {path_value!r}",
+                )
+            )
+        if canonical_path in by_path:
+            findings.append(
+                Finding(
+                    "ERROR",
+                    f"duplicate path {canonical_path} for {artifact_id} and "
+                    f"{by_path[canonical_path]}",
                 )
             )
         else:
-            by_path[path_value] = artifact_id
+            by_path[canonical_path] = artifact_id
 
         if status not in STATUS_ORDER:
             findings.append(
                 Finding("ERROR", f"{artifact_id} has unsupported status {status!r}")
             )
 
+    graph: dict[str, tuple[str, ...]] = {}
+    for artifact_id, artifact in by_id.items():
         try:
-            graph[artifact_id] = tuple(iter_dependency_ids(artifact["depends_on"]))
+            dependencies, legacy = resolve_dependencies(
+                artifact["depends_on"],
+                by_id=by_id,
+                by_path=by_path,
+            )
         except ValueError as exc:
             findings.append(Finding("ERROR", f"{artifact_id}: {exc}"))
-            graph[artifact_id] = ()
+            dependencies = ()
+            legacy = False
+        graph[artifact_id] = dependencies
+        if legacy:
+            findings.append(
+                Finding(
+                    "WARNING",
+                    f"{artifact_id} uses legacy dependency syntax in the register",
+                )
+            )
 
     for artifact_id, artifact in by_id.items():
         path_value = artifact["path"]
@@ -250,38 +311,60 @@ def validate_repository(root: Path) -> list[Finding]:
             findings.append(Finding("ERROR", str(exc)))
             continue
 
-        if frontmatter is not None:
-            for key in ("artifact_id", "status", "phase"):
-                if key not in frontmatter:
-                    findings.append(
-                        Finding("ERROR", f"{path_value} frontmatter missing {key}")
-                    )
-                    continue
-                if frontmatter[key] != artifact[key]:
-                    findings.append(
-                        Finding(
-                            "ERROR",
-                            f"{path_value} {key}={frontmatter[key]!r} "
-                            f"does not match register {artifact[key]!r}",
-                        )
-                    )
+        if artifact_path.suffix.lower() in {".md", ".mdc"} and frontmatter is None:
+            findings.append(
+                Finding("ERROR", f"{path_value} is registered but has no frontmatter")
+            )
+            continue
+        if frontmatter is None:
+            continue
 
-            try:
-                file_dependencies = tuple(
-                    iter_dependency_ids(frontmatter.get("depends_on", []))
+        for key in ("artifact_id", "status", "phase"):
+            if key not in frontmatter:
+                findings.append(
+                    Finding("ERROR", f"{path_value} frontmatter missing {key}")
                 )
-            except ValueError as exc:
-                findings.append(Finding("ERROR", f"{path_value}: {exc}"))
-            else:
-                register_dependencies = graph.get(artifact_id, ())
-                if file_dependencies != register_dependencies:
-                    findings.append(
-                        Finding(
-                            "ERROR",
-                            f"{path_value} depends_on {file_dependencies!r} "
-                            f"does not match register {register_dependencies!r}",
-                        )
+            elif frontmatter[key] != artifact[key]:
+                findings.append(
+                    Finding(
+                        "ERROR",
+                        f"{path_value} {key}={frontmatter[key]!r} does not match "
+                        f"register {artifact[key]!r}",
                     )
+                )
+
+        try:
+            file_dependencies, legacy = resolve_dependencies(
+                frontmatter.get("depends_on", []),
+                by_id=by_id,
+                by_path=by_path,
+            )
+        except ValueError as exc:
+            findings.append(Finding("ERROR", f"{path_value}: {exc}"))
+            continue
+
+        if legacy:
+            findings.append(
+                Finding(
+                    "WARNING",
+                    f"{path_value} uses legacy dependency syntax; migrate to "
+                    "dependency objects",
+                )
+            )
+
+        register_dependencies = graph.get(artifact_id, ())
+        if set(file_dependencies) != set(register_dependencies):
+            findings.append(
+                Finding(
+                    "ERROR",
+                    f"{path_value} depends_on {file_dependencies!r} does not match "
+                    f"register {register_dependencies!r}",
+                )
+            )
+        elif len(file_dependencies) != len(set(file_dependencies)):
+            findings.append(
+                Finding("ERROR", f"{path_value} contains duplicate dependencies")
+            )
 
     for artifact_id, dependencies in graph.items():
         for dependency in dependencies:
@@ -302,7 +385,6 @@ def validate_repository(root: Path) -> list[Finding]:
         status = artifact["status"]
         if status not in {"IN REVIEW", "APPROVED"}:
             continue
-
         required_rank = (
             STATUS_ORDER["DRAFT"]
             if status == "IN REVIEW"
@@ -313,13 +395,12 @@ def validate_repository(root: Path) -> list[Finding]:
             if dependency_artifact is None:
                 continue
             dependency_status = dependency_artifact["status"]
-            dependency_rank = STATUS_ORDER.get(dependency_status, -1)
-            if dependency_rank < required_rank:
+            if STATUS_ORDER.get(dependency_status, -1) < required_rank:
                 findings.append(
                     Finding(
                         "ERROR",
-                        f"{artifact_id} is {status} but dependency {dependency} "
-                        f"is only {dependency_status}",
+                        f"{artifact_id} is {status} but dependency {dependency} is "
+                        f"only {dependency_status}",
                     )
                 )
 
@@ -327,8 +408,6 @@ def validate_repository(root: Path) -> list[Finding]:
 
 
 def build_parser() -> argparse.ArgumentParser:
-    """Build the command-line parser."""
-
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
         "--root",
@@ -339,19 +418,16 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument(
         "--warnings-as-errors",
         action="store_true",
-        help="return a non-zero exit code when warnings are present",
+        help="return exit code 2 when warnings are present",
     )
     return parser
 
 
 def main() -> int:
-    """Run validation and return a process exit code."""
-
     args = build_parser().parse_args()
     findings = validate_repository(args.root.resolve())
-
-    errors = [item for item in findings if item.level == "ERROR"]
-    warnings = [item for item in findings if item.level == "WARNING"]
+    errors = [finding for finding in findings if finding.level == "ERROR"]
+    warnings = [finding for finding in findings if finding.level == "WARNING"]
 
     for finding in findings:
         print(finding.render())
@@ -363,11 +439,10 @@ def main() -> int:
         print(f"\nValidation failed with {len(warnings)} warning(s).")
         return 2
 
-    print(
-        f"Validation passed with {len(warnings)} warning(s)."
-        if warnings
-        else "Validation passed."
-    )
+    if warnings:
+        print(f"\nValidation passed with {len(warnings)} warning(s).")
+    else:
+        print("Validation passed.")
     return 0
 
 
