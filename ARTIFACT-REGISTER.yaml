@@ -2,7 +2,7 @@
 #
 # Status: DRAFT
 # Phase: 0
-# Content version: 0.3.0
+# Content version: 0.4.0
 # Last reviewed: 2026-07-17
 #
 # IDs are immutable after publication. Placeholder files receive IDs when they
@@ -11,7 +11,7 @@
 register:
   artifact_id: CTRL-CORE-004
   status: DRAFT
-  content_version: 0.3.0
+  content_version: 0.4.0
   last_reviewed: 2026-07-17
   naming_standard: STD-CORE-001
   dependency_standard: CTRL-CORE-002
@@ -91,6 +91,7 @@ artifacts:
     blocks:
       - STD-CORE-002
       - STD-CORE-003
+      - STD-CORE-004
       - all named governed artifacts
 
   - artifact_id: STD-CORE-002
@@ -250,6 +251,28 @@ artifacts:
       - future visual-perception knowledge pack
       - future chart-selection skill
 
+  - artifact_id: EVAL-QA-001
+    path: knowledge/research-register/reviews/phase-0-internal-pre-review-2026-07-17.md
+    type: EVAL
+    domain: QA
+    phase: 0
+    status: DRAFT
+    minimum_status_to_unblock: IN REVIEW
+    depends_on:
+      - CTRL-CORE-001
+      - CTRL-CORE-002
+      - STD-CORE-001
+      - STD-CORE-002
+      - STD-CORE-003
+      - EX-CORE-001
+      - EX-CORE-002
+      - EX-FIXED-001
+      - EX-CONSULT-001
+      - EX-VIZ-001
+    blocks:
+      - independent Phase 0 review
+      - Phase 0 status transition
+
   - artifact_id: SCRIPT-CORE-001
     path: scripts/README.md
     type: SCRIPT
@@ -263,8 +286,8 @@ artifacts:
       - STD-CORE-001
     blocks:
       - SCRIPT-CORE-002
-      - SCRIPT-CORE-003
-      - TEST-QA-001
+      - SCRIPT-CORE-004
+      - SCRIPT-CORE-005
       - repository validation workflow
 
   - artifact_id: SCRIPT-CORE-002
@@ -280,6 +303,7 @@ artifacts:
       - STD-CORE-001
     blocks:
       - TEST-QA-001
+      - INFRA-CORE-001
       - branch-wide dependency validation
 
   - artifact_id: SCRIPT-CORE-003
@@ -293,7 +317,46 @@ artifacts:
       - SCRIPT-CORE-001
     blocks:
       - SCRIPT-CORE-002
+      - SCRIPT-CORE-004
       - TEST-QA-001
+      - TEST-QA-002
+      - TEST-QA-003
+      - INFRA-CORE-001
+
+  - artifact_id: SCRIPT-CORE-004
+    path: scripts/validate-source-register.py
+    type: SCRIPT
+    domain: CORE
+    phase: 0
+    status: DRAFT
+    minimum_status_to_unblock: IN REVIEW
+    depends_on:
+      - SCRIPT-CORE-001
+      - SCRIPT-CORE-003
+      - CTRL-CORE-004
+      - KNOW-CORE-002
+      - STD-CORE-002
+      - STD-CORE-003
+    blocks:
+      - TEST-QA-003
+      - INFRA-CORE-001
+      - source-register quality gate
+
+  - artifact_id: SCRIPT-CORE-005
+    path: scripts/check-internal-links.py
+    type: SCRIPT
+    domain: CORE
+    phase: 0
+    status: DRAFT
+    minimum_status_to_unblock: IN REVIEW
+    depends_on:
+      - SCRIPT-CORE-001
+      - STD-CORE-001
+      - STD-CORE-003
+    blocks:
+      - TEST-QA-002
+      - INFRA-CORE-001
+      - internal-link quality gate
 
   - artifact_id: TEST-QA-001
     path: tests/test_validate_dependencies.py
@@ -307,8 +370,68 @@ artifacts:
       - SCRIPT-CORE-002
       - SCRIPT-CORE-003
     blocks:
-      - validator review
-      - repository validation workflow
+      - INFRA-CORE-001
+      - dependency-validator review
+
+  - artifact_id: TEST-QA-002
+    path: tests/test_check_internal_links.py
+    type: TEST
+    domain: QA
+    phase: 0
+    status: DRAFT
+    minimum_status_to_unblock: IN REVIEW
+    depends_on:
+      - SCRIPT-CORE-003
+      - SCRIPT-CORE-005
+    blocks:
+      - INFRA-CORE-001
+      - internal-link-validator review
+
+  - artifact_id: TEST-QA-003
+    path: tests/test_validate_source_register.py
+    type: TEST
+    domain: QA
+    phase: 0
+    status: DRAFT
+    minimum_status_to_unblock: IN REVIEW
+    depends_on:
+      - SCRIPT-CORE-003
+      - SCRIPT-CORE-004
+      - KNOW-CORE-002
+    blocks:
+      - INFRA-CORE-001
+      - source-register-validator review
+
+  - artifact_id: INFRA-CORE-001
+    path: .github/workflows/repository-validation.yml
+    type: INFRA
+    domain: CORE
+    phase: 0
+    status: DRAFT
+    minimum_status_to_unblock: IN REVIEW
+    depends_on:
+      - SCRIPT-CORE-002
+      - SCRIPT-CORE-003
+      - SCRIPT-CORE-004
+      - SCRIPT-CORE-005
+      - TEST-QA-001
+      - TEST-QA-002
+      - TEST-QA-003
+    blocks:
+      - automated repository quality gate
+      - Phase 0 review evidence
+
+  - artifact_id: KNOW-QA-001
+    path: docs/reviews/README.md
+    type: KNOW
+    domain: QA
+    phase: 1
+    status: PLACEHOLDER
+    minimum_status_to_unblock: APPROVED
+    depends_on:
+      - STD-CORE-006
+    blocks:
+      - formal review records
 
   - artifact_id: ARCH-CORE-001
     path: docs/architecture/agent-architecture.md
@@ -387,7 +510,7 @@ artifacts:
       - ARCH-CORE-004
       - EX-CORE-002
     blocks:
-      - release plan
+      - PLAN-CORE-003
       - package validation
 
   - artifact_id: STD-CORE-004
@@ -497,9 +620,10 @@ reserved_id_namespaces:
   EVAL: 1-999
   SCRIPT: 1-99
   TEST: 1-999
+  INFRA: 1-99
 
 validation_requirements:
-  - every substantive non-placeholder artifact must appear in this register
+  - every active substantive artifact must appear in this register
   - path and artifact_id must match file frontmatter where frontmatter is supported
   - artifact_id values must be unique
   - depends_on values must resolve to registered artifact IDs
