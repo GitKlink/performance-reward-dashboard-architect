@@ -34,7 +34,7 @@ jobs:
         run: python3 scripts/validate-dependencies.py
 
       - name: Validate source register
-        run: python3 scripts/validate-source-register.py
+        run: python3 scripts/validate-source-register.py --warnings-as-errors
 
       - name: Validate internal links
         run: python3 scripts/check-internal-links.py
