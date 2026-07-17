@@ -10,7 +10,7 @@ depends_on:
     path: DEPENDENCIES.md
 blocks:
   - release decisions
-content_version: 0.5.0
+content_version: 0.6.0
 last_reviewed: 2026-07-17
 next_review: 2026-07-24
 ---
@@ -31,7 +31,7 @@ scaffold/repository-foundation
 
 ## Current activity
 
-Phase 0 repository governance is approaching formal review.
+Phase 0 repository governance is ready for independent content review after automated validation.
 
 The complete initial scaffold has been created. The first three substantive standards exist as drafts:
 
@@ -47,9 +47,17 @@ The artifact register and central research register exist. All five representati
 - `EX-VIZ-001` — stable graphical-perception research;
 - `EX-CORE-002` — internal source-of-truth decision.
 
-The branch now includes a working dependency validator, seven unit-test scenarios, and a GitHub Actions validation workflow. The latest workflow run completed successfully: Python setup, dependency installation, unit tests, and branch-wide artifact validation all passed.
+The branch now includes:
 
-The standards remain `DRAFT` pending canonical metadata migration, source/link validation expansion, and independent review.
+- artifact dependency validation;
+- source-register validation;
+- internal-link validation;
+- 18 unit-test scenarios;
+- a GitHub Actions workflow running the complete validation suite.
+
+The latest workflow run passed all tests and validators.
+
+The standards remain `DRAFT` pending canonical metadata migration and independent review under GitHub issue #2.
 
 ## Important current-product finding
 
@@ -70,8 +78,8 @@ IBCS Version 2.0 was released on 2026-06-11 and changed the prior conceptual, pe
 
 | Phase | Name | Status | Current result |
 |---:|---|---|---|
-| 0 | Repository controls | DRAFT | Core standards, five trials, reconciled register, tests, and successful CI validation |
-| 1 | Architecture and standards | PLACEHOLDER | Placeholders now have specific metadata, dependencies, required outputs, and acceptance criteria |
+| 0 | Repository controls | DRAFT | Core standards, five trials, reconciled register, 18 tests, three validators, and successful CI |
+| 1 | Architecture and standards | PLACEHOLDER | Artifact-specific placeholders complete; blocked by Phase 0 review |
 | 2 | Schemas and templates | PLACEHOLDER | Blocked by Phase 1 and approved standards |
 | 3 | Audience and decision foundation | PLACEHOLDER | Not started |
 | 4 | Holistic P&R foundation | PLACEHOLDER | Not started |
@@ -82,24 +90,8 @@ IBCS Version 2.0 was released on 2026-06-11 and changed the prior conceptual, pe
 | 9 | Dashboard experience | PLACEHOLDER | Not started |
 | 10 | Power BI implementation | PLACEHOLDER | Not started |
 | 11 | Orchestrator and subagents | PLACEHOLDER | Not started |
-| 12 | Evaluation and validation | PLACEHOLDER | Initial repository validation implemented early as a Phase 0 control |
+| 12 | Evaluation and validation | PLACEHOLDER | Repository validation foundation implemented early as a Phase 0 control |
 | 13 | Integration and release | PLACEHOLDER | Not started |
-
-## Scaffold inventory
-
-The branch contains the planned repository locations for:
-
-- repository controls and project files;
-- four safe, non-applying Cursor rule placeholders;
-- three non-operational Cursor subagent placeholders;
-- forty-nine Cursor skill placeholders across nine capability groups;
-- architecture, standards, and planning artifacts;
-- audience, P&R, consulting, visual-design, visualisation, and Power BI knowledge packs;
-- eight output schemas and nine output templates;
-- audience and format examples;
-- five benchmark scenarios with expected-result locations;
-- validation and generation scripts;
-- automated repository validation through GitHub Actions.
 
 ## Completed Phase 0 work
 
@@ -113,18 +105,21 @@ The branch contains the planned repository locations for:
 8. Implemented the dependency validator and seven unit tests.
 9. Reconciled Phase 0 and Phase 1 artifacts in `ARTIFACT-REGISTER.yaml`.
 10. Replaced generic Phase 1 placeholders with artifact-specific instructions and canonical metadata.
-11. Added a GitHub Actions validation workflow.
-12. Passed branch-wide unit tests and dependency validation in CI.
+11. Implemented internal-link validation and five tests.
+12. Implemented source-register validation and six tests.
+13. Added a GitHub Actions workflow running all tests and validators.
+14. Passed the complete automated validation suite.
+15. Opened issue #2 for the required independent review.
 
 ## Phase 0 work remaining
 
-1. Migrate remaining active Phase 0 files from accepted legacy dependency syntax to the canonical dependency-object format.
-2. Register the validation workflow as a governed infrastructure artifact.
-3. Add source-register validation and internal-link validation.
-4. Conduct independent review of `STD-CORE-001` to `STD-CORE-003` and the five trials.
-5. Resolve review findings and move eligible controls to `IN REVIEW`.
-6. Merge the scaffold and governance pull request when the review gate is satisfied.
+1. Register the validation workflow and newly activated validators in `ARTIFACT-REGISTER.yaml`.
+2. Migrate remaining active Phase 0 files from accepted legacy dependency syntax to canonical dependency objects.
+3. Complete independent review under issue #2.
+4. Resolve critical and major review findings.
+5. Move eligible controls to `IN REVIEW`.
+6. Merge pull request #1 when the review gate is satisfied.
 
 ## Immediate next action
 
-Implement source-register and internal-link validation, then create the Phase 0 independent-review package.
+Complete the Phase 0 independent review and resolve its findings before beginning substantive Phase 1 architecture work.
