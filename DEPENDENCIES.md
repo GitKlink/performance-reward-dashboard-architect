@@ -4,20 +4,21 @@ status: DRAFT
 phase: 0
 priority: critical
 depends_on:
-  - CTRL-CORE-001: BUILD-ORDER.md
+  - artifact_id: CTRL-CORE-001
+    path: BUILD-ORDER.md
 blocks:
   - all dependent artifacts
   - dependency validation
-content_version: 0.2.0
+content_version: 0.3.0
 last_reviewed: 2026-07-17
 next_review: 2026-07-24
 ---
 
-# Artifact Dependency Map
+# Artifact dependency map
 
 ## Purpose
 
-This file defines dependency semantics, approval rules, and the authoritative high-level dependency graph. File-level identifiers and lifecycle states are recorded in `ARTIFACT-REGISTER.yaml`.
+This file defines dependency semantics, approval rules, source-of-truth boundaries, and change-impact handling. `ARTIFACT-REGISTER.yaml` is the machine-readable authority for artifact IDs, paths, statuses, and direct dependencies.
 
 ## Core dependency chain
 
@@ -32,7 +33,7 @@ Audience and decision framework
         ↓
 Holistic Performance & Reward value-driver architecture
         ↓
-Specialist P&R domain packs
+Specialist Performance & Reward domain packs
         ↓
 Consulting, visual-design, and visualisation knowledge
         ↓
@@ -42,12 +43,12 @@ Power BI implementation patterns
         ↓
 Active skills, orchestrator rules, and subagents
         ↓
-Evaluation, regression, and release
+Evaluation, regression, packaging, and release
 ```
 
-## Dependency fields
+## Required dependency metadata
 
-Every governed artifact must declare:
+Every governed Markdown or MDC artifact declares:
 
 ```yaml
 artifact_id:
@@ -55,110 +56,114 @@ depends_on:
 blocks:
 ```
 
-### `depends_on`
-
-Lists the immutable artifact IDs required to author, interpret, validate, or approve the current artifact.
-
-Use the form:
+Canonical dependencies use immutable IDs plus repository-relative paths:
 
 ```yaml
 depends_on:
-  - STD-CORE-001: docs/standards/naming-standard.md
-  - ARCH-CORE-001: docs/architecture/agent-architecture.md
+  - artifact_id: STD-CORE-001
+    path: docs/standards/naming-standard.md
+  - artifact_id: ARCH-CORE-001
+    path: docs/architecture/agent-architecture.md
 ```
 
-The path is included for human readability. Validation resolves the identifier through `ARTIFACT-REGISTER.yaml`.
+The ID is authoritative. The path supports human navigation and must agree with the artifact register.
 
-### `blocks`
-
-Lists downstream artifact IDs, groups, or named capabilities that cannot progress to the required status until this artifact meets its gate.
-
-`blocks` is informative and may be broader than the reverse of `depends_on`. `depends_on` remains authoritative for machine validation.
+`blocks` may name artifact IDs or bounded capabilities. It is informative; `depends_on` is authoritative for validation.
 
 ## Dependency types
 
 | Type | Meaning | Example |
 |---|---|---|
-| Structural | Defines required location, format, or component boundary | skill depends on skill-authoring standard |
-| Semantic | Defines concepts or terminology used downstream | fixed-reward skill depends on fixed-reward knowledge pack |
-| Data contract | Defines required fields or machine-readable structure | template depends on corresponding schema |
-| Evidence | Defines research or sources required for factual claims | knowledge pack depends on research and citation standards |
-| Behavioural | Defines orchestration or invocation behaviour | main rule depends on routing model |
-| Validation | Defines tests or acceptance criteria | release depends on approved evaluation standard |
-| Implementation | Defines platform feasibility or technical constraints | interactive UX pattern depends on Power BI feasibility knowledge |
+| Structural | Defines required format or component boundary | skill depends on skill-authoring standard |
+| Semantic | Defines concepts or terminology | domain skill depends on domain knowledge pack |
+| Data contract | Defines required fields or structure | template depends on schema |
+| Evidence | Defines research needed for claims | knowledge pack depends on research and citation standards |
+| Behavioural | Defines invocation or orchestration | main rule depends on routing model |
+| Validation | Defines tests or acceptance criteria | release depends on evaluation standard |
+| Implementation | Defines platform feasibility | interaction pattern depends on Power BI evidence |
 
-A dependency may have more than one type. The detailed register may add a `dependency_type` field when the schema is implemented.
+A dependency may satisfy more than one type.
 
-## Status semantics
+## Lifecycle semantics
 
-### Placeholder
+### `PLACEHOLDER`
 
-`PLACEHOLDER` identifies planned scope only. It never satisfies a dependency.
+Scope exists, but the artifact does not provide substantive authority. It never satisfies a release dependency.
 
-### Research in progress
+### `RESEARCH IN PROGRESS`
 
-`RESEARCH IN PROGRESS` may inform exploration but cannot be treated as settled knowledge.
+Evidence collection is active. The artifact may inform exploration but remains unsettled.
 
-### Draft
+### `DRAFT`
 
-`DRAFT` may support explicitly authorised prototyping. A dependent artifact must state that it is using draft input and must be revisited after the dependency changes.
+Substantive content exists. It may support explicitly authorised prototyping and internal pre-review.
 
-### In review
+### `IN REVIEW`
 
-`IN REVIEW` may support controlled evaluation. It is not sufficient for public release unless `BUILD-ORDER.md` explicitly permits it.
+Acceptance criteria are being assessed. It may support controlled evaluation but not public release.
 
-### Approved
+### `APPROVED`
 
-`APPROVED` is authoritative for downstream release work until superseded.
+The artifact is authoritative for dependent work until superseded.
 
-### Superseded
+### `SUPERSEDED`
 
-`SUPERSEDED` cannot satisfy new dependencies. The artifact must declare `superseded_by`.
+The artifact cannot satisfy new dependencies and must declare `superseded_by`.
 
-## Minimum dependency status
+## Minimum dependency maturity
 
-The default minimum prerequisite status is:
-
-| Downstream activity | Minimum prerequisite status |
+| Downstream activity | Default minimum prerequisite status |
 |---|---|
 | Scope planning | `PLACEHOLDER` |
-| Research planning | `DRAFT` standard or architecture with explicit risk note |
-| Prototype authoring | `DRAFT` where authorised by `BUILD-ORDER.md` |
+| Evidence or implementation prototyping | `DRAFT`, where authorised by `BUILD-ORDER.md` |
 | Controlled evaluation | `IN REVIEW` |
-| Approval | `APPROVED` prerequisites |
-| Public release | `APPROVED` prerequisites |
+| Artifact approval | `APPROVED` mandatory prerequisites |
+| Public release | `APPROVED` mandatory prerequisites |
 
-An artifact cannot move to a higher status than its least mature mandatory dependency unless a documented exception is approved in a decision record.
+An artifact cannot move above the maturity of a mandatory dependency unless a documented exception is approved.
+
+## Phase-boundary rule
+
+`BUILD-ORDER.md` defines the phase gate. A later phase may be explored for planning or controlled trials, but it cannot become authoritative while its mandatory earlier-phase dependencies remain below the required status.
+
+A trial used to validate an earlier standard does not create a circular approval dependency when:
+
+- it is explicitly labelled as a controlled trial;
+- it does not become an active Cursor capability;
+- the earlier standard remains authoritative for the trial's scope;
+- the trial result is used to approve or revise the earlier standard.
 
 ## Source-of-truth rules
 
-1. One concept must have one authoritative artifact.
-2. Dependent files link to the authority instead of reproducing its full content.
+1. One concept has one authoritative artifact.
+2. Dependent files link to the authority instead of reproducing it.
 3. Skills contain procedures and selection logic; knowledge files contain governed subject matter.
-4. Templates mirror schemas; they do not redefine field semantics.
-5. Examples demonstrate approved methods; they do not create new rules silently.
-6. Rules orchestrate and constrain behaviour; they do not duplicate full skills or knowledge packs.
-7. Subagents return bounded results; they do not become independent sources of truth.
-8. The artifact register identifies authority by immutable ID and current path.
+4. Templates implement schemas and do not redefine field semantics.
+5. Examples demonstrate approved methods and do not create hidden rules.
+6. Rules orchestrate and constrain behaviour without duplicating full skills or knowledge packs.
+7. Subagents return bounded results and do not become independent authorities.
+8. Generated indexes never replace the artifact register.
+9. Source records identify evidence; they do not replace claim-level citations.
+10. A review performed by the authoring workflow does not replace an independent approval review.
 
-## Circular-dependency rules
+## Circular dependencies
 
-Circular dependencies are prohibited among approval dependencies.
+Approval dependencies must be acyclic.
 
-Permitted feedback does not create a formal cycle. For example, evaluation may reveal that an architecture artifact needs revision, but architecture does not formally depend on the evaluation artifact used to test it.
+Evaluation may reveal that an upstream artifact needs revision, but that feedback does not become a formal reverse dependency.
 
 When a cycle is detected:
 
-1. identify which artifact owns the definition;
-2. move the shared definition to that authority or a new upstream artifact;
+1. identify which artifact owns the shared definition;
+2. move the definition to that authority or a new upstream artifact;
 3. replace copied content with links;
-4. update the register and frontmatter;
+4. update frontmatter and the artifact register;
 5. rerun validation.
 
 ## Phase 0 and Phase 1 dependency graph
 
 ```text
-CTRL-CORE-001  BUILD-ORDER
+CTRL-CORE-001  BUILD ORDER
         ↓
 CTRL-CORE-002  DEPENDENCIES
         ↓
@@ -169,6 +174,8 @@ STD-CORE-002   RESEARCH
 STD-CORE-003   CITATION
         ↓
 CTRL-CORE-004  ARTIFACT REGISTER
+        ↓
+Phase 0 trials, validators, tests, and independent review
         ↓
 ARCH-CORE-001  AGENT ARCHITECTURE
         ├──→ ARCH-CORE-002  CONTEXT STRATEGY
@@ -184,81 +191,74 @@ STD-CORE-004   SKILL AUTHORING
 STD-CORE-006   EVALUATION STANDARD
 ```
 
-The machine-readable register contains the complete initial mapping and takes precedence if this diagram becomes stale.
+The artifact register takes precedence if this diagram becomes stale.
 
 ## Group dependencies
 
-| Group | Mandatory upstream authorities | Primary consumers |
+| Group | Mandatory upstream authorities | Main consumers |
 |---|---|---|
 | Repository controls | `CTRL-CORE-001` to `CTRL-CORE-004` | all governed artifacts |
-| Research governance | `STD-CORE-001` to `STD-CORE-003` | knowledge, current-product claims, domain skills |
-| Architecture | Phase 0 approved standards | rules, agents, skills, schemas, release packaging |
-| Schemas | architecture and naming standard | templates, skills, evaluations, scripts |
-| Audience knowledge | architecture, schemas, research governance | discovery, KPI, UX, storyline skills |
-| P&R foundation | audience framework and research governance | specialist domains, KPI catalogue, diagnostics |
-| Consulting knowledge | research and citation standards | storyline, static-design, executive communication |
-| Visual-design knowledge | research and citation standards | visualisation, UX, accessibility, QA |
-| Power BI knowledge | approved design patterns and current official product evidence | implementation skills and verifier |
-| Orchestrator | stable routing model and foundational skills | final Cursor agent |
+| Research governance | `STD-CORE-001` to `STD-CORE-003` | knowledge, research-dependent skills, current-product claims |
+| Architecture | approved Phase 0 controls | rules, agents, skills, schemas, release packaging |
+| Schemas | architecture and naming standards | templates, skills, evaluations, validators |
+| Audience knowledge | architecture, schemas, research governance | discovery, KPI, UX, and storyline skills |
+| Performance & Reward foundation | audience framework and research governance | specialist packs, KPI catalogue, diagnostics |
+| Consulting knowledge | research and citation standards | storyline, static design, executive communication |
+| Visual-design knowledge | research and citation standards | visualisation, UX, accessibility, quality assurance |
+| Power BI knowledge | approved design patterns and current product evidence | implementation skills and verifier |
+| Orchestrator | routing model and foundational skills | final Cursor agent |
 | Evaluation | approved schemas, skills, examples, and evaluation standard | release decisions |
 
-## Change-impact procedure
+## Change impact
 
 When an approved artifact changes:
 
-1. increment its `content_version`;
-2. identify all direct and transitive dependants;
+1. increment `content_version`;
+2. identify direct and transitive dependants;
 3. classify the change as compatible or breaking;
-4. update affected dependants or mark them for review;
-5. run dependency and link validation;
+4. update affected artifacts or mark them for review;
+5. run dependency, source, and link validation;
 6. record the impact in `CHANGELOG.md`;
-7. do not release until breaking impacts are resolved.
+7. block release until breaking impacts are resolved.
 
 A major content-version change is presumed breaking unless demonstrated otherwise.
 
-## Dependency exceptions
+## Exceptions
 
-Exceptions are allowed only when:
+A dependency exception is allowed only when:
 
-- the missing dependency is explicitly identified;
-- the work is clearly labelled exploratory;
-- no active Cursor rule, skill, or subagent is released from it;
-- the owner records the rework trigger;
-- the exception does not concern privacy, security, regulatory, citation, or public-repository safety.
+- the missing dependency is named;
+- the work is explicitly exploratory;
+- no active rule, skill, or subagent is released from it;
+- a rework trigger is recorded;
+- the exception does not concern privacy, security, regulation, citation, or public-repository safety.
 
-Exceptions must not be used to bypass evidence or governance standards.
+Exceptions cannot bypass evidence or governance requirements.
 
 ## Validation requirements
 
-The future dependency validator must confirm:
+The dependency validator must confirm:
 
-- every substantive artifact has an immutable `artifact_id`;
-- every registered path exists;
-- file frontmatter and the register agree;
-- every `depends_on` ID resolves;
-- no duplicate IDs exist;
+- registered paths exist;
+- IDs and paths are unique;
+- frontmatter and register metadata agree;
+- every dependency resolves;
 - no approval cycle exists;
-- no artifact is approved while a mandatory dependency is below its required status;
-- superseded artifacts identify their replacement;
-- renamed paths preserve artifact IDs;
-- templates and schemas have one-to-one declared relationships.
-
-## Current limitations
-
-- Only repository controls and Phase 0/1 artifacts have received final IDs.
-- Group-level placeholders will receive IDs when they enter active work.
-- Automated graph validation has not yet been implemented.
-- The scaffold contains generic frontmatter that must be replaced before each artifact becomes active.
+- no artifact is approved while a mandatory prerequisite is below the required status;
+- superseded artifacts name their replacement;
+- path changes preserve IDs;
+- templates and schemas declare their relationships;
+- canonical dependency syntax is used before Phase 0 approval.
 
 ## Acceptance criteria
 
-This dependency map can move to `IN REVIEW` when:
+This control can move to `IN REVIEW` when:
 
-- the initial artifact register passes uniqueness and path checks;
-- Phase 0 and Phase 1 frontmatter agrees with the register;
-- one representative skill-to-knowledge dependency is modelled;
-- one schema-to-template dependency is modelled;
-- one breaking-change impact path is tested;
-- the validator design has no unresolved semantics.
+- the artifact register passes uniqueness, path, and cycle validation;
+- registered Markdown and MDC frontmatter agrees with the register;
+- representative skill-to-knowledge, schema-to-template, and validation dependencies are modelled;
+- one breaking-change path has been tested;
+- legacy dependency syntax has been removed from active Phase 0 artifacts;
+- the internal pre-review's critical and major findings are resolved.
 
-It can move to `APPROVED` with the other Phase 0 controls after independent review.
+It can move to `APPROVED` after independent review and correction of all critical and major findings.
