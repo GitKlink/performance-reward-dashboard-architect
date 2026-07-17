@@ -1,0 +1,239 @@
+$schema: https://json-schema.org/draft/2020-12/schema
+$id: urn:performance-reward-dashboard-architect:schema:audience-decision-profile:0.1.0
+title: Audience and decision profile
+description: >-
+  Contract for defining who will use a dashboard or reporting product, which
+  decision or action it supports, and how the product will be consumed.
+type: object
+additionalProperties: false
+x-repository:
+  artifact_id: SCHEMA-AUD-001
+  status: DRAFT
+  phase: 2
+  schema_version: 0.1.0
+  content_version: 0.1.0
+  owner: docs/architecture/skill-routing-model.md
+required:
+  - profile_id
+  - status
+  - primary_audience
+  - decision_owner
+  - decision_mode
+  - decision
+  - actions_supported
+  - primary_questions
+  - consumption_mode
+  - detail_level
+  - assumptions
+  - open_questions
+properties:
+  profile_id:
+    type: string
+    pattern: ^AUD-[A-Z0-9-]+-[0-9]{3}$
+  status:
+    enum: [DRAFT, IN REVIEW, APPROVED, SUPERSEDED]
+  content_version:
+    type: string
+    pattern: ^[0-9]+\.[0-9]+\.[0-9]+$
+    default: 0.1.0
+  primary_audience:
+    $ref: '#/$defs/audience'
+  secondary_audiences:
+    type: array
+    uniqueItems: true
+    items:
+      $ref: '#/$defs/audience'
+  audience_context:
+    type: object
+    additionalProperties: false
+    properties:
+      business_context:
+        type: string
+      expected_expertise:
+        enum: [low, mixed, moderate, high, specialist]
+      expected_reading_time:
+        type: string
+        pattern: ^[0-9]+(?:-[0-9]+)? (?:seconds|minutes|hours)$
+      frequency:
+        enum: [real-time, daily, weekly, monthly, quarterly, cycle-based, annual, ad-hoc]
+      access_environment:
+        type: array
+        uniqueItems: true
+        items:
+          enum: [desktop, mobile, meeting-room, printed-pack, exported-pdf, embedded, other]
+      data_authority:
+        type: string
+  decision_owner:
+    type: string
+    minLength: 2
+  decision_mode:
+    $ref: '#/$defs/decision_mode'
+  decision:
+    type: string
+    minLength: 8
+  actions_supported:
+    type: array
+    minItems: 1
+    uniqueItems: true
+    items:
+      type: string
+      minLength: 3
+  decision_deadline:
+    type: [string, 'null']
+    format: date
+  consequences_of_error:
+    enum: [low, moderate, high, critical]
+  primary_questions:
+    type: array
+    minItems: 1
+    uniqueItems: true
+    items:
+      type: string
+      minLength: 5
+  secondary_questions:
+    type: array
+    uniqueItems: true
+    items:
+      type: string
+      minLength: 5
+  exclusions:
+    type: array
+    items:
+      type: string
+  performance_reward_domains:
+    type: array
+    uniqueItems: true
+    items:
+      $ref: '#/$defs/domain'
+  consumption_mode:
+    enum: [interactive, static, hybrid, not-yet-decided]
+  experience_mode:
+    enum:
+      - executive-decision
+      - business-partner-diagnostic
+      - manager-action
+      - specialist-analytical
+      - operational
+      - not-yet-decided
+  detail_level:
+    enum: [summary, summary-with-drivers, diagnostic, case-level, employee-level, specialist-detail]
+  interaction_requirements:
+    type: array
+    uniqueItems: true
+    items:
+      enum:
+        - filter
+        - cross-filter
+        - drill-down
+        - drill-through
+        - tooltip
+        - scenario-input
+        - export
+        - print
+        - mobile
+        - no-interaction
+  comparison_requirements:
+    type: array
+    uniqueItems: true
+    items:
+      enum:
+        - prior-period
+        - target
+        - budget
+        - forecast
+        - market
+        - peer
+        - policy
+        - distribution
+        - scenario
+        - none
+  data_granularity_required:
+    type: string
+  privacy_and_access:
+    type: object
+    additionalProperties: false
+    required: [sensitivity, employee_level_required]
+    properties:
+      sensitivity:
+        enum: [public, internal, confidential, highly-confidential]
+      employee_level_required:
+        type: boolean
+      row_level_security_required:
+        type: boolean
+      export_restrictions:
+        type: array
+        items:
+          type: string
+      minimum_cell_or_suppression_required:
+        type: boolean
+  success_criteria:
+    type: array
+    items:
+      type: string
+      minLength: 3
+  assumptions:
+    type: array
+    items:
+      $ref: '#/$defs/assumption'
+  open_questions:
+    type: array
+    items:
+      type: object
+      additionalProperties: false
+      required: [question, materiality, owner]
+      properties:
+        question:
+          type: string
+        materiality:
+          enum: [high, medium, low]
+        owner:
+          type: string
+        resolution_required_before:
+          enum: [analysis, design, implementation, release, not-blocking]
+  confirmed_by:
+    type: array
+    items:
+      type: string
+  last_updated:
+    type: string
+    format: date
+$defs:
+  audience:
+    enum:
+      - executive
+      - board-or-committee
+      - business-partner
+      - people-manager
+      - reward-partner
+      - performance-reward-specialist
+      - people-analytics-or-reporting
+      - operational-team
+  decision_mode:
+    enum: [monitor, diagnose, compare, decide, plan, allocate, calibrate, forecast, explain, govern, execute, review]
+  domain:
+    enum:
+      - cross-domain-performance-reward
+      - performance-management
+      - fixed-reward
+      - variable-reward
+      - market-competitiveness
+      - job-architecture
+      - pay-equity
+      - talent-and-retention
+      - total-rewards
+      - governance-and-controls
+  assumption:
+    type: object
+    additionalProperties: false
+    required: [assumption, materiality, status]
+    properties:
+      assumption:
+        type: string
+      materiality:
+        enum: [high, medium, low]
+      status:
+        enum: [unvalidated, accepted, rejected, superseded]
+      owner:
+        type: string
+      validation_action:
+        type: string

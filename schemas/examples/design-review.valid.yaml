@@ -1,0 +1,195 @@
+review_id: REVIEW-EXEC-FIXED-001
+title: Development review of the executive fixed-reward summary vertical slice
+status: DRAFT
+content_version: 0.1.0
+review_type: integrated
+independence:
+  reviewer_type: author-self-review
+  independent_of_authoring: false
+  declaration: Development self-review only; this does not satisfy the Phase 12 independent-review requirement.
+reviewed_artifacts:
+  - artifact_id: SCHEMA-AUD-001
+    path: schemas/examples/audience-decision-profile.valid.yaml
+    content_version: 0.1.0
+    status: DRAFT
+  - artifact_id: SCHEMA-PR-001
+    path: schemas/examples/kpi-definition.valid.yaml
+    content_version: 0.1.0
+    status: DRAFT
+  - artifact_id: SCHEMA-CORE-002
+    path: schemas/examples/dashboard-brief.valid.yaml
+    content_version: 0.1.0
+    status: DRAFT
+  - artifact_id: SCHEMA-UX-001
+    path: schemas/examples/page-specification.valid.yaml
+    content_version: 0.1.0
+    status: DRAFT
+  - artifact_id: SCHEMA-VIZ-001
+    path: schemas/examples/visual-specification.valid.yaml
+    content_version: 0.1.0
+    status: DRAFT
+reviewed_state:
+  repository_commit: 0000000
+  branch_or_release: scaffold/repository-foundation
+  review_date: '2026-07-17'
+  cursor_version: not-tested
+  power_bi_version: not-tested
+  ci_status: pass
+  package_profile: source-development
+ audience_and_decision:
+  primary_audience: executive
+  decision: Endorse or redirect the proposed fixed-reward investment before final allocation.
+  actions_supported:
+    - endorse the proposed investment
+    - redirect investment toward material risks
+    - request a revised scenario
+  consumption_mode: hybrid
+  expected_reading_time: three minutes
+review_scope:
+  included:
+    - schema consistency across the first executive vertical slice
+    - audience, decision, KPI, page, and visual logic
+    - privacy and Power BI assumptions visible in the draft
+  excluded:
+    - actual DAX implementation
+    - production security and accessibility testing
+    - independent release review
+  review_questions:
+    - Does the vertical slice preserve one coherent audience and decision from brief to visual?
+    - Are the KPI population, time, comparison, and interpretation rules explicit?
+    - Can the page remain understandable in a static export?
+executive_conclusion: The vertical slice is development-ready because it preserves one executive decision across the audience profile, KPI, dashboard brief, page, and visual; implementation and policy tolerances remain explicit open work.
+strengths:
+  - The decision, action, population, budget comparator, and static-export requirements remain consistent across artifacts.
+  - The KPI definition separates financial position from allocation quality and workforce outcomes.
+findings:
+  - finding_id: DEV-001
+    severity: major
+    category: power-bi
+    title: The budget comparison visual requires a Power BI prototype.
+    artifact_id: SCHEMA-VIZ-001
+    path: schemas/examples/visual-specification.valid.yaml
+    section: Power BI implementation
+    finding: The specification allows a native or composite implementation but has not demonstrated target-marker, tolerance, accessibility, and export behaviour in Power BI.
+    impact: The design could be visually valid in specification but fail to reproduce reliably in the target platform.
+    required_correction: Build and test a Power BI prototype before implementation approval.
+    evidence_or_rationale: The current visual specification marks feasibility as requires-prototype.
+    owner: Power BI verifier
+    status: open
+    correction_commit: ''
+    closure_evidence: ''
+    closed_by: ''
+  - finding_id: DEV-002
+    severity: major
+    category: governance
+    title: The organisation-approved budget tolerance remains unresolved.
+    artifact_id: SCHEMA-PR-001
+    path: schemas/examples/kpi-definition.valid.yaml
+    section: Direction and materiality
+    finding: The example correctly avoids inventing a threshold, but executive status cannot be finalised until the approved tolerance is supplied.
+    impact: The action title and status label remain illustrative rather than decision-ready.
+    required_correction: Obtain and govern the approved tolerance before final page design.
+    evidence_or_rationale: The dashboard brief records this as a high-materiality open question.
+    owner: Performance & Reward Product Owner
+    status: open
+    correction_commit: ''
+    closure_evidence: ''
+    closed_by: ''
+rubric:
+  scores:
+    decision_usefulness:
+      score: 3
+      rationale: The decision and supported actions are explicit, but the unresolved tolerance prevents final endorsement use.
+      finding_ids:
+        - DEV-002
+    audience_fit:
+      score: 3.5
+      rationale: The summary is concise, conclusion-led, and protects executives from employee-level detail.
+      finding_ids: []
+    analytical_and_kpi_integrity:
+      score: 3.5
+      rationale: Population, time basis, aggregation, comparison, limitations, and survivorship controls are explicit.
+      finding_ids:
+        - DEV-002
+    performance_reward_accuracy:
+      score: 3.5
+      rationale: The artifacts distinguish budget position from market, fairness, and workforce outcomes.
+      finding_ids: []
+    story_and_communication:
+      score: 3
+      rationale: The intended conclusion-driver-action structure is clear but the final action title depends on validated data.
+      finding_ids:
+        - DEV-002
+    visual_hierarchy_and_design:
+      score: 3
+      rationale: The page defines one outcome, one driver exhibit, and one action area with a clear reading order.
+      finding_ids: []
+    experience_and_consumption_mode:
+      score: 3
+      rationale: Hybrid page roles and static fallback are specified, but they have not been tested in a working report.
+      finding_ids:
+        - DEV-001
+    power_bi_feasibility_and_performance:
+      score: 2
+      rationale: The implementation is plausible but requires a prototype and scenario-filter safeguards.
+      finding_ids:
+        - DEV-001
+    accessibility:
+      score: 2.5
+      rationale: Accessibility requirements are explicit but have not been implemented or tested.
+      finding_ids:
+        - DEV-001
+    governance_and_maintainability:
+      score: 3
+      rationale: Ownership, controls, assumptions, and review triggers are visible, with one unresolved policy input.
+      finding_ids:
+        - DEV-002
+  weighted_total: 78.75
+  critical_failures: 0
+  major_failures: 2
+  scoring_notes: This is a development self-review. Major findings block formal approval but not controlled continuation into implementation prototyping.
+required_correction_sequence:
+  - sequence: 1
+    finding_ids:
+      - DEV-002
+    action: Confirm the organisation-approved budget tolerance and update the KPI, page, and visual specifications.
+    owner: Performance & Reward Product Owner
+    validation_required:
+      - metric QA
+      - dashboard brief reconciliation
+  - sequence: 2
+    finding_ids:
+      - DEV-001
+    action: Prototype the comparison visual and static export in Power BI.
+    owner: Power BI verifier
+    validation_required:
+      - Power BI feasibility review
+      - accessibility review
+      - PDF and PowerPoint export test
+gate_decision: DEVELOPMENT PASS
+residual_risks:
+  - risk: Illustrative values or conclusions could be mistaken for approved organisation data.
+    severity: minor
+    treatment: monitor
+    owner: Example author
+    rationale: All examples must retain explicit synthetic and illustrative labels.
+accepted_alternatives:
+  - A variance KPI plus aligned bar and target line may replace the bullet chart if it meets the same comparison, accessibility, and export requirements.
+validation:
+  deterministic_checks:
+    - check: Schema validation
+      status: pass
+      evidence: All vertical-slice fixtures validate against their Draft 2020-12 schemas.
+    - check: Internal links
+      status: pass
+      evidence: Repository-local links pass the active link validator.
+  scenario_checks:
+    - scenario_id: EXEC-FIXED-001
+      status: partial
+      finding_ids:
+        - DEV-001
+        - DEV-002
+  closure_status: open
+  rechecked_by: []
+  recheck_date: null
+next_action: Resolve the budget tolerance, then prototype the executive summary visual and export behaviour in Power BI.

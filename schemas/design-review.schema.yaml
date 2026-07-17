@@ -1,0 +1,376 @@
+$schema: https://json-schema.org/draft/2020-12/schema
+$id: urn:performance-reward-dashboard-architect:schema:design-review:0.1.0
+title: Design review
+description: >-
+  Contract for a severity-ranked review of a dashboard, static report, page,
+  visual, KPI architecture, routing decision, or implementation handoff.
+type: object
+additionalProperties: false
+x-repository:
+  artifact_id: SCHEMA-QA-001
+  status: DRAFT
+  phase: 2
+  schema_version: 0.1.0
+  content_version: 0.1.0
+  owner: docs/standards/evaluation-standard.md
+required:
+  - review_id
+  - title
+  - status
+  - review_type
+  - reviewed_artifacts
+  - reviewed_state
+  - audience_and_decision
+  - executive_conclusion
+  - findings
+  - rubric
+  - gate_decision
+  - required_correction_sequence
+  - validation
+properties:
+  review_id:
+    type: string
+    pattern: ^REVIEW-[A-Z0-9-]+-[0-9]{3}$
+  title:
+    type: string
+    minLength: 5
+    maxLength: 180
+  status:
+    enum: [DRAFT, IN REVIEW, APPROVED, SUPERSEDED]
+  content_version:
+    type: string
+    pattern: ^[0-9]+\.[0-9]+\.[0-9]+$
+    default: 0.1.0
+  review_type:
+    enum:
+      - architecture
+      - routing
+      - metric
+      - dashboard
+      - page
+      - visual
+      - accessibility
+      - power-bi-implementation
+      - privacy-and-security
+      - evidence-and-citation
+      - release-package
+      - integrated
+  independence:
+    type: object
+    additionalProperties: false
+    required: [reviewer_type, independent_of_authoring]
+    properties:
+      reviewer_type:
+        enum: [author-self-review, peer-review, independent-review, subject-matter-review, automated-validation]
+      independent_of_authoring:
+        type: boolean
+      declaration:
+        type: string
+  reviewed_artifacts:
+    type: array
+    minItems: 1
+    items:
+      type: object
+      additionalProperties: false
+      required: [artifact_id, path, content_version]
+      properties:
+        artifact_id:
+          type: string
+        path:
+          type: string
+        content_version:
+          type: string
+        status:
+          type: string
+  reviewed_state:
+    type: object
+    additionalProperties: false
+    required: [repository_commit, branch_or_release, review_date]
+    properties:
+      repository_commit:
+        type: string
+        pattern: ^[0-9a-f]{7,40}$
+      branch_or_release:
+        type: string
+      review_date:
+        type: string
+        format: date
+      cursor_version:
+        type: string
+      power_bi_version:
+        type: string
+      ci_status:
+        enum: [not-checked, pass, fail, partial]
+      package_profile:
+        type: string
+  audience_and_decision:
+    type: object
+    additionalProperties: false
+    required: [primary_audience, decision, consumption_mode]
+    properties:
+      primary_audience:
+        type: string
+      decision:
+        type: string
+      actions_supported:
+        type: array
+        items:
+          type: string
+      consumption_mode:
+        enum: [interactive, static, hybrid, not-applicable]
+      expected_reading_time:
+        type: string
+  review_scope:
+    type: object
+    additionalProperties: false
+    properties:
+      included:
+        type: array
+        items:
+          type: string
+      excluded:
+        type: array
+        items:
+          type: string
+      review_questions:
+        type: array
+        items:
+          type: string
+  executive_conclusion:
+    type: string
+    minLength: 10
+  strengths:
+    type: array
+    items:
+      type: string
+  findings:
+    type: array
+    items:
+      $ref: '#/$defs/finding'
+  rubric:
+    type: object
+    additionalProperties: false
+    required: [scores, weighted_total, critical_failures, major_failures]
+    properties:
+      scores:
+        type: object
+        additionalProperties: false
+        required:
+          - decision_usefulness
+          - audience_fit
+          - analytical_and_kpi_integrity
+          - performance_reward_accuracy
+          - story_and_communication
+          - visual_hierarchy_and_design
+          - experience_and_consumption_mode
+          - power_bi_feasibility_and_performance
+          - accessibility
+          - governance_and_maintainability
+        properties:
+          decision_usefulness:
+            $ref: '#/$defs/score'
+          audience_fit:
+            $ref: '#/$defs/score'
+          analytical_and_kpi_integrity:
+            $ref: '#/$defs/score'
+          performance_reward_accuracy:
+            $ref: '#/$defs/score'
+          story_and_communication:
+            $ref: '#/$defs/score'
+          visual_hierarchy_and_design:
+            $ref: '#/$defs/score'
+          experience_and_consumption_mode:
+            $ref: '#/$defs/score'
+          power_bi_feasibility_and_performance:
+            $ref: '#/$defs/score'
+          accessibility:
+            $ref: '#/$defs/score'
+          governance_and_maintainability:
+            $ref: '#/$defs/score'
+      weighted_total:
+        type: number
+        minimum: 0
+        maximum: 100
+      critical_failures:
+        type: integer
+        minimum: 0
+      major_failures:
+        type: integer
+        minimum: 0
+      scoring_notes:
+        type: string
+  required_correction_sequence:
+    type: array
+    items:
+      type: object
+      additionalProperties: false
+      required: [sequence, finding_ids, action, owner]
+      properties:
+        sequence:
+          type: integer
+          minimum: 1
+        finding_ids:
+          type: array
+          minItems: 1
+          items:
+            type: string
+        action:
+          type: string
+        owner:
+          type: string
+        validation_required:
+          type: array
+          items:
+            type: string
+  gate_decision:
+    enum:
+      - FAIL — CRITICAL
+      - FAIL — MAJOR
+      - DEVELOPMENT PASS
+      - READY FOR FORMAL REVIEW
+      - READY FOR APPROVAL
+      - APPROVED FOR RELEASE
+  residual_risks:
+    type: array
+    items:
+      type: object
+      additionalProperties: false
+      required: [risk, severity, treatment]
+      properties:
+        risk:
+          type: string
+        severity:
+          enum: [critical, major, minor, editorial]
+        treatment:
+          enum: [resolve, accept, defer, transfer, monitor]
+        owner:
+          type: string
+        rationale:
+          type: string
+  accepted_alternatives:
+    type: array
+    items:
+      type: string
+  validation:
+    type: object
+    additionalProperties: false
+    required: [deterministic_checks, scenario_checks, closure_status]
+    properties:
+      deterministic_checks:
+        type: array
+        items:
+          type: object
+          additionalProperties: false
+          required: [check, status]
+          properties:
+            check:
+              type: string
+            status:
+              enum: [not-run, pass, fail, not-applicable]
+            evidence:
+              type: string
+      scenario_checks:
+        type: array
+        items:
+          type: object
+          additionalProperties: false
+          required: [scenario_id, status]
+          properties:
+            scenario_id:
+              type: string
+            status:
+              enum: [not-run, pass, fail, partial]
+            finding_ids:
+              type: array
+              items:
+                type: string
+      closure_status:
+        enum: [open, corrections-in-progress, awaiting-recheck, closed]
+      rechecked_by:
+        type: array
+        items:
+          type: string
+      recheck_date:
+        type: [string, 'null']
+        format: date
+  next_action:
+    type: string
+$defs:
+  score:
+    type: object
+    additionalProperties: false
+    required: [score, rationale]
+    properties:
+      score:
+        type: number
+        minimum: 0
+        maximum: 4
+      rationale:
+        type: string
+      finding_ids:
+        type: array
+        items:
+          type: string
+  finding:
+    type: object
+    additionalProperties: false
+    required:
+      - finding_id
+      - severity
+      - title
+      - artifact_id
+      - section
+      - finding
+      - impact
+      - required_correction
+      - status
+    properties:
+      finding_id:
+        type: string
+        pattern: ^[A-Z]+-[0-9]{3}$
+      severity:
+        enum: [critical, major, minor, editorial]
+      category:
+        enum:
+          - decision-usefulness
+          - audience
+          - performance-reward
+          - metric
+          - analysis
+          - story
+          - visual
+          - experience
+          - accessibility
+          - power-bi
+          - privacy
+          - security
+          - evidence
+          - governance
+          - maintainability
+          - release
+      title:
+        type: string
+      artifact_id:
+        type: string
+      path:
+        type: string
+      section:
+        type: string
+      finding:
+        type: string
+      impact:
+        type: string
+      required_correction:
+        type: string
+      evidence_or_rationale:
+        type: string
+      owner:
+        type: string
+      status:
+        enum: [open, accepted, correction-in-progress, corrected-awaiting-review, closed, superseded]
+      correction_commit:
+        type: string
+      closure_evidence:
+        type: string
+      closed_by:
+        type: string

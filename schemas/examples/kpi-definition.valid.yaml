@@ -1,0 +1,163 @@
+kpi_id: KPI-FIXED-001
+name: Forecast fixed-reward investment versus approved budget
+short_name: Forecast budget variance
+status: DRAFT
+content_version: 0.1.0
+business_question: Is forecast fixed-reward investment within the approved budget and tolerance?
+decisions_supported:
+  - endorse the proposed investment
+  - redirect discretionary allocation
+  - request a revised scenario
+audiences:
+  - executive
+  - reward-partner
+performance_reward_domain: fixed-reward
+measure_role: outcome
+time_orientation: forecast
+definition: Forecast annual fixed-reward investment for the governed population compared with the approved investment budget on the same currency, FTE, and component basis.
+conceptual_source:
+  source_ids: []
+  repository_defined: true
+  organisation_policy_required: true
+formula:
+  expression: Forecast fixed-reward investment minus approved fixed-reward budget
+  numerator: Forecast annualised FTE fixed-reward investment for the eligible population
+  denominator: Approved annualised FTE fixed-reward investment budget for the same eligible population
+  components:
+    - name: forecast investment
+      definition: Sum of approved or modelled fixed-reward changes on an annualised FTE basis.
+      unit: currency
+    - name: approved budget
+      definition: Approved fixed-reward investment envelope on the same population and pay basis.
+      unit: currency
+  null_and_zero_treatment: Return unknown when either forecast or budget is missing; do not convert missing values to zero.
+  sign_convention: Positive variance means forecast exceeds budget.
+  rounding: Display currency to one decimal million and percentage to one decimal place.
+  example_calculation: A forecast of 103 and budget of 100 produces a variance of 3 and 3.0 percent.
+grain:
+  calculation_grain: Eligible employee reward case
+  reporting_grain: Governed organisational portfolio
+  entity_key: Employee reward case ID
+  duplicate_treatment: Retain one current governed case per employee and reward cycle.
+population:
+  included:
+    - employees eligible for the fixed-reward review in the selected cycle
+  excluded:
+    - employees removed by approved policy exclusions
+    - invalid or duplicate reward cases
+  eligibility_date: Eligibility determined using the approved cycle population date.
+  cohort_logic: Preserve the governed eligible cycle population for all budget and forecast calculations.
+  survivorship_bias_control: Do not remove eligible cases because employment status changes after the population date unless policy explicitly cancels the case.
+  coverage_denominator: All governed eligible fixed-reward cases.
+time_logic:
+  effective_date: Use the planned fixed-reward effective date for annualised cost.
+  reporting_period: Selected reward cycle.
+  lookback_or_window: Not applicable.
+  snapshot_or_event_rule: Use the latest approved or modelled recommendation per case at the report refresh time.
+  comparison_alignment: Forecast and budget use the same population, pay components, currency method, and annualisation basis.
+  late_arriving_data: Flag late population or recommendation changes and restate forecast where governance permits.
+aggregation:
+  method: sum
+  rollup_rule: Sum employee-level annualised investment and subtract the governed budget at the selected organisational level.
+  weighting: No additional weighting after employee-level annualisation and FTE adjustment.
+  non_additive_dimensions:
+    - scenario
+    - refresh snapshot
+  small_group_treatment: Apply privacy rules to diagnostic segments; the enterprise total remains reportable.
+unit: currency
+currency_and_fte_basis:
+  currency: Reporting currency defined by the cycle.
+  fx_date_or_method: Use the approved cycle foreign-exchange method.
+  annualised: true
+  fte_adjusted: true
+  pay_basis: Fixed reward components included in the approved budget definition.
+direction:
+  interpretation: target-range
+  rationale: The desired result is within the approved tolerance; underspend and overspend can both require explanation.
+  materiality_rule: Use the organisation-approved budget tolerance and show both currency and percentage variance.
+comparators:
+  - comparator_type: budget
+    definition: Approved fixed-reward investment budget for the same cycle and population.
+    source: Approved cycle budget artifact.
+    tolerance: Organisation-approved budget tolerance.
+    display_priority: primary
+segmentation:
+  - dimension: organisational portfolio
+    purpose: Identify where material variance is concentrated.
+    privacy_risk: low
+  - dimension: investment component
+    purpose: Explain whether mandatory, market, promotion, or discretionary components drive variance.
+    privacy_risk: low
+interpretation:
+  what_it_indicates:
+    - whether the current forecast is within the approved financial envelope
+    - which portfolios or investment components explain the variance
+  what_it_does_not_prove:
+    - that the allocation is fair or addresses workforce risk appropriately
+    - that every underspend is desirable
+  diagnostic_follow_ups:
+    - analyse variance by investment component
+    - compare allocation with market, fairness, and retention risk indicators
+  causal_language: descriptive
+data_requirements:
+  required_fields:
+    - employee reward case ID
+    - eligibility status
+    - current fixed reward
+    - proposed fixed reward
+    - FTE
+    - currency
+    - organisational portfolio
+    - investment component
+    - approved budget
+  source_systems:
+    - governed reward planning dataset
+    - approved budget dataset
+  historical_depth: Current cycle; prior cycle required only for trend comparison.
+  effective_dating_required: true
+  joins_and_keys:
+    - join employee reward cases to organisation and budget using approved cycle keys
+data_quality:
+  coverage_measure: Eligible cases with valid current pay, proposed pay, FTE, currency, and portfolio divided by all eligible cases.
+  minimum_coverage: Define and approve before executive use.
+  known_risks:
+    - population drift between budget and forecast
+    - inconsistent pay-component or FX treatment
+    - duplicate recommendation snapshots
+  validation_rules:
+    - forecast and budget populations reconcile to the governed cycle population
+    - proposed fixed reward is not below valid current fixed reward unless an approved exception applies
+    - all currency conversions use the approved method
+  reconciliation: Reconcile total budget and forecast to the approved financial control file before publication.
+privacy:
+  sensitivity: confidential
+  minimum_group_rule: Apply the approved minimum group and suppression rule to diagnostic segments.
+  employee_level_access: Restricted to authorised Reward Partners and implementation users.
+  suppression_or_rounding: Suppress small diagnostic groups and use approved executive rounding.
+  export_restrictions: Executive exports exclude employee-level data.
+display_guidance:
+  default_format: Currency variance with percentage variance and approved tolerance.
+  preferred_comparison: Forecast versus approved budget.
+  recommended_visual_relationship: comparison
+  headline_suitable: true
+  tooltip_or_definition_text: Forecast annualised FTE fixed-reward investment compared with approved budget for the same governed population and pay basis.
+implementation_notes:
+  semantic_model: Use an employee reward case fact at the approved cycle snapshot grain and a separate governed budget fact or allocation table.
+  dax_or_calculation_notes: Calculate forecast and budget separately, then variance as a measure; prevent aggregation across multiple scenarios or snapshots without explicit selection.
+  performance_risks:
+    - scenario and snapshot ambiguity can double count investment
+  test_cases:
+    - equal forecast and budget returns zero variance
+    - missing budget returns unknown rather than zero
+    - population mismatch is flagged by the coverage and reconciliation controls
+limitations:
+  - The KPI measures financial position, not allocation quality, fairness, or workforce impact.
+  - Results are only comparable when population and pay bases are aligned.
+ownership:
+  business_owner: Executive Reward Committee
+  definition_owner: Performance & Reward Product Owner
+  data_owner: Reward Data Owner
+  review_cadence: Each reward cycle and whenever budget methodology changes.
+  last_reviewed: '2026-07-17'
+  next_review_trigger: Change to eligible population, pay-component scope, FX method, or budget-control process.
+superseded_by: null

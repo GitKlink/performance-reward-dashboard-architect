@@ -1,0 +1,368 @@
+$schema: https://json-schema.org/draft/2020-12/schema
+$id: urn:performance-reward-dashboard-architect:schema:visual-specification:0.1.0
+title: Visual specification
+description: >-
+  Contract for one chart, table, KPI card, commentary block, or other exhibit,
+  including analytical relationship, data mapping, encoding, comparison,
+  interaction, accessibility, and Power BI implementation notes.
+type: object
+additionalProperties: false
+x-repository:
+  artifact_id: SCHEMA-VIZ-001
+  status: DRAFT
+  phase: 2
+  schema_version: 0.1.0
+  content_version: 0.1.0
+  owner: docs/architecture/agent-architecture.md
+required:
+  - visual_id
+  - title
+  - status
+  - page_id
+  - purpose
+  - analytical_relationship
+  - visual_type
+  - measures
+  - dimensions
+  - comparison_logic
+  - encoding
+  - sorting
+  - labels_and_annotations
+  - interactions
+  - accessibility
+  - power_bi
+  - misuse_conditions
+properties:
+  visual_id:
+    type: string
+    pattern: ^VISUAL-[A-Z0-9-]+-[0-9]{3}$
+  title:
+    type: string
+    minLength: 3
+    maxLength: 140
+  status:
+    enum: [DRAFT, IN REVIEW, APPROVED, SUPERSEDED]
+  content_version:
+    type: string
+    pattern: ^[0-9]+\.[0-9]+\.[0-9]+$
+    default: 0.1.0
+  page_id:
+    type: string
+    pattern: ^PAGE-[A-Z0-9-]+-[0-9]{3}$
+  purpose:
+    type: string
+    minLength: 5
+  business_question:
+    type: string
+  conclusion_or_message:
+    type: string
+  analytical_relationship:
+    enum:
+      - status
+      - comparison
+      - actual-versus-target
+      - trend
+      - change
+      - composition
+      - distribution
+      - relationship
+      - concentration
+      - two-dimensional-pattern
+      - flow
+      - hierarchy
+      - portfolio
+      - schedule
+      - scenario
+      - detail-table
+      - commentary
+  precision_requirement:
+    enum: [approximate-orientation, moderate-comparison, precise-comparison, exact-value]
+  visual_type:
+    enum:
+      - kpi-card
+      - variance-kpi
+      - bullet-chart
+      - bar-chart
+      - dot-plot
+      - line-chart
+      - small-multiples
+      - waterfall
+      - stacked-bar
+      - one-hundred-percent-stacked-bar
+      - histogram
+      - box-plot
+      - strip-plot
+      - scatter-plot
+      - pareto
+      - heatmap
+      - matrix
+      - variance-table
+      - detail-table
+      - decomposition-tree
+      - sankey
+      - bubble-chart
+      - decision-matrix
+      - scenario-table
+      - gantt
+      - text-commentary
+      - navigation-control
+      - custom
+  custom_visual_type:
+    type: string
+  measures:
+    type: array
+    minItems: 1
+    items:
+      type: object
+      additionalProperties: false
+      required: [kpi_id, role, aggregation]
+      properties:
+        kpi_id:
+          type: string
+        role:
+          enum: [primary, comparator, variance, target, size, colour, label, tooltip, diagnostic]
+        aggregation:
+          type: string
+        display_format:
+          type: string
+        axis:
+          enum: [x, y, secondary-y, value, none]
+  dimensions:
+    type: array
+    items:
+      type: object
+      additionalProperties: false
+      required: [field, role]
+      properties:
+        field:
+          type: string
+        role:
+          enum: [category, series, time, hierarchy, facet, colour, tooltip, filter, detail]
+        hierarchy_level:
+          type: integer
+          minimum: 1
+        data_type:
+          enum: [text, date, datetime, integer, decimal, boolean, geography, other]
+  comparison_logic:
+    type: object
+    additionalProperties: false
+    required: [primary_comparison, comparator_definition]
+    properties:
+      primary_comparison:
+        enum: [none, prior-period, target, budget, forecast, market, peer, policy, distribution, scenario, direct-category]
+      comparator_definition:
+        type: string
+      variance_calculation:
+        type: string
+      tolerance_or_band:
+        type: string
+      scale_consistency:
+        type: string
+  encoding:
+    type: object
+    additionalProperties: false
+    required: [position, length, colour, size, shape]
+    properties:
+      position:
+        type: string
+      length:
+        type: string
+      colour:
+        type: string
+      size:
+        type: string
+      shape:
+        type: string
+      line_style:
+        type: string
+      orientation:
+        enum: [horizontal, vertical, radial, not-applicable]
+      zero_baseline:
+        enum: [required, not-required, prohibited, context-dependent]
+      uniform_scale:
+        type: boolean
+      semantic_notation:
+        type: string
+  sorting:
+    type: object
+    additionalProperties: false
+    required: [method, direction]
+    properties:
+      method:
+        enum: [value, category, time, custom, hierarchy, none]
+      direction:
+        enum: [ascending, descending, chronological, custom, not-applicable]
+      custom_order:
+        type: array
+        items:
+          type: string
+  labels_and_annotations:
+    type: object
+    additionalProperties: false
+    required: [title_style, data_labels, direct_labels, source_note]
+    properties:
+      title_style:
+        enum: [descriptive, question, action-title, conclusion]
+      data_labels:
+        enum: [all, selected, endpoints, exceptions, none]
+      direct_labels:
+        type: boolean
+      annotation_rules:
+        type: array
+        items:
+          type: string
+      tooltip_content:
+        type: array
+        items:
+          type: string
+      definition_text:
+        type: string
+      source_note:
+        type: string
+      data_as_of_label:
+        type: string
+  interactions:
+    type: object
+    additionalProperties: false
+    required: [selection_behavior, filtering_behavior, detail_behavior, static_fallback]
+    properties:
+      selection_behavior:
+        enum: [none, highlight, cross-filter, navigate, input]
+      filtering_behavior:
+        type: string
+      detail_behavior:
+        enum: [none, tooltip, drill-down, drill-through, detail-table, export]
+      reset_behavior:
+        type: string
+      static_fallback:
+        type: string
+  colour:
+    type: object
+    additionalProperties: false
+    properties:
+      semantic_roles:
+        type: array
+        items:
+          type: object
+          additionalProperties: false
+          required: [role, meaning]
+          properties:
+            role:
+              type: string
+            meaning:
+              type: string
+            usage:
+              type: string
+      palette_constraints:
+        type: array
+        items:
+          type: string
+      exception_emphasis:
+        type: string
+  typography:
+    type: object
+    additionalProperties: false
+    properties:
+      title_size:
+        type: number
+        exclusiveMinimum: 0
+      label_size:
+        type: number
+        exclusiveMinimum: 0
+      value_size:
+        type: number
+        exclusiveMinimum: 0
+      font_family:
+        type: string
+      emphasis_rules:
+        type: string
+  accessibility:
+    type: object
+    additionalProperties: false
+    required: [colour_independent, alternative_text, keyboard_and_focus, contrast]
+    properties:
+      colour_independent:
+        type: string
+      alternative_text:
+        type: string
+      keyboard_and_focus:
+        type: string
+      contrast:
+        type: string
+      cognitive_load:
+        type: string
+      small_text_or_density_risk:
+        type: string
+  power_bi:
+    type: object
+    additionalProperties: false
+    required: [implementation_type, feasibility_status, required_fields, export_behavior]
+    properties:
+      implementation_type:
+        enum: [native-visual, matrix, card, shape-and-text, custom-visual, composite, not-applicable]
+      feasibility_status:
+        enum: [not-reviewed, feasible, feasible-with-constraints, not-feasible, requires-prototype]
+      required_fields:
+        type: array
+        items:
+          type: string
+      required_measures:
+        type: array
+        items:
+          type: string
+      formatting_notes:
+        type: array
+        items:
+          type: string
+      interaction_notes:
+        type: array
+        items:
+          type: string
+      performance_risks:
+        type: array
+        items:
+          type: string
+      export_behavior:
+        type: string
+      custom_visual_dependency:
+        type: string
+  selected_because:
+    type: array
+    items:
+      type: string
+  alternatives_considered:
+    type: array
+    items:
+      type: object
+      additionalProperties: false
+      required: [alternative, rejection_reason]
+      properties:
+        alternative:
+          type: string
+        rejection_reason:
+          type: string
+  misuse_conditions:
+    type: array
+    minItems: 1
+    items:
+      type: string
+  assumptions:
+    type: array
+    items:
+      type: string
+  validation:
+    type: array
+    items:
+      type: object
+      additionalProperties: false
+      required: [check, status]
+      properties:
+        check:
+          type: string
+        status:
+          enum: [not-run, pass, fail, not-applicable]
+        finding:
+          type: string
+  superseded_by:
+    type: [string, 'null']
+    pattern: ^VISUAL-[A-Z0-9-]+-[0-9]{3}$

@@ -1,0 +1,63 @@
+name: Repository validation
+
+on:
+  push:
+    branches:
+      - main
+      - scaffold/repository-foundation
+  pull_request:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Confirm Python runtime
+        run: python3 --version
+
+      - name: Install development dependencies
+        run: python3 -m pip install -r requirements-dev.txt
+
+      - name: Run unit tests
+        run: python3 -m unittest discover -s tests -p "test_*.py"
+
+      - name: Validate artifact dependencies
+        run: python3 scripts/validate-dependencies.py --warnings-as-errors
+
+      - name: Validate source register
+        run: python3 scripts/validate-source-register.py --warnings-as-errors
+
+      - name: Validate schemas
+        shell: bash
+        run: |
+          set -o pipefail
+          python3 scripts/validate-schemas.py --warnings-as-errors 2>&1 | tee schema-validation.log
+
+      - name: Validate templates
+        shell: bash
+        run: |
+          set -o pipefail
+          python3 scripts/validate-templates.py --warnings-as-errors 2>&1 | tee template-validation.log
+
+      - name: Upload contract validation logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: contract-validation-logs
+          path: |
+            schema-validation.log
+            template-validation.log
+          if-no-files-found: ignore
+          retention-days: 7
+
+      - name: Validate internal links
+        run: python3 scripts/check-internal-links.py
