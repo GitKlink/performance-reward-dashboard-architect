@@ -42,12 +42,20 @@ jobs:
           set -o pipefail
           python3 scripts/validate-schemas.py --warnings-as-errors 2>&1 | tee schema-validation.log
 
-      - name: Upload schema validation log
+      - name: Validate templates
+        shell: bash
+        run: |
+          set -o pipefail
+          python3 scripts/validate-templates.py --warnings-as-errors 2>&1 | tee template-validation.log
+
+      - name: Upload contract validation logs
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: schema-validation-log
-          path: schema-validation.log
+          name: contract-validation-logs
+          path: |
+            schema-validation.log
+            template-validation.log
           if-no-files-found: ignore
           retention-days: 7
 
