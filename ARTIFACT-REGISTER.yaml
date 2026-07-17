@@ -2,18 +2,16 @@
 #
 # Status: DRAFT
 # Phase: 0
-# Content version: 0.2.0
+# Content version: 0.3.0
 # Last reviewed: 2026-07-17
 #
-# This register starts with repository controls, Phase 0 evidence governance,
-# standards trials, and Phase 1 architecture. Additional placeholders receive
-# immutable IDs when they enter active work. IDs must never be reused or
-# renumbered after publication.
+# IDs are immutable after publication. Placeholder files receive IDs when they
+# enter active planning or become dependencies of active work.
 
 register:
   artifact_id: CTRL-CORE-004
   status: DRAFT
-  content_version: 0.2.0
+  content_version: 0.3.0
   last_reviewed: 2026-07-17
   naming_standard: STD-CORE-001
   dependency_standard: CTRL-CORE-002
@@ -158,7 +156,10 @@ artifacts:
       - STD-CORE-003
     blocks:
       - EX-CORE-001
+      - EX-CORE-002
       - EX-FIXED-001
+      - EX-CONSULT-001
+      - EX-VIZ-001
       - reusable source provenance
 
   - artifact_id: EX-CORE-001
@@ -179,6 +180,24 @@ artifacts:
       - ARCH-CORE-001
       - ARCH-CORE-002
 
+  - artifact_id: EX-CORE-002
+    path: knowledge/research-register/trials/internal-source-of-truth-decision-trial.md
+    type: EX
+    domain: CORE
+    phase: 0
+    status: DRAFT
+    minimum_status_to_unblock: IN REVIEW
+    depends_on:
+      - CTRL-CORE-001
+      - CTRL-CORE-002
+      - STD-CORE-001
+      - STD-CORE-002
+      - STD-CORE-003
+    blocks:
+      - Phase 0 internal-decision review
+      - ARCH-CORE-001
+      - ARCH-CORE-005
+
   - artifact_id: EX-FIXED-001
     path: knowledge/research-register/trials/new-hire-premium-kpi-trial.md
     type: EX
@@ -196,6 +215,101 @@ artifacts:
       - Phase 0 KPI evidence review
       - future fixed-reward KPI catalogue
 
+  - artifact_id: EX-CONSULT-001
+    path: knowledge/research-register/trials/consulting-attribution-trial.md
+    type: EX
+    domain: CONSULT
+    phase: 0
+    status: DRAFT
+    minimum_status_to_unblock: IN REVIEW
+    depends_on:
+      - STD-CORE-001
+      - STD-CORE-002
+      - STD-CORE-003
+      - KNOW-CORE-001
+      - KNOW-CORE-002
+    blocks:
+      - Phase 0 consulting-attribution review
+      - future consulting-technique catalogue
+
+  - artifact_id: EX-VIZ-001
+    path: knowledge/research-register/trials/graphical-perception-trial.md
+    type: EX
+    domain: VIZ
+    phase: 0
+    status: DRAFT
+    minimum_status_to_unblock: IN REVIEW
+    depends_on:
+      - STD-CORE-001
+      - STD-CORE-002
+      - STD-CORE-003
+      - KNOW-CORE-001
+      - KNOW-CORE-002
+    blocks:
+      - Phase 0 stable-research review
+      - future visual-perception knowledge pack
+      - future chart-selection skill
+
+  - artifact_id: SCRIPT-CORE-001
+    path: scripts/README.md
+    type: SCRIPT
+    domain: CORE
+    phase: 0
+    status: DRAFT
+    minimum_status_to_unblock: IN REVIEW
+    depends_on:
+      - CTRL-CORE-002
+      - CTRL-CORE-004
+      - STD-CORE-001
+    blocks:
+      - SCRIPT-CORE-002
+      - SCRIPT-CORE-003
+      - TEST-QA-001
+      - repository validation workflow
+
+  - artifact_id: SCRIPT-CORE-002
+    path: scripts/validate-dependencies.py
+    type: SCRIPT
+    domain: CORE
+    phase: 0
+    status: DRAFT
+    minimum_status_to_unblock: IN REVIEW
+    depends_on:
+      - SCRIPT-CORE-001
+      - CTRL-CORE-004
+      - STD-CORE-001
+    blocks:
+      - TEST-QA-001
+      - branch-wide dependency validation
+
+  - artifact_id: SCRIPT-CORE-003
+    path: requirements-dev.txt
+    type: SCRIPT
+    domain: CORE
+    phase: 0
+    status: DRAFT
+    minimum_status_to_unblock: DRAFT
+    depends_on:
+      - SCRIPT-CORE-001
+    blocks:
+      - SCRIPT-CORE-002
+      - TEST-QA-001
+
+  - artifact_id: TEST-QA-001
+    path: tests/test_validate_dependencies.py
+    type: TEST
+    domain: QA
+    phase: 0
+    status: DRAFT
+    minimum_status_to_unblock: IN REVIEW
+    depends_on:
+      - SCRIPT-CORE-001
+      - SCRIPT-CORE-002
+      - SCRIPT-CORE-003
+    blocks:
+      - validator review
+      - repository validation workflow
+
   - artifact_id: ARCH-CORE-001
     path: docs/architecture/agent-architecture.md
     type: ARCH
@@ -208,6 +322,7 @@ artifacts:
       - STD-CORE-002
       - STD-CORE-003
       - EX-CORE-001
+      - EX-CORE-002
     blocks:
       - ARCH-CORE-002
       - ARCH-CORE-003
@@ -270,6 +385,7 @@ artifacts:
     depends_on:
       - ARCH-CORE-001
       - ARCH-CORE-004
+      - EX-CORE-002
     blocks:
       - release plan
       - package validation
@@ -304,7 +420,10 @@ artifacts:
       - STD-CORE-002
       - STD-CORE-003
       - EX-CORE-001
+      - EX-CORE-002
       - EX-FIXED-001
+      - EX-CONSULT-001
+      - EX-VIZ-001
     blocks:
       - worked examples
       - benchmark scenarios
@@ -377,10 +496,11 @@ reserved_id_namespaces:
   EX: 1-999
   EVAL: 1-999
   SCRIPT: 1-99
+  TEST: 1-999
 
 validation_requirements:
   - every substantive non-placeholder artifact must appear in this register
-  - path and artifact_id must match file frontmatter
+  - path and artifact_id must match file frontmatter where frontmatter is supported
   - artifact_id values must be unique
   - depends_on values must resolve to registered artifact IDs
   - circular dependencies are prohibited
