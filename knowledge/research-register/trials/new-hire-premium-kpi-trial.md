@@ -4,15 +4,20 @@ status: DRAFT
 phase: 0
 priority: high
 depends_on:
-  - STD-CORE-001: ../../../docs/standards/naming-standard.md
-  - STD-CORE-002: ../../../docs/standards/research-standard.md
-  - STD-CORE-003: ../../../docs/standards/citation-standard.md
-  - KNOW-CORE-001: ../README.md
-  - KNOW-CORE-002: ../sources.yaml
+  - artifact_id: STD-CORE-001
+    path: ../../../docs/standards/naming-standard.md
+  - artifact_id: STD-CORE-002
+    path: ../../../docs/standards/research-standard.md
+  - artifact_id: STD-CORE-003
+    path: ../../../docs/standards/citation-standard.md
+  - artifact_id: KNOW-CORE-001
+    path: ../README.md
+  - artifact_id: KNOW-CORE-002
+    path: ../sources.yaml
 blocks:
   - Phase 0 KPI-research review
   - future fixed-reward KPI catalogue
-content_version: 0.1.0
+content_version: 0.2.0
 last_reviewed: 2026-07-17
 next_review: 2026-08-17
 ---
@@ -23,11 +28,11 @@ next_review: 2026-08-17
 
 Test the repository's naming, research, citation, KPI-definition, and evidence-versus-project-decision standards against a Performance & Reward measure.
 
-This trial does not yet establish an approved enterprise KPI. It provides a candidate definition for later review in the fixed-reward and market-competitiveness workstreams.
+This trial does not establish an approved enterprise KPI. It provides a candidate definition for later review in the fixed-reward and market-competitiveness workstreams.
 
 ## Research question
 
-How should a dashboard measure whether external hires are entering at higher fixed pay than comparable incumbents without allowing job mix, geography, currency, or timing to distort the result?
+How should a dashboard measure whether external hires are entering at higher fixed pay than comparable incumbents without allowing job mix, geography, currency, timing, or later employment status to distort the result?
 
 ## Decision supported
 
@@ -72,7 +77,7 @@ This is a **project-defined calculation** informed by the external concept. It i
 
 ## Why the calculation is employee-first
 
-A simple ratio of total or average new-hire pay to total or average incumbent pay can be distorted when the two populations contain different mixes of jobs, levels, locations, or salaries.
+A simple ratio of total or average new-hire pay to total or average incumbent pay can be distorted when the populations contain different mixes of jobs, levels, locations, or salaries.
 
 Calculating a matched premium for each hire and then taking the median:
 
@@ -82,7 +87,7 @@ Calculating a matched premium for each hire and then taking the median:
 - makes cohort coverage visible;
 - allows the same method to operate across different salary scales.
 
-This is a supported analytical design decision, not an externally mandated standard.
+This is a project analytical decision, not an externally mandated standard.
 
 ## Comparator cohort
 
@@ -98,7 +103,7 @@ A comparable incumbent cohort should normally match the new hire on:
 
 Business unit may be added only where internal labour markets or pay structures materially differ.
 
-Comparator precedence should be defined before calculation. A candidate hierarchy is:
+Comparator precedence must be defined before calculation:
 
 ```text
 Exact job profile + level + labour market
@@ -118,7 +123,7 @@ versus
 comparable incumbent fixed pay effective on the hire date
 ```
 
-This avoids comparing a new-hire starting offer with incumbent pay after a later salary review.
+This avoids comparing a starting offer with incumbent pay after a later salary review.
 
 Where historical effective-dated incumbent pay is unavailable, a current-state approximation may be calculated, but it must be labelled and kept separate from the preferred measure.
 
@@ -146,26 +151,28 @@ A total guaranteed cash or total remuneration version may be defined separately 
 
 Candidate inclusion rule:
 
-- external hires;
-- commenced within the selected lookback period;
-- active or valid at the relevant measurement point;
+- external hires who commenced within the selected lookback period;
+- all otherwise eligible commenced hires regardless of current employment status;
 - complete starting-pay and comparator attributes;
 - not part of a separately governed structured-entry program unless reported as its own cohort.
 
 Candidate exclusions:
 
-- internal transfers;
-- promotions;
+- offers that were rescinded, declined, or never commenced;
+- duplicate or invalid hire records;
+- internal transfers and promotions;
 - rehires where prior service materially affects pay, unless separately classified;
 - contractors and non-employees;
 - graduate, trainee, or apprentice programs where starting rates follow a distinct structure;
 - cases without a valid comparator cohort.
 
-The final domain standard must decide these rules explicitly.
+A qualifying hire must not be removed from the historical cohort merely because the employee later left the organisation. Current employment status belongs in separate retention or outcome analysis. Filtering the premium cohort to later active employees would create survivorship bias and could conceal problematic hiring outcomes.
+
+The final domain standard must decide the detailed rules explicitly.
 
 ## Supporting KPIs
 
-A single premium number is insufficient. The dashboard should pair it with:
+A single premium number is insufficient. Pair it with:
 
 | Measure | Purpose |
 |---|---|
@@ -176,6 +183,7 @@ A single premium number is insufficient. The dashboard should pair it with:
 | Distribution of individual premiums | Reveals overlap, outliers, and asymmetry |
 | Incumbent position-to-market or range position | Tests whether the internal reference is itself behind market |
 | New-hire market position | Distinguishes internal premium from external-market premium |
+| Subsequent retention by premium band | Supports later outcome analysis without changing the hire cohort |
 
 ## Materiality thresholds
 
@@ -234,7 +242,7 @@ The public repository will not prescribe organisation-specific thresholds before
 | Name | Median new-hire premium |
 | Business question | Are external hires entering above comparable incumbents, and where is that concentrated? |
 | Unit | Percentage |
-| Grain | Individual eligible external hire |
+| Grain | Individual eligible commenced external hire |
 | Numerator | New-hire annualised FTE fixed pay |
 | Denominator | Median annualised FTE fixed pay of comparable incumbents at hire date |
 | Aggregation | Median of individual premiums |
@@ -242,7 +250,7 @@ The public repository will not prescribe organisation-specific thresholds before
 | Direction | Context-dependent; increasing positive premium is generally a watch signal |
 | Frequency | Monthly or quarterly diagnostic; cycle summary where relevant |
 | Main segments | Job profile, level, labour market, business unit, critical skill |
-| Coverage measure | Comparable eligible hires divided by all eligible external hires |
+| Coverage measure | Comparable eligible commenced hires divided by all eligible commenced external hires |
 | Key limitation | Results depend on comparator quality and effective-dated pay availability |
 
 ## Alternative calculations considered
@@ -280,8 +288,9 @@ This answers a different question. It must not be labelled as the internal new-h
 | NHP-002 | Positive new-hire relativity means new hires are above current employees in the role | `mercer-au-remuneration-trends-2026` | Established for Mercer's public concept | Publish with attribution |
 | NHP-003 | New-hire premiums can indicate compression | `mercer-transforming-merit-new-hire-premium`, `shrm-pay-compression-glossary` | Supported synthesis | Publish as diagnostic, not proof |
 | NHP-004 | Employee-first matched calculation is the preferred enterprise method | Project analytical design | Project decision | Label clearly |
-| NHP-005 | A specific 5% or 10% threshold is universally material | No sufficient source | Unresolved/rejected | Do not publish as universal standard |
-| NHP-006 | Positive premium causes attrition | Sources in this trial are insufficient for causal claim | Unresolved | Do not claim |
+| NHP-005 | Current employment status should determine inclusion in the historical hire cohort | Analytical review found survivorship-bias risk | Rejected project rule | Exclude from KPI definition |
+| NHP-006 | A specific 5% or 10% threshold is universally material | No sufficient source | Unresolved/rejected | Do not publish as universal standard |
+| NHP-007 | Positive premium causes attrition | Sources in this trial are insufficient for causal claim | Unresolved | Do not claim |
 
 ## What the trial revealed about the standards
 
@@ -290,13 +299,14 @@ This answers a different question. It must not be labelled as the internal new-h
 - A professional source may define a concept without providing enough detail for implementation.
 - The repository must separate external concept, local formula, and organisation-specific policy.
 - KPI research must capture cohort, timing, pay basis, aggregation, coverage, and interpretation limits.
+- Historical cohort construction must not introduce survivorship bias.
 - A useful diagnostic should not be promoted to a causal measure.
 
 ### Citation standard
 
 - The external concept can be cited directly while the project formula is labelled separately.
 - Source records need usage restrictions because public pages may sit beside licensed market data.
-- A claim matrix makes rejected universal thresholds visible.
+- A claim matrix makes rejected universal thresholds and rejected cohort rules visible.
 
 ### Naming standard
 
@@ -308,7 +318,7 @@ This answers a different question. It must not be labelled as the internal new-h
 
 **Trial result: PASS WITH DOMAIN DECISIONS REQUIRED**
 
-The standards supported a clear separation between external concept, project formula, and future organisation-specific implementation. The candidate KPI is suitable for Phase 5 research but is not yet approved for agent use.
+The standards supported a clear separation between external concept, project formula, and future organisation-specific implementation. The internal pre-review identified and corrected a survivorship-bias risk. The candidate KPI remains suitable for Phase 5 research but is not approved for agent use.
 
 ## Sources
 
