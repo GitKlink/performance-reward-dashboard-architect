@@ -16,9 +16,7 @@ last_reviewed: 2026-07-17
 
 The repository contains **49 planned skill folders** across nine capability groups.
 
-Every `SKILL.md` remains a safe non-invokable placeholder. None currently contains active Cursor skill frontmatter.
-
-Do not remove the placeholder protection until the skill has entered controlled activation testing under the skill-authoring standard.
+Every `SKILL.md` remains a safe non-invokable placeholder. None contains active Cursor skill frontmatter. Placeholder protection is removed only when a skill enters controlled activation testing under the skill-authoring standard.
 
 ## Capability groups
 
@@ -35,7 +33,9 @@ Do not remove the placeholder protection until the skill has entered controlled 
 | Assurance | 5 | metric, visual, accessibility, executive, and complete design review |
 | **Total** | **49** | |
 
-## Discovery
+## Canonical inventory
+
+### Discovery
 
 ```text
 audience-decision-framing
@@ -43,7 +43,7 @@ dashboard-discovery
 grill-dashboard-requirements
 ```
 
-## Strategy
+### Strategy
 
 ```text
 value-driver-modelling
@@ -51,10 +51,10 @@ kpi-measure-design
 people-analytics-diagnostics
 ```
 
-## Performance & Reward
+### Performance & Reward
 
 ```text
-holistic-pr-value-drivers          # must be renamed before activation
+holistic-performance-reward-value-drivers
 performance-management-analysis
 fixed-reward-analysis
 variable-reward-analysis
@@ -66,16 +66,9 @@ total-rewards-analysis
 reward-governance-analysis
 ```
 
-Required rename:
+The ambiguous scaffold path `holistic-pr-value-drivers` was replaced by the canonical `holistic-performance-reward-value-drivers` path before activation.
 
-```text
-holistic-pr-value-drivers
-→ holistic-performance-reward-value-drivers
-```
-
-The rename must update every architecture, routing, example, and evaluation reference in the same change.
-
-## Consulting
+### Consulting
 
 ```text
 consulting-storyline
@@ -85,7 +78,7 @@ action-title-writing
 issue-tree-design
 ```
 
-## Visual design
+### Visual design
 
 ```text
 visual-hierarchy-design
@@ -96,7 +89,7 @@ data-ink-optimisation
 accessibility-design
 ```
 
-## Visualisation
+### Visualisation
 
 ```text
 chart-selection
@@ -107,7 +100,7 @@ table-and-matrix-design
 ibcs-application
 ```
 
-## Experience
+### Experience
 
 ```text
 dashboard-information-architecture
@@ -116,9 +109,9 @@ interactive-dashboard-ux
 static-deck-style-design
 ```
 
-`guided-analytics-design` owns selection and integration of guided, exploratory, action, static, interactive, and hybrid experience modes. It should not duplicate the detailed interactive or static implementation skills.
+`guided-analytics-design` owns selection and integration of guided, exploratory, action, static, interactive, and hybrid experience modes. It does not duplicate detailed interactive or static methods.
 
-## Power BI
+### Power BI
 
 ```text
 power-bi-feasibility
@@ -130,9 +123,9 @@ power-bi-security
 power-bi-theme-design
 ```
 
-Static export requirements currently belong across `static-deck-style-design`, `power-bi-feasibility`, and Power BI knowledge. A separate export skill should be added only if implementation trials show a distinct reusable workflow.
+Static export requirements currently belong across `static-deck-style-design`, `power-bi-feasibility`, and Power BI knowledge. A separate export skill is added only if implementation trials demonstrate a distinct reusable procedure.
 
-## Assurance
+### Assurance
 
 ```text
 review-dashboard
@@ -142,25 +135,25 @@ accessibility-review
 executive-readability-test
 ```
 
-Power BI implementation assurance is initially performed by the `power-bi-verifier` subagent using Power BI skills and implementation-review schemas. Add a separate skill only if a stable standalone procedure emerges.
+Power BI implementation assurance is initially performed by the `power-bi-verifier` subagent using relevant Power BI skills and the implementation-review contract.
 
 ## Canonical architecture-name mapping
 
-Architecture drafts must use actual folder names.
+Architecture, routing, plans, examples, and evaluations must use actual folder names.
 
-| Conceptual wording | Canonical skill |
+| Conceptual wording | Canonical implementation |
 |---|---|
-| holistic P&R value drivers | `holistic-performance-reward-value-drivers` after rename |
+| holistic P&R value drivers | `holistic-performance-reward-value-drivers` |
 | interactive versus static design | `guided-analytics-design` |
 | static report design | `static-deck-style-design` |
 | dashboard critique | `review-dashboard` |
 | Power BI interaction build | `power-bi-interaction-design` |
 | Power BI theme and layout | `power-bi-theme-design` plus `dashboard-layout-composition` where needed |
-| variance and driver visualisation | `variance-visualisation` plus analytical method as needed |
+| variance and driver visualisation | `variance-visualisation` plus the relevant analytical skill |
 | Power BI implementation review | `power-bi-verifier` subagent plus relevant Power BI skills |
-| Power BI export design | `static-deck-style-design` plus `power-bi-feasibility` unless a later distinct skill is approved |
+| Power BI export design | `static-deck-style-design` plus `power-bi-feasibility`, unless a distinct skill is later approved |
 
-Do not introduce additional skill names only to make architecture prose symmetrical. Add a skill when it owns a distinct reusable method and passes the normal design test.
+Do not create a new skill merely to make architecture prose symmetrical. Add a skill only when it owns a distinct reusable method and passes the standard capability test.
 
 ## Activation waves
 
@@ -180,9 +173,9 @@ power-bi-feasibility
 review-dashboard
 ```
 
-These skills should support one end-to-end design and critique workflow before broader activation.
+These skills must support one end-to-end design and critique workflow before broader activation.
 
-### Wave B — Initial dashboard products and domains
+### Wave B — Initial products and domains
 
 ```text
 people-analytics-diagnostics
@@ -261,7 +254,7 @@ Before release approval:
 - release package resolves all references and assets;
 - no critical or major finding remains.
 
-## What each placeholder must contain before activation
+## Required skill content before activation
 
 - valid `name` and precise `description`;
 - `Use when` and `Do not use when`;
@@ -278,9 +271,9 @@ Before release approval:
 ## Anti-patterns
 
 - Activating all 49 skills simultaneously.
-- Keeping different names in architecture, folder paths, and frontmatter.
-- Creating a new skill for every conceptual label used in prose.
-- Duplicating one method across several audience-specific skills.
+- Keeping different names in architecture, paths, and frontmatter.
+- Creating a new skill for every conceptual label.
+- Duplicating one method across audience-specific skills.
 - Putting shared P&R definitions inside each skill.
 - Using assurance skills as a substitute for domain or metric design.
 - Making disruptive review or grilling workflows automatic.
