@@ -4,16 +4,21 @@ status: DRAFT
 phase: 0
 priority: high
 depends_on:
-  - CTRL-CORE-001: ../../../BUILD-ORDER.md
-  - CTRL-CORE-002: ../../../DEPENDENCIES.md
-  - STD-CORE-001: ../../../docs/standards/naming-standard.md
-  - STD-CORE-002: ../../../docs/standards/research-standard.md
-  - STD-CORE-003: ../../../docs/standards/citation-standard.md
+  - artifact_id: CTRL-CORE-001
+    path: ../../../BUILD-ORDER.md
+  - artifact_id: CTRL-CORE-002
+    path: ../../../DEPENDENCIES.md
+  - artifact_id: STD-CORE-001
+    path: ../../../docs/standards/naming-standard.md
+  - artifact_id: STD-CORE-002
+    path: ../../../docs/standards/research-standard.md
+  - artifact_id: STD-CORE-003
+    path: ../../../docs/standards/citation-standard.md
 blocks:
   - Phase 0 internal-decision review
-  - ARCH-CORE-001: ../../../docs/architecture/agent-architecture.md
-  - ARCH-CORE-005: ../../../docs/architecture/release-architecture.md
-content_version: 0.1.0
+  - ARCH-CORE-001
+  - ARCH-CORE-005
+content_version: 0.2.0
 last_reviewed: 2026-07-17
 next_review: 2026-10-17
 ---
@@ -22,7 +27,7 @@ next_review: 2026-10-17
 
 ## Purpose
 
-Test how the repository records a deliberate architectural decision that is informed by project needs but is not an externally established fact.
+Test how the repository records a deliberate architecture decision that is informed by project needs but is not an externally established fact.
 
 ## Decision question
 
@@ -34,7 +39,7 @@ Should this repository contain only the final installable Cursor agent, or shoul
 
 The installable Cursor agent is a governed subset of the repository rather than a separate authority.
 
-The final agent surface is expected to include:
+The intended runtime surface is:
 
 ```text
 .cursor/
@@ -43,24 +48,24 @@ The final agent surface is expected to include:
 └── skills/
 ```
 
-Supporting knowledge, schemas, templates, examples, evaluation cases, scripts, and documentation remain versioned beside the agent because they explain, test, and govern its behaviour.
+Supporting knowledge, schemas, templates, examples, evaluations, scripts, and documentation remain versioned beside the runtime components because they explain, test, and govern behaviour.
 
 ## Rationale
 
 A single maintained source repository provides:
 
-- one authoritative history for agent behaviour and supporting knowledge;
-- traceability from research to skill instructions and evaluation results;
-- coordinated versioning of dependencies;
-- the ability to review a change and its downstream effects in one pull request;
-- release packaging without synchronising two competing repositories;
-- clear separation between development artifacts and the packaged release through release architecture rather than repository duplication.
+- one history for agent behaviour and supporting knowledge;
+- traceability from research to skills and evaluations;
+- coordinated dependency and version management;
+- one pull request for a change and its downstream impacts;
+- release packaging without synchronising competing repositories;
+- separation between development artifacts and the distributed package through release architecture rather than repository duplication.
 
-This rationale is a project judgement. It is not presented as a universal Cursor requirement.
+This is a project judgement, not a universal Cursor requirement.
 
 ## Boundaries
 
-The decision does not mean every repository file must ship in every release.
+The decision does not mean every file must ship in every release.
 
 The release architecture may package only approved runtime and support files, for example:
 
@@ -73,37 +78,37 @@ README.md
 LICENSE
 ```
 
-Development-only research trails, incomplete evaluations, working notes, or validation fixtures may remain in the source repository but be excluded from a public release package.
+Development-only research trails, incomplete evaluations, working notes, and validation fixtures may remain in the source repository but be excluded from the release package.
 
-The decision also does not prevent a future distribution repository if a documented need emerges, such as:
+A separate distribution repository may be reconsidered where a material need emerges, such as:
 
-- package-manager requirements;
+- package-manager constraints;
 - materially different licensing;
 - security separation;
-- a generated artifact that should not share source history;
-- a stable consumer repository with a distinct maintenance lifecycle.
+- generated artifacts requiring independent history;
+- a consumer repository with a genuinely separate lifecycle.
 
-A future split would require an approved architecture decision and migration plan.
+A future split requires an approved architecture decision and migration plan.
 
-## Authority and references
+## Authority
 
 This decision is governed by:
 
-- [CTRL-CORE-001 — Build order](../../../BUILD-ORDER.md), which separates architecture, implementation, evaluation, and release stages;
-- [CTRL-CORE-002 — Dependencies](../../../DEPENDENCIES.md), which requires one authoritative artifact per concept and coordinated change-impact handling;
-- [CTRL-CORE-004 — Artifact register](../../../ARTIFACT-REGISTER.yaml), which provides immutable artifact identification across path changes;
-- the future `ARCH-CORE-005` release architecture, which must define the shipped subset.
+- [CTRL-CORE-001 — Build order](../../../BUILD-ORDER.md);
+- [CTRL-CORE-002 — Dependency map](../../../DEPENDENCIES.md);
+- [CTRL-CORE-004 — Artifact register](../../../ARTIFACT-REGISTER.yaml);
+- the future `ARCH-CORE-005` release architecture.
 
-No external citation is required because the statement is explicitly labelled as a project decision and does not claim that Cursor mandates this repository model.
+No external citation is required because the statement is explicitly a project decision and does not claim that Cursor mandates this model.
 
 ## Alternative considered
 
 ### Separate builder and final-agent repositories
 
-Potential advantages:
+Potential benefits:
 
 - cleaner consumer-facing repository;
-- stronger separation between source research and distributed runtime;
+- stronger separation of research and runtime;
 - potentially smaller clone and review surface.
 
 Reasons not selected initially:
@@ -111,11 +116,19 @@ Reasons not selected initially:
 - duplicate release and dependency management;
 - risk of drift between source knowledge and distributed skills;
 - more complex contribution and regression workflows;
-- no current product or licensing constraint requiring separation.
+- no current product, security, or licensing requirement for separation.
 
-The alternative remains available if the release architecture later establishes a material need.
+## Revisit triggers
 
-## Decision record prototype
+Reassess this decision when:
+
+- release packaging becomes materially complex;
+- licensing differs between source and distribution;
+- a security boundary is required;
+- generated releases require a separate lifecycle;
+- consumers need a stable repository that cannot include development history.
+
+## Decision-record prototype
 
 Future architecture decisions should capture:
 
@@ -134,27 +147,8 @@ depends_on:
 blocks:
 ```
 
-## What the trial revealed about the standards
-
-### Research standard
-
-- Not every important repository statement is a research claim.
-- Project decisions need explicit rationale, alternatives, consequences, and revisit triggers rather than artificial external citations.
-- Evidence may inform a decision without converting the decision into a product requirement.
-
-### Citation standard
-
-- Relative links and immutable artifact IDs are sufficient for internal governance claims.
-- Labelling the statement as a project decision prevents false external authority.
-- A bibliography would reduce clarity here because no external evidence is needed to establish the chosen repository structure.
-
-### Naming standard
-
-- The artifact should describe the decision topic, not use a generic filename such as `decision-1.md`.
-- The immutable artifact ID survives a future move into an architecture-decision directory.
-
 ## Acceptance result
 
 **Trial result: PASS**
 
-The standards support a clear internal decision without citation theatre. The trial should inform the future architecture-decision format in Phase 1.
+The standards support a clear internal decision without citation theatre. The decision remains subject to the future release architecture and independent review.
