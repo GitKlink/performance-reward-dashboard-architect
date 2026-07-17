@@ -1,13 +1,13 @@
 # Central source register
 # Artifact: KNOW-CORE-002
 # Status: DRAFT
-# Content version: 0.1.0
+# Content version: 0.2.0
 # Last reviewed: 2026-07-17
 
 register:
   artifact_id: KNOW-CORE-002
   status: DRAFT
-  content_version: 0.1.0
+  content_version: 0.2.0
   last_reviewed: 2026-07-17
   depends_on:
     - KNOW-CORE-001
@@ -149,3 +149,94 @@ sources:
       - New-hire premiums relative to incumbents can indicate compression issues.
       - Long-tenured employees may face pay compression when new hires enter at similar or higher salaries.
     review_notes: Supports interpretation but not a universal causal claim about retention or performance.
+
+  - source_id: mckinsey-visual-performance-management-2022
+    title: Getting visual performance management right
+    author_or_organisation: McKinsey & Company
+    source_type: official-consulting-publication
+    evidence_level: primary-authoritative
+    url_or_doi: https://www.mckinsey.com/capabilities/operations/our-insights/operations-blog/getting-visual-performance-management-right
+    publication_date: 2022-04-01
+    updated_date: null
+    retrieved_date: 2026-07-17
+    version: current-web-content-as-retrieved
+    jurisdiction: general
+    lifecycle_state: accepted
+    licence_or_usage_notes: Cite and paraphrase; do not imply the article defines McKinsey's universal presentation standard.
+    relevant_artifacts:
+      - EX-CONSULT-001
+      - future consulting-technique catalogue
+      - future executive-readability guidance
+    relevant_claims:
+      - The article presents three principles for visual performance management.
+      - It explicitly describes the 1-3-10 principle.
+      - It recommends a KPI cascade linked across organisational layers and action-oriented performance meetings.
+    review_notes: Attribute only the claims directly stated in the article. Do not generalise to all McKinsey dashboards or presentations.
+
+  - source_id: mckinsey-visual-performance-pitch-2022
+    title: Getting visual performance management right — So, what's the pitch?
+    author_or_organisation: McKinsey & Company
+    source_type: official-consulting-publication
+    evidence_level: primary-authoritative
+    url_or_doi: https://www.mckinsey.com/capabilities/operations/our-insights/operations-blog/getting-visual-performance-management-right-so-whats-the-pitch
+    publication_date: 2022-06-06
+    updated_date: null
+    retrieved_date: 2026-07-17
+    version: current-web-content-as-retrieved
+    jurisdiction: general
+    lifecycle_state: accepted
+    licence_or_usage_notes: Cite and paraphrase; preserve the distinction between visual performance management and general presentation design.
+    relevant_artifacts:
+      - EX-CONSULT-001
+      - future consulting-storyline skill
+    relevant_claims:
+      - The article states that visual performance management is about storytelling and helping people take action.
+      - It says the performance story should be understandable at a glance.
+      - It repeats the 1-3-10 principle and describes visual performance management as a one-sentence pitch rather than a full script.
+    review_notes: The method is directly attributable to this published McKinsey article, not necessarily to every firm engagement or communication product.
+
+  - source_id: cleveland-mcgill-graphical-perception-1984
+    title: Graphical Perception — Theory, Experimentation, and Application to the Development of Graphical Methods
+    author_or_organisation: William S. Cleveland and Robert McGill
+    source_type: peer-reviewed-journal-article
+    evidence_level: primary-authoritative
+    url_or_doi: https://doi.org/10.1080/01621459.1984.10478080
+    publication_date: 1984-09
+    updated_date: null
+    retrieved_date: 2026-07-17
+    version: Journal-of-the-American-Statistical-Association-79-387
+    jurisdiction: general
+    lifecycle_state: accepted
+    licence_or_usage_notes: Cite and paraphrase; do not reproduce copyrighted figures or substantial article text.
+    relevant_artifacts:
+      - EX-VIZ-001
+      - future visual-perception knowledge pack
+      - future chart-selection skill
+    relevant_claims:
+      - The paper frames graphical perception as visual decoding of information encoded in graphs.
+      - It identifies elementary perceptual tasks and orders them by observed accuracy.
+      - It argues that graphical methods need a scientific foundation informed by theory and experimentation.
+    review_notes: Later research may qualify population-average rankings and individual variation; do not turn the paper into an absolute universal chart hierarchy.
+
+  - source_id: ibcs-version-2-0-2026
+    title: IBCS Standards Version 2.0 — aligned with ISO 24896
+    author_or_organisation: IBCS Association
+    source_type: official-standard-owner-publication
+    evidence_level: primary-authoritative
+    url_or_doi: https://www.ibcs.com/ibcs-version-2-0/
+    publication_date: 2026-06-11
+    updated_date: null
+    retrieved_date: 2026-07-17
+    version: IBCS-2.0
+    jurisdiction: general
+    lifecycle_state: accepted
+    licence_or_usage_notes: Public page may be cited. Review licence terms before reproducing substantial standard content or notation examples.
+    relevant_artifacts:
+      - future IBCS knowledge pack
+      - future IBCS application skill
+      - Phase 1 release and research planning
+    relevant_claims:
+      - IBCS Version 2.0 was approved and released on 2026-06-11.
+      - Version 2.0 is aligned with ISO 24896 notation for business reporting.
+      - Version 2.0 restructures the standards into Notation and Composition rather than the prior conceptual, perceptual, and semantic chapter structure.
+    review_notes: Existing scaffold references to IBCS 1.2 or the old chapter structure must be treated as potentially outdated and reviewed before use.
