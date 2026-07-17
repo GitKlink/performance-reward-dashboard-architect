@@ -27,7 +27,7 @@ depends_on:
 blocks:
   - independent Phase 0 review
   - Phase 0 status transition
-content_version: 0.1.0
+content_version: 0.2.0
 last_reviewed: 2026-07-17
 next_review: 2026-07-24
 ---
@@ -36,146 +36,77 @@ next_review: 2026-07-24
 
 ## Review status
 
-This is a rigorous internal pre-review performed before the required independent review. It does **not** satisfy the independent-review gate because it was conducted within the same implementation workflow.
+This internal pre-review was performed within the implementation workflow. It does **not** satisfy the independent-review gate.
 
 ## Scope
 
 Reviewed:
 
-- Phase 0 build and dependency controls;
+- build and dependency controls;
 - naming, research, and citation standards;
-- the five required evidence and decision trials;
+- five evidence and decision trials;
 - artifact and source registers;
-- validation scripts, tests, and CI workflow;
-- readiness to move the core standards to `IN REVIEW`.
+- validators, tests, and CI;
+- readiness for a separate independent review.
 
-## Overall conclusion
+## Initial outcome
 
-**Not ready to move to `IN REVIEW`.**
+The first pass identified one critical, seven major, and four minor findings. The repository was not ready for independent review at that point.
 
-The evidence model and trial design are strong, and automated validation passes. However, one critical governance deadlock and several major consistency issues must be resolved before an independent reviewer can assess a coherent Phase 0 package.
+## Resolution summary
 
-## Findings
+| Finding | Severity | Resolution | Status |
+|---|---|---|---|
+| F-001 Phase approval deadlock | Critical | Research and citation standards now permit initial approval after Phase 0 trials and independent review, with mandatory later implementation reviews | Resolved |
+| F-002 Research-record schema circular dependency | Major | Phase 0 now requires a validated field contract; formal schema implementation remains in Phase 2 | Resolved |
+| F-003 Incomplete artifact types | Major | `TEST` and `INFRA` were added to the naming standard and reserved namespaces | Resolved |
+| F-004 Active validation artifacts unregistered | Major | Validators, tests, CI workflow, and this review were added to `ARTIFACT-REGISTER.yaml` | Resolved |
+| F-005 Descriptive source-to-artifact references | Major | `relevant_artifacts` now contains only immutable IDs; future destinations use `planned_consumers` | Resolved |
+| F-006 Legacy dependency syntax | Major | Active Phase 0 and registered Phase 1 Markdown artifacts use canonical dependency objects; CI treats dependency warnings as failures | Resolved |
+| F-007 New-hire KPI survivorship bias | Major | Historical cohort now includes all eligible commenced hires regardless of later employment status | Resolved |
+| F-008 Independent reviewer separation | Major | Standards and issue #2 explicitly require a reviewer independent of the authoring workflow | Process gate remains open |
+| F-009 Standards did not apply citation model to themselves | Minor | Naming and research standards now use claim-level footnotes for material product claims | Resolved |
+| F-010 Undocumented `scaffold/` branch type | Minor | Naming standard now allows `scaffold` for initial foundation work only | Resolved |
+| F-011 Missing reserved filename | Minor | `ARTIFACT-REGISTER.yaml` added to reserved filenames | Resolved |
+| F-012 CI action pinning policy | Minor | Deferred to Phase 1 release/security architecture; not a Phase 0 blocker | Accepted deferral |
 
-### F-001 — Critical — Phase approval deadlock
+## Additional corrections completed
 
-**Affected artifacts:** `CTRL-CORE-001`, `STD-CORE-002`, `STD-CORE-003`
+- Rewrote the three core standards with canonical metadata and tighter scope.
+- Updated all five trials to canonical dependency objects.
+- Registered active scripts, tests, infrastructure, and review artifacts.
+- Added source-register and internal-link validation.
+- Enabled `--warnings-as-errors` for dependency and source-register validation.
+- Updated the source register to distinguish current registered consumers from planned consumers.
+- Passed the full CI suite after all corrections.
 
-`BUILD-ORDER.md` requires Phase 0 standards to be `APPROVED` before substantive Phase 1 work. The research standard states that approval occurs only after successful use in Phase 3 and Phase 4 workstreams. The citation standard similarly defers approval until audience and holistic P&R knowledge packs are used.
+## Current automated evidence
 
-This creates a dependency deadlock: later phases cannot begin until the standards are approved, while the standards cannot be approved until later phases have begun.
+The latest validation workflow passes:
 
-**Required correction:** Permit Phase 0 approval after the five representative trials, automated validation, and independent review. Require a mandatory post-implementation review after the first Phase 3 and Phase 4 applications rather than withholding initial approval.
+- all 18 unit-test scenarios;
+- artifact ID, path, dependency, frontmatter, cycle, and maturity validation;
+- source-register validation with warnings treated as errors;
+- internal-link validation;
+- dependency metadata validation with warnings treated as errors.
 
-### F-002 — Major — Research-record schema circular dependency
+## Artifact readiness for independent review
 
-**Affected artifacts:** `STD-CORE-002`, `STD-CORE-003`, `ARTIFACT-REGISTER.yaml`
+| Artifact | Internal pre-review decision |
+|---|---|
+| `STD-CORE-001` | Ready for independent review |
+| `STD-CORE-002` | Ready for independent review |
+| `STD-CORE-003` | Ready for independent review |
+| Five Phase 0 trials | Ready for independent review |
+| Artifact and source registers | Ready for independent review |
+| Validation suite | Ready for independent review |
 
-Both standards require the research-record schema to implement required fields before moving to `IN REVIEW`, while the standards block that schema and Phase 2 is formally downstream of Phase 1.
+## Remaining gate
 
-**Required correction:** For Phase 0 `IN REVIEW`, require a validated research-record field contract and successful trial records. Reserve formal schema approval for Phase 2. Alternatively move the research-record schema into Phase 0; the first option is preferred because it preserves the agreed build sequence.
-
-### F-003 — Major — Artifact-type registry is incomplete
-
-**Affected artifacts:** `STD-CORE-001`, `ARTIFACT-REGISTER.yaml`
-
-The register contains `TEST-QA-001`, but the naming standard does not define the `TEST` type code. The active GitHub Actions workflow also lacks an appropriate governed artifact type.
-
-**Required correction:** Add `TEST` and `INFRA` type codes, define their scope, reserve their namespaces, and register active tests and CI infrastructure.
-
-### F-004 — Major — Active validators and workflow are not fully registered
-
-**Affected artifacts:** `ARTIFACT-REGISTER.yaml`, `scripts/README.md`
-
-The internal-link validator, source-register validator, their tests, and the GitHub Actions workflow are active but absent from the artifact register.
-
-**Required correction:** Register every active validator, test suite, and workflow with immutable IDs and dependencies.
-
-### F-005 — Major — Source-to-artifact references are partly descriptive
-
-**Affected artifacts:** `KNOW-CORE-002`, `scripts/validate-source-register.py`
-
-Several `relevant_artifacts` entries contain phrases such as `future context-management strategy` rather than immutable artifact IDs. The validator allows these as warnings, weakening traceability.
-
-**Required correction:** Restrict `relevant_artifacts` to registered IDs. Add a separate optional `planned_consumers` field for future or not-yet-registered destinations. Migrate existing records and then promote source-register warnings to CI failures.
-
-### F-006 — Major — Legacy dependency syntax remains in active Phase 0 artifacts
-
-**Affected artifacts:** `STD-CORE-001`, `STD-CORE-002`, `STD-CORE-003`, Phase 0 trials and controls
-
-The canonical metadata model uses dependency objects, but several active files still use path-only, colon-delimited, or one-key mapping forms. CI passes because legacy syntax is only warned.
-
-**Required correction:** Migrate active Phase 0 and registered Phase 1 files to dependency objects, then run dependency validation with `--warnings-as-errors`.
-
-### F-007 — Major — New-hire KPI candidate risks survivorship bias
-
-**Affected artifact:** `EX-FIXED-001`
-
-The candidate eligible population includes hires that are “active or valid at the relevant measurement point.” A historical new-hire premium should not normally exclude a qualifying hire merely because the employee later left, as this can bias the cohort and conceal problematic hiring outcomes.
-
-**Required correction:** Include all valid eligible external starts in the selected hire cohort regardless of current employment status. Use employment status only for separate retention or outcome analysis. Exclude only invalid, rescinded, or non-commenced records according to an explicit rule.
-
-### F-008 — Major — Independent review independence must be explicit
-
-**Affected artifacts:** `STATUS.md`, issue #2, review process
-
-The current implementation workflow cannot itself satisfy an independent review requirement.
-
-**Required correction:** Require a reviewer who did not author the material changes, or a separately isolated review agent/process with no authority to silently approve its own corrections. This internal pre-review may prepare the package but cannot close issue #2.
-
-### F-009 — Minor — Citation standard is not yet applied consistently to the standards
-
-**Affected artifacts:** `STD-CORE-001`, `STD-CORE-002`
-
-The naming and research standards use source-list links rather than the claim-level descriptive footnote model defined by `STD-CORE-003`.
-
-**Required correction:** Before approval, migrate material external claims in the standards to the repository citation model, or explicitly document a temporary drafting exception that expires before approval.
-
-### F-010 — Minor — Scaffold branch type is undocumented
-
-**Affected artifact:** `STD-CORE-001`
-
-The active branch is `scaffold/repository-foundation`, but `scaffold` is not included in the permitted branch types.
-
-**Required correction:** Add `scaffold` as a temporary pre-release branch type or record the existing branch as a one-time exception and use approved types thereafter.
-
-### F-011 — Minor — Reserved repository filenames are incomplete
-
-**Affected artifact:** `STD-CORE-001`
-
-`ARTIFACT-REGISTER.yaml` is a repository control using uppercase conventional naming but is absent from the reserved-filename list.
-
-**Required correction:** Add it to the reserved list and clarify treatment of root-level machine-readable controls.
-
-### F-012 — Minor — CI action references are version tags rather than immutable commits
-
-**Affected artifact:** `.github/workflows/repository-validation.yml`
-
-The workflow uses `actions/checkout@v4`. This is common and currently functional, but immutable commit pinning would provide stronger supply-chain control.
-
-**Required correction:** Decide and document whether public release workflows must pin third-party actions to full commit SHAs. This is not a Phase 0 blocker unless the project adopts a strict supply-chain policy.
-
-## Artifact readiness
-
-| Artifact | Pre-review decision | Reason |
-|---|---|---|
-| `STD-CORE-001` | Remain `DRAFT` | Type registry, branch exception, filename list, and legacy metadata require correction |
-| `STD-CORE-002` | Remain `DRAFT` | Approval deadlock and schema gate require correction |
-| `STD-CORE-003` | Remain `DRAFT` | Approval deadlock and schema gate require correction |
-| Five Phase 0 trials | Remain `DRAFT` | New-hire trial requires one material cohort correction; others are suitable for independent review |
-| Validation suite | Remain `DRAFT` | Active artifacts require registration and warning policy hardening |
-
-## Required sequence
-
-1. Resolve F-001 to F-008.
-2. Run all tests and validators with warnings promoted to errors.
-3. Update the artifact register, status, and changelog.
-4. Present the corrected package to a genuinely independent reviewer under issue #2.
-5. Resolve independent critical and major findings.
-6. Move eligible standards to `IN REVIEW`.
+The package still requires a genuinely independent reviewer who did not author the material changes. That reviewer must record findings under issue #2 and cannot silently approve corrections made within the same review pass.
 
 ## Review outcome
 
-**Internal pre-review: FAIL — CORRECTIONS REQUIRED**
+**Internal pre-review: PASS TO INDEPENDENT REVIEW**
 
-The failure is procedural and consistency-related, not a rejection of the overall architecture. The repository should not begin substantive Phase 1 work until the critical and major findings are closed.
+This outcome confirms that the initial internal critical and major findings were resolved. It does not authorise a status change to `IN REVIEW` or the start of substantive Phase 1 work.
