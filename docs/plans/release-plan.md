@@ -1,40 +1,53 @@
 ---
+artifact_id: PLAN-CORE-003
 status: PLACEHOLDER
-phase: TBD
-priority: TBD
-depends_on: []
-blocks: []
+phase: 1
+priority: high
+depends_on:
+  - artifact_id: ARCH-CORE-005
+    path: ../architecture/release-architecture.md
+  - artifact_id: STD-CORE-006
+    path: ../standards/evaluation-standard.md
+  - artifact_id: PLAN-CORE-002
+    path: implementation-roadmap.md
+blocks:
+  - tagged releases
+content_version: 0.0.0
 last_reviewed: 2026-07-17
+next_review: 2026-08-17
 ---
 
-# Placeholder Architecture or Standards Artifact
+# Release plan
 
 ## Purpose
 
-This file reserves an authoritative repository location. Its final purpose is defined by its path, `BUILD-ORDER.md`, and `DEPENDENCIES.md`.
+Define the operational sequence for preparing, validating, approving, publishing, and maintaining tagged releases.
 
-## What must be completed
+## What this file must establish
 
-- Define the artifact's scope and boundaries.
-- Identify authoritative upstream dependencies and downstream consumers.
-- Conduct the research required by `docs/standards/research-standard.md`.
-- Apply the naming, citation, and authoring standards.
-- Record decisions, assumptions, exclusions, and unresolved questions.
-- Replace generic instructions with artifact-specific acceptance criteria.
+- Release types and versioning rules
+- Candidate, approval, and publication stages
+- Required validation and review evidence
+- Package assembly and manifest checks
+- Changelog and migration-note requirements
+- Public-repository safety review
+- Rollback, hotfix, and deprecation process
+- Post-release monitoring and refresh triggers
 
-## Required sections in the finished artifact
+## Required outputs
 
-- Purpose
-- Scope and exclusions
-- Definitions
-- Method or standard
-- Decision rules
-- Dependencies
-- Examples where relevant
-- Anti-patterns and risks
-- Acceptance criteria
-- Sources and review record
+- Release checklist
+- Approval matrix
+- Tagging and package procedure
+- Release-note template
+- Migration-note template
+- Rollback procedure
+- Post-release review schedule
 
-## Completion gate
+## Acceptance criteria
 
-Do not change the status from `PLACEHOLDER` until dependencies are confirmed and an artifact-specific plan has been written. Do not mark `APPROVED` until independent review and relevant validation are complete.
+- A release cannot include placeholders or unapproved runtime dependencies
+- Benchmark and validation results are recorded against the exact release commit
+- Package contents match the approved release architecture
+- Licensing, privacy, and source freshness checks are complete
+- Consumers can determine compatibility and upgrade impact
