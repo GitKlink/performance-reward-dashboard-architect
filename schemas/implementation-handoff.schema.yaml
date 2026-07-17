@@ -1,22 +1,632 @@
-# PLACEHOLDER SCHEMA
-#
-# Purpose
-# Reserve an authoritative machine-readable contract at this path.
-#
-# Complete this file by:
-# - defining the schema version and object purpose;
-# - listing required and optional fields;
-# - specifying types, enums, formats, defaults, and validation rules;
-# - mapping each field to the corresponding template;
-# - adding valid and invalid examples;
-# - documenting backward-compatibility and migration rules;
-# - validating the schema with the repository validation script.
-#
-# Dependencies
-# Consult BUILD-ORDER.md and DEPENDENCIES.md before authoring.
-#
-# Completion gate
-# This placeholder is not a valid production schema and must not be consumed by skills until approved.
-status: PLACEHOLDER
-schema_version: 0.0.0
-artifact_path_defines_subject: true
+$schema: https://json-schema.org/draft/2020-12/schema
+$id: urn:performance-reward-dashboard-architect:schema:implementation-handoff:0.1.0
+title: Implementation handoff
+description: >-
+  Contract for transferring an agreed dashboard design into Power BI build,
+  testing, deployment, and maintenance work without relying on conversation
+  history.
+type: object
+additionalProperties: false
+x-repository:
+  artifact_id: SCHEMA-PBI-001
+  status: DRAFT
+  phase: 2
+  schema_version: 0.1.0
+  content_version: 0.1.0
+  owner: docs/architecture/agent-architecture.md
+required:
+  - handoff_id
+  - title
+  - status
+  - source_artifacts
+  - audience_and_decision
+  - scope
+  - semantic_model
+  - measures
+  - pages
+  - interactions
+  - security_and_privacy
+  - accessibility
+  - performance
+  - export_and_distribution
+  - implementation_sequence
+  - testing
+  - assumptions
+  - open_questions
+  - risks
+  - acceptance_criteria
+properties:
+  handoff_id:
+    type: string
+    pattern: ^HANDOFF-[A-Z0-9-]+-[0-9]{3}$
+  title:
+    type: string
+    minLength: 5
+    maxLength: 180
+  status:
+    enum: [DRAFT, IN REVIEW, APPROVED, SUPERSEDED]
+  content_version:
+    type: string
+    pattern: ^[0-9]+\.[0-9]+\.[0-9]+$
+    default: 0.1.0
+  source_artifacts:
+    type: array
+    minItems: 1
+    items:
+      type: object
+      additionalProperties: false
+      required: [artifact_id, path, content_version]
+      properties:
+        artifact_id:
+          type: string
+        path:
+          type: string
+        content_version:
+          type: string
+        approval_status:
+          type: string
+  audience_and_decision:
+    type: object
+    additionalProperties: false
+    required: [primary_audience, decision, actions_supported, consumption_mode]
+    properties:
+      primary_audience:
+        type: string
+      secondary_audiences:
+        type: array
+        items:
+          type: string
+      decision:
+        type: string
+      actions_supported:
+        type: array
+        minItems: 1
+        items:
+          type: string
+      consumption_mode:
+        enum: [interactive, static, hybrid]
+      expected_reading_time:
+        type: string
+  scope:
+    type: object
+    additionalProperties: false
+    required: [included, excluded, population, time_horizon, jurisdictions]
+    properties:
+      included:
+        type: array
+        minItems: 1
+        items:
+          type: string
+      excluded:
+        type: array
+        items:
+          type: string
+      population:
+        type: string
+      organisational_scope:
+        type: string
+      time_horizon:
+        type: string
+      jurisdictions:
+        type: array
+        items:
+          type: string
+      currencies_and_pay_basis:
+        type: string
+  target_environment:
+    type: object
+    additionalProperties: false
+    properties:
+      power_bi_desktop_version:
+        type: string
+      power_bi_service_environment:
+        type: string
+      workspace:
+        type: string
+      deployment_pipeline:
+        type: string
+      capacity_or_licence:
+        type: string
+      gateway:
+        type: string
+      supporting_tools:
+        type: array
+        items:
+          type: string
+  data_sources:
+    type: array
+    items:
+      type: object
+      additionalProperties: false
+      required: [source_name, source_type, owner, refresh]
+      properties:
+        source_name:
+          type: string
+        source_type:
+          enum: [database, dataflow, lakehouse, warehouse, api, file, sharepoint, semantic-model, other]
+        location_or_connection:
+          type: string
+        owner:
+          type: string
+        refresh:
+          type: string
+        credentials_and_gateway:
+          type: string
+        data_classification:
+          enum: [public, internal, confidential, highly-confidential]
+        known_limitations:
+          type: array
+          items:
+            type: string
+  semantic_model:
+    type: object
+    additionalProperties: false
+    required: [model_type, grain, fact_tables, dimensions, relationships, effective_dating]
+    properties:
+      model_type:
+        enum: [import, directquery, direct-lake, composite, live-connection, not-decided]
+      grain:
+        type: array
+        minItems: 1
+        items:
+          type: string
+      fact_tables:
+        type: array
+        minItems: 1
+        items:
+          type: object
+          additionalProperties: false
+          required: [name, grain, purpose]
+          properties:
+            name:
+              type: string
+            grain:
+              type: string
+            purpose:
+              type: string
+            keys:
+              type: array
+              items:
+                type: string
+      dimensions:
+        type: array
+        minItems: 1
+        items:
+          type: object
+          additionalProperties: false
+          required: [name, key, purpose]
+          properties:
+            name:
+              type: string
+            key:
+              type: string
+            purpose:
+              type: string
+            type_two_or_effective_dated:
+              type: boolean
+      relationships:
+        type: array
+        items:
+          type: object
+          additionalProperties: false
+          required: [from, to, cardinality, filter_direction]
+          properties:
+            from:
+              type: string
+            to:
+              type: string
+            cardinality:
+              enum: [one-to-one, one-to-many, many-to-one, many-to-many]
+            filter_direction:
+              enum: [single, both]
+            active:
+              type: boolean
+      effective_dating:
+        type: string
+      role_playing_dates:
+        type: array
+        items:
+          type: string
+      calculation_groups:
+        type: array
+        items:
+          type: string
+      model_assumptions:
+        type: array
+        items:
+          type: string
+  measures:
+    type: array
+    minItems: 1
+    items:
+      type: object
+      additionalProperties: false
+      required: [kpi_id, measure_name, definition_status, implementation_status, test_cases]
+      properties:
+        kpi_id:
+          type: string
+        measure_name:
+          type: string
+        definition_status:
+          enum: [draft, approved]
+        dax_or_calculation:
+          type: string
+        implementation_status:
+          enum: [not-started, prototype, implemented, tested, approved]
+        format_string:
+          type: string
+        dependencies:
+          type: array
+          items:
+            type: string
+        performance_notes:
+          type: string
+        test_cases:
+          type: array
+          minItems: 1
+          items:
+            type: object
+            additionalProperties: false
+            required: [case, expected_result]
+            properties:
+              case:
+                type: string
+              expected_result:
+                type: string
+              tolerance:
+                type: string
+  pages:
+    type: array
+    minItems: 1
+    items:
+      type: object
+      additionalProperties: false
+      required: [page_id, title, role, page_specification, visual_specifications]
+      properties:
+        page_id:
+          type: string
+        title:
+          type: string
+        role:
+          enum: [summary, driver, diagnostic, detail, action, methodology, appendix]
+        page_specification:
+          type: string
+        visual_specifications:
+          type: array
+          items:
+            type: string
+        build_order:
+          type: integer
+          minimum: 1
+        implementation_notes:
+          type: array
+          items:
+            type: string
+  interactions:
+    type: object
+    additionalProperties: false
+    required: [navigation, filters, drill, tooltips, reset, bookmarks_or_parameters]
+    properties:
+      navigation:
+        type: array
+        items:
+          type: string
+      filters:
+        type: array
+        items:
+          type: string
+      drill:
+        type: array
+        items:
+          type: string
+      tooltips:
+        type: array
+        items:
+          type: string
+      reset:
+        type: string
+      bookmarks_or_parameters:
+        type: array
+        items:
+          type: string
+      cross_highlight_or_filter:
+        type: string
+      interaction_tests:
+        type: array
+        items:
+          type: string
+  security_and_privacy:
+    type: object
+    additionalProperties: false
+    required: [sensitivity, row_level_security, object_level_security, export_controls, privacy_tests]
+    properties:
+      sensitivity:
+        enum: [public, internal, confidential, highly-confidential]
+      row_level_security:
+        type: object
+        additionalProperties: false
+        required: [required, design, test_users]
+        properties:
+          required:
+            type: boolean
+          design:
+            type: string
+          hierarchy_or_entitlement_source:
+            type: string
+          test_users:
+            type: array
+            items:
+              type: string
+      object_level_security:
+        type: string
+      export_controls:
+        type: array
+        items:
+          type: string
+      minimum_group_or_suppression:
+        type: string
+      employee_level_access:
+        type: string
+      privacy_tests:
+        type: array
+        minItems: 1
+        items:
+          type: string
+  accessibility:
+    type: object
+    additionalProperties: false
+    required: [reading_order, keyboard_navigation, contrast, colour_independence, alt_text, tests]
+    properties:
+      reading_order:
+        type: string
+      keyboard_navigation:
+        type: string
+      contrast:
+        type: string
+      colour_independence:
+        type: string
+      alt_text:
+        type: string
+      text_size_and_zoom:
+        type: string
+      tests:
+        type: array
+        minItems: 1
+        items:
+          type: string
+  performance:
+    type: object
+    additionalProperties: false
+    required: [targets, risks, optimisation_actions, tests]
+    properties:
+      targets:
+        type: array
+        items:
+          type: string
+      risks:
+        type: array
+        items:
+          type: string
+      optimisation_actions:
+        type: array
+        items:
+          type: string
+      tests:
+        type: array
+        minItems: 1
+        items:
+          type: string
+      expected_data_volume:
+        type: string
+  export_and_distribution:
+    type: object
+    additionalProperties: false
+    required: [required_formats, static_behavior, distribution_channels]
+    properties:
+      required_formats:
+        type: array
+        uniqueItems: true
+        items:
+          enum: [none, pdf, powerpoint, excel, csv, print, image, embedded]
+      static_behavior:
+        type: string
+      distribution_channels:
+        type: array
+        items:
+          type: string
+      subscription_or_alerting:
+        type: string
+      mobile_behavior:
+        type: string
+      export_tests:
+        type: array
+        items:
+          type: string
+  theme_and_layout:
+    type: object
+    additionalProperties: false
+    properties:
+      theme_file:
+        type: string
+      canvas_and_grid:
+        type: string
+      font_requirements:
+        type: string
+      semantic_colour_rules:
+        type: string
+      custom_visuals:
+        type: array
+        items:
+          type: string
+  implementation_sequence:
+    type: array
+    minItems: 1
+    items:
+      type: object
+      additionalProperties: false
+      required: [sequence, work_item, dependencies, owner, completion_criteria]
+      properties:
+        sequence:
+          type: integer
+          minimum: 1
+        work_item:
+          type: string
+        dependencies:
+          type: array
+          items:
+            type: string
+        owner:
+          type: string
+        completion_criteria:
+          type: array
+          minItems: 1
+          items:
+            type: string
+        status:
+          enum: [not-started, in-progress, blocked, complete]
+  testing:
+    type: object
+    additionalProperties: false
+    required: [data_tests, measure_tests, visual_tests, interaction_tests, security_tests, accessibility_tests, export_tests, user_acceptance]
+    properties:
+      data_tests:
+        type: array
+        items:
+          type: string
+      measure_tests:
+        type: array
+        items:
+          type: string
+      visual_tests:
+        type: array
+        items:
+          type: string
+      interaction_tests:
+        type: array
+        items:
+          type: string
+      security_tests:
+        type: array
+        items:
+          type: string
+      accessibility_tests:
+        type: array
+        items:
+          type: string
+      performance_tests:
+        type: array
+        items:
+          type: string
+      export_tests:
+        type: array
+        items:
+          type: string
+      user_acceptance:
+        type: array
+        items:
+          type: string
+      regression_scenarios:
+        type: array
+        items:
+          type: string
+  deployment_and_operations:
+    type: object
+    additionalProperties: false
+    properties:
+      environments:
+        type: array
+        items:
+          type: string
+      deployment_steps:
+        type: array
+        items:
+          type: string
+      refresh_monitoring:
+        type: string
+      support_owner:
+        type: string
+      incident_process:
+        type: string
+      change_control:
+        type: string
+      documentation_location:
+        type: string
+  assumptions:
+    type: array
+    minItems: 1
+    items:
+      type: object
+      additionalProperties: false
+      required: [assumption, materiality, owner, validation]
+      properties:
+        assumption:
+          type: string
+        materiality:
+          enum: [high, medium, low]
+        owner:
+          type: string
+        validation:
+          type: string
+        status:
+          enum: [unvalidated, accepted, rejected, superseded]
+  open_questions:
+    type: array
+    items:
+      type: object
+      additionalProperties: false
+      required: [question, owner, resolution_required_before]
+      properties:
+        question:
+          type: string
+        owner:
+          type: string
+        materiality:
+          enum: [high, medium, low]
+        resolution_required_before:
+          enum: [build, test, deploy, release, not-blocking]
+  risks:
+    type: array
+    minItems: 1
+    items:
+      type: object
+      additionalProperties: false
+      required: [risk, severity, mitigation, owner]
+      properties:
+        risk:
+          type: string
+        severity:
+          enum: [critical, major, minor, editorial]
+        probability:
+          enum: [high, medium, low]
+        mitigation:
+          type: string
+        owner:
+          type: string
+        trigger:
+          type: string
+  acceptance_criteria:
+    type: array
+    minItems: 1
+    items:
+      type: string
+  approvals:
+    type: object
+    additionalProperties: false
+    properties:
+      design_owner:
+        type: string
+      business_owner:
+        type: string
+      data_owner:
+        type: string
+      technical_owner:
+        type: string
+      security_or_privacy_owner:
+        type: string
+      status:
+        enum: [not-requested, pending, approved, rejected]
+      date:
+        type: [string, 'null']
+        format: date
+  next_action:
+    type: string
