@@ -1,0 +1,151 @@
+# Central source register
+# Artifact: KNOW-CORE-002
+# Status: DRAFT
+# Content version: 0.1.0
+# Last reviewed: 2026-07-17
+
+register:
+  artifact_id: KNOW-CORE-002
+  status: DRAFT
+  content_version: 0.1.0
+  last_reviewed: 2026-07-17
+  depends_on:
+    - KNOW-CORE-001
+    - STD-CORE-002
+    - STD-CORE-003
+
+sources:
+  - source_id: cursor-rules
+    title: Rules
+    author_or_organisation: Cursor
+    source_type: official-product-documentation
+    evidence_level: primary-authoritative
+    url_or_doi: https://docs.cursor.com/context/rules
+    publication_date: null
+    updated_date: null
+    retrieved_date: 2026-07-17
+    version: current-web-documentation-as-retrieved
+    jurisdiction: global
+    lifecycle_state: accepted
+    licence_or_usage_notes: Cite and paraphrase; do not reproduce substantial documentation text.
+    relevant_artifacts:
+      - STD-CORE-001
+      - STD-CORE-002
+      - STD-CORE-003
+    relevant_claims:
+      - Cursor project rules are stored under .cursor/rules.
+      - Cursor rule files use MDC metadata and content.
+      - Rules may be always applied, automatically attached, agent requested, or manual.
+      - Focused and composable rules are recommended.
+    review_notes: Reverify before activating final Cursor rules because product metadata may change.
+
+  - source_id: cursor-2-4-subagents-skills
+    title: Subagents, Skills, and Image Generation
+    author_or_organisation: Cursor
+    source_type: official-release-note
+    evidence_level: primary-authoritative
+    url_or_doi: https://cursor.com/changelog/2-4
+    publication_date: 2026-01-22
+    updated_date: null
+    retrieved_date: 2026-07-17
+    version: Cursor-2.4
+    jurisdiction: global
+    lifecycle_state: accepted
+    licence_or_usage_notes: Cite and paraphrase; feature behaviour remains version-sensitive.
+    relevant_artifacts:
+      - STD-CORE-001
+      - STD-CORE-002
+      - STD-CORE-003
+    relevant_claims:
+      - Cursor supports Agent Skills defined in SKILL.md files.
+      - Skills may contain instructions, scripts, and custom commands.
+      - Skills can be invoked through the slash-command menu.
+      - Cursor introduced independent subagents with separate context and configurable prompts, tools, and models.
+    review_notes: Exact custom-subagent file schema and tool availability require separate verification before activation.
+
+  - source_id: cursor-agent-best-practices
+    title: Best practices for coding with agents
+    author_or_organisation: Cursor
+    source_type: official-product-guidance
+    evidence_level: primary-authoritative
+    url_or_doi: https://cursor.com/blog/agent-best-practices
+    publication_date: 2026
+    updated_date: null
+    retrieved_date: 2026-07-17
+    version: current-web-guidance-as-retrieved
+    jurisdiction: global
+    lifecycle_state: accepted
+    licence_or_usage_notes: Cite and paraphrase.
+    relevant_artifacts:
+      - STD-CORE-001
+      - STD-CORE-002
+      - STD-CORE-003
+      - future context-management strategy
+    relevant_claims:
+      - Skills package domain knowledge, workflows, and scripts.
+      - Skills load dynamically when relevant, unlike persistent rules.
+      - Dynamic loading helps preserve context focus.
+    review_notes: Reverify during Phase 1 context-management research.
+
+  - source_id: mercer-au-remuneration-trends-2026
+    title: Remuneration Trends & Insights
+    author_or_organisation: Mercer Australia
+    source_type: professional-market-methodology
+    evidence_level: authoritative-synthesis
+    url_or_doi: https://www.mercer.com/en-au/insights/total-rewards/compensation/remuneration-and-salary-trends/
+    publication_date: null
+    updated_date: 2026
+    retrieved_date: 2026-07-17
+    version: March-quarter-2026-content-as-retrieved
+    jurisdiction: Australia
+    lifecycle_state: accepted
+    licence_or_usage_notes: Public explanatory content may be cited; do not reproduce licensed market-data charts or tables.
+    relevant_artifacts:
+      - future new-hire-premium KPI definition
+      - future market-competitiveness knowledge pack
+    relevant_claims:
+      - Mercer defines new-hire pay rate as the relativity between salaries offered to new staff and existing employees in the same role within an organisation.
+      - A positive value indicates new hires are attracting salaries above current employees in the role; a negative value indicates the reverse.
+    review_notes: The public page explains the concept but does not publish a complete reusable calculation specification; the repository must define cohort, pay basis, effective date, and aggregation method.
+
+  - source_id: shrm-pay-compression-glossary
+    title: HR Glossary — Pay Compression
+    author_or_organisation: SHRM
+    source_type: professional-body-glossary
+    evidence_level: authoritative-synthesis
+    url_or_doi: https://www.shrm.org/mena/topics-tools/tools/hr-glossary
+    publication_date: null
+    updated_date: null
+    retrieved_date: 2026-07-17
+    version: current-web-content-as-retrieved
+    jurisdiction: general
+    lifecycle_state: accepted
+    licence_or_usage_notes: Cite and paraphrase.
+    relevant_artifacts:
+      - future new-hire-premium KPI definition
+      - future fixed-reward knowledge pack
+    relevant_claims:
+      - Pay compression occurs when employee pay is close to that of more-experienced employees in the same job or higher-level roles.
+      - Market rates outpacing historical incumbent increases can contribute to compression.
+    review_notes: Use as contextual support, not as the sole source for a quantitative KPI formula.
+
+  - source_id: mercer-transforming-merit-new-hire-premium
+    title: Transforming merit — From flawed to fair
+    author_or_organisation: Mercer
+    source_type: professional-methodology-article
+    evidence_level: authoritative-synthesis
+    url_or_doi: https://www.mercer.com/en-us/insights/total-rewards/transforming-merit-from-flawed-to-fair/
+    publication_date: null
+    updated_date: null
+    retrieved_date: 2026-07-17
+    version: current-web-content-as-retrieved
+    jurisdiction: general
+    lifecycle_state: accepted
+    licence_or_usage_notes: Cite and paraphrase; do not copy client charts.
+    relevant_artifacts:
+      - future new-hire-premium KPI definition
+      - future fixed-reward analysis
+    relevant_claims:
+      - New-hire premiums relative to incumbents can indicate compression issues.
+      - Long-tenured employees may face pay compression when new hires enter at similar or higher salaries.
+    review_notes: Supports interpretation but not a universal causal claim about retention or performance.
