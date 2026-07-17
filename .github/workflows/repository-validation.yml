@@ -31,7 +31,7 @@ jobs:
         run: python3 -m unittest discover -s tests -p "test_*.py"
 
       - name: Validate artifact dependencies
-        run: python3 scripts/validate-dependencies.py
+        run: python3 scripts/validate-dependencies.py --warnings-as-errors
 
       - name: Validate source register
         run: python3 scripts/validate-source-register.py --warnings-as-errors
