@@ -1,13 +1,13 @@
 # Central source register
 # Artifact: KNOW-CORE-002
 # Status: DRAFT
-# Content version: 0.2.0
+# Content version: 0.3.0
 # Last reviewed: 2026-07-17
 
 register:
   artifact_id: KNOW-CORE-002
   status: DRAFT
-  content_version: 0.2.0
+  content_version: 0.3.0
   last_reviewed: 2026-07-17
   depends_on:
     - KNOW-CORE-001
@@ -32,6 +32,10 @@ sources:
       - STD-CORE-001
       - STD-CORE-002
       - STD-CORE-003
+      - EX-CORE-001
+      - ARCH-CORE-001
+      - ARCH-CORE-002
+    planned_consumers: []
     relevant_claims:
       - Cursor project rules are stored under .cursor/rules.
       - Cursor rule files use MDC metadata and content.
@@ -56,6 +60,11 @@ sources:
       - STD-CORE-001
       - STD-CORE-002
       - STD-CORE-003
+      - EX-CORE-001
+      - ARCH-CORE-001
+      - ARCH-CORE-002
+    planned_consumers:
+      - active Cursor skills and subagents after Phase 1 verification
     relevant_claims:
       - Cursor supports Agent Skills defined in SKILL.md files.
       - Skills may contain instructions, scripts, and custom commands.
@@ -80,7 +89,10 @@ sources:
       - STD-CORE-001
       - STD-CORE-002
       - STD-CORE-003
-      - future context-management strategy
+      - EX-CORE-001
+      - ARCH-CORE-002
+    planned_consumers:
+      - Phase 1 context-management implementation
     relevant_claims:
       - Skills package domain knowledge, workflows, and scripts.
       - Skills load dynamically when relevant, unlike persistent rules.
@@ -101,8 +113,10 @@ sources:
     lifecycle_state: accepted
     licence_or_usage_notes: Public explanatory content may be cited; do not reproduce licensed market-data charts or tables.
     relevant_artifacts:
-      - future new-hire-premium KPI definition
-      - future market-competitiveness knowledge pack
+      - EX-FIXED-001
+    planned_consumers:
+      - new-hire-premium KPI definition
+      - market-competitiveness knowledge pack
     relevant_claims:
       - Mercer defines new-hire pay rate as the relativity between salaries offered to new staff and existing employees in the same role within an organisation.
       - A positive value indicates new hires are attracting salaries above current employees in the role; a negative value indicates the reverse.
@@ -122,8 +136,9 @@ sources:
     lifecycle_state: accepted
     licence_or_usage_notes: Cite and paraphrase.
     relevant_artifacts:
-      - future new-hire-premium KPI definition
-      - future fixed-reward knowledge pack
+      - EX-FIXED-001
+    planned_consumers:
+      - fixed-reward knowledge pack
     relevant_claims:
       - Pay compression occurs when employee pay is close to that of more-experienced employees in the same job or higher-level roles.
       - Market rates outpacing historical incumbent increases can contribute to compression.
@@ -143,8 +158,9 @@ sources:
     lifecycle_state: accepted
     licence_or_usage_notes: Cite and paraphrase; do not copy client charts.
     relevant_artifacts:
-      - future new-hire-premium KPI definition
-      - future fixed-reward analysis
+      - EX-FIXED-001
+    planned_consumers:
+      - fixed-reward analysis skill
     relevant_claims:
       - New-hire premiums relative to incumbents can indicate compression issues.
       - Long-tenured employees may face pay compression when new hires enter at similar or higher salaries.
@@ -165,8 +181,9 @@ sources:
     licence_or_usage_notes: Cite and paraphrase; do not imply the article defines McKinsey's universal presentation standard.
     relevant_artifacts:
       - EX-CONSULT-001
-      - future consulting-technique catalogue
-      - future executive-readability guidance
+    planned_consumers:
+      - consulting-technique catalogue
+      - executive-readability guidance
     relevant_claims:
       - The article presents three principles for visual performance management.
       - It explicitly describes the 1-3-10 principle.
@@ -188,7 +205,8 @@ sources:
     licence_or_usage_notes: Cite and paraphrase; preserve the distinction between visual performance management and general presentation design.
     relevant_artifacts:
       - EX-CONSULT-001
-      - future consulting-storyline skill
+    planned_consumers:
+      - consulting-storyline skill
     relevant_claims:
       - The article states that visual performance management is about storytelling and helping people take action.
       - It says the performance story should be understandable at a glance.
@@ -210,8 +228,9 @@ sources:
     licence_or_usage_notes: Cite and paraphrase; do not reproduce copyrighted figures or substantial article text.
     relevant_artifacts:
       - EX-VIZ-001
-      - future visual-perception knowledge pack
-      - future chart-selection skill
+    planned_consumers:
+      - visual-perception knowledge pack
+      - chart-selection skill
     relevant_claims:
       - The paper frames graphical perception as visual decoding of information encoded in graphs.
       - It identifies elementary perceptual tasks and orders them by observed accuracy.
@@ -232,9 +251,11 @@ sources:
     lifecycle_state: accepted
     licence_or_usage_notes: Public page may be cited. Review licence terms before reproducing substantial standard content or notation examples.
     relevant_artifacts:
-      - future IBCS knowledge pack
-      - future IBCS application skill
-      - Phase 1 release and research planning
+      - PLAN-CORE-001
+    planned_consumers:
+      - IBCS knowledge pack
+      - IBCS application skill
+      - release compatibility guidance
     relevant_claims:
       - IBCS Version 2.0 was approved and released on 2026-06-11.
       - Version 2.0 is aligned with ISO 24896 notation for business reporting.
