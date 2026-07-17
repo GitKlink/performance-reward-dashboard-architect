@@ -37,7 +37,19 @@ jobs:
         run: python3 scripts/validate-source-register.py --warnings-as-errors
 
       - name: Validate schemas
-        run: python3 scripts/validate-schemas.py --warnings-as-errors
+        shell: bash
+        run: |
+          set -o pipefail
+          python3 scripts/validate-schemas.py --warnings-as-errors 2>&1 | tee schema-validation.log
+
+      - name: Upload schema validation log
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: schema-validation-log
+          path: schema-validation.log
+          if-no-files-found: ignore
+          retention-days: 7
 
       - name: Validate internal links
         run: python3 scripts/check-internal-links.py
