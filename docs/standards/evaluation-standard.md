@@ -1,40 +1,54 @@
 ---
+artifact_id: STD-CORE-006
 status: PLACEHOLDER
-phase: TBD
-priority: TBD
-depends_on: []
-blocks: []
+phase: 1
+priority: critical
+depends_on:
+  - artifact_id: ARCH-CORE-001
+    path: ../architecture/agent-architecture.md
+  - artifact_id: ARCH-CORE-003
+    path: ../architecture/skill-routing-model.md
+  - artifact_id: STD-CORE-005
+    path: example-authoring-standard.md
+blocks:
+  - evaluation rubric
+  - release quality gates
+content_version: 0.0.0
 last_reviewed: 2026-07-17
+next_review: 2026-08-17
 ---
 
-# Placeholder Architecture or Standards Artifact
+# Evaluation standard
 
 ## Purpose
 
-This file reserves an authoritative repository location. Its final purpose is defined by its path, `BUILD-ORDER.md`, and `DEPENDENCIES.md`.
+Define how the agent, skills, routing, knowledge, outputs, and releases are tested consistently.
 
-## What must be completed
+## What this file must establish
 
-- Define the artifact's scope and boundaries.
-- Identify authoritative upstream dependencies and downstream consumers.
-- Conduct the research required by `docs/standards/research-standard.md`.
-- Apply the naming, citation, and authoring standards.
-- Record decisions, assumptions, exclusions, and unresolved questions.
-- Replace generic instructions with artifact-specific acceptance criteria.
+- Evaluation dimensions and severity levels
+- Scenario, expected-result, and reviewer requirements
+- Deterministic checks versus judgement-based review
+- Audience, P&R, analytical, visual, accessibility, Power BI, evidence, and governance criteria
+- Routing false-positive and false-negative tests
+- Regression-test process
+- Human review and disagreement resolution
+- Release-blocking failure conditions
 
-## Required sections in the finished artifact
+## Required outputs
 
-- Purpose
-- Scope and exclusions
-- Definitions
-- Method or standard
-- Decision rules
-- Dependencies
-- Examples where relevant
-- Anti-patterns and risks
-- Acceptance criteria
-- Sources and review record
+- Evaluation rubric
+- Severity and weighting model
+- Benchmark-case format
+- Expected-result format
+- Regression process
+- Review record and sign-off requirements
+- Release threshold
 
-## Completion gate
+## Acceptance criteria
 
-Do not change the status from `PLACEHOLDER` until dependencies are confirmed and an artifact-specific plan has been written. Do not mark `APPROVED` until independent review and relevant validation are complete.
+- Different reviewers can apply the rubric consistently
+- Critical metric, evidence, privacy, and audience failures cannot be averaged away
+- Acceptable alternative designs are permitted where the decision logic remains sound
+- Static and interactive products are evaluated differently where appropriate
+- Results are versioned and traceable to the tested agent state
