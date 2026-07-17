@@ -36,5 +36,8 @@ jobs:
       - name: Validate source register
         run: python3 scripts/validate-source-register.py --warnings-as-errors
 
+      - name: Validate schemas
+        run: python3 scripts/validate-schemas.py --warnings-as-errors
+
       - name: Validate internal links
         run: python3 scripts/check-internal-links.py
