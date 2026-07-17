@@ -1,40 +1,59 @@
 ---
+artifact_id: ARCH-CORE-003
 status: PLACEHOLDER
-phase: TBD
-priority: TBD
-depends_on: []
-blocks: []
+phase: 1
+priority: critical
+depends_on:
+  - artifact_id: ARCH-CORE-001
+    path: agent-architecture.md
+  - artifact_id: ARCH-CORE-002
+    path: context-management-strategy.md
+blocks:
+  - active Cursor skills
+  - main orchestrator rule
+  - routing evaluations
+content_version: 0.0.0
 last_reviewed: 2026-07-17
+next_review: 2026-08-17
 ---
 
-# Placeholder Architecture or Standards Artifact
+# Skill-routing model
 
 ## Purpose
 
-This file reserves an authoritative repository location. Its final purpose is defined by its path, `BUILD-ORDER.md`, and `DEPENDENCIES.md`.
+Define how Cursor selects the minimum appropriate set of skills for each dashboard-design request.
 
-## What must be completed
+## What this file must establish
 
-- Define the artifact's scope and boundaries.
-- Identify authoritative upstream dependencies and downstream consumers.
-- Conduct the research required by `docs/standards/research-standard.md`.
-- Apply the naming, citation, and authoring standards.
-- Record decisions, assumptions, exclusions, and unresolved questions.
-- Replace generic instructions with artifact-specific acceptance criteria.
+- Routing dimensions: audience, decision mode, Performance & Reward domain, consumption mode, workflow stage, and requested output
+- Automatic versus explicit invocation rules
+- Required foundational skills
+- Specialist-skill selection and exclusion rules
+- Skill sequencing and dependency handling
+- Conflict resolution when multiple skills make competing recommendations
+- When to delegate to a subagent
+- How to avoid overloading context with irrelevant capabilities
 
-## Required sections in the finished artifact
+## Required outputs
 
-- Purpose
-- Scope and exclusions
-- Definitions
-- Method or standard
-- Decision rules
-- Dependencies
-- Examples where relevant
-- Anti-patterns and risks
-- Acceptance criteria
-- Sources and review record
+- Routing decision tree
+- Skill dependency graph
+- Invocation matrix
+- Example routing traces
+- Fallback and ambiguity protocol
+- Evaluation cases for false-positive and false-negative routing
 
-## Completion gate
+## Acceptance criteria
 
-Do not change the status from `PLACEHOLDER` until dependencies are confirmed and an artifact-specific plan has been written. Do not mark `APPROVED` until independent review and relevant validation are complete.
+- The same request routes differently for executives, Business Partners, managers, and specialist teams where appropriate
+- Static, interactive, and hybrid outputs trigger different capabilities
+- Domain skills are not invoked without relevant business questions
+- The minimum sufficient skill set is preferred
+- Routing can be tested deterministically against benchmark scenarios
+
+## Files that consume this content
+
+- Skill-authoring standard
+- Main Cursor rule
+- Subagent definitions
+- Evaluation standard and routing benchmarks
