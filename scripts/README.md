@@ -12,7 +12,7 @@ depends_on:
     path: ../docs/standards/naming-standard.md
 blocks:
   - repository validation workflow
-content_version: 0.3.0
+content_version: 0.4.0
 last_reviewed: 2026-07-17
 next_review: 2026-08-17
 ---
@@ -66,15 +66,7 @@ Validation scripts are read-only.
 
 ### `validate-dependencies.py`
 
-Checks:
-
-- artifact-ID and path uniqueness;
-- registered-file existence;
-- required register fields;
-- lifecycle statuses;
-- dependency references and cycles;
-- frontmatter/register agreement;
-- approval maturity.
+Checks artifact IDs, paths, registered files, lifecycle statuses, dependency references and cycles, frontmatter/register agreement, and approval maturity.
 
 ```bash
 python3 scripts/validate-dependencies.py --warnings-as-errors
@@ -82,15 +74,7 @@ python3 scripts/validate-dependencies.py --warnings-as-errors
 
 ### `validate-source-register.py`
 
-Checks:
-
-- required source fields;
-- source-ID and URL uniqueness;
-- evidence and lifecycle enums;
-- publication, update, and retrieval dates;
-- current-product freshness;
-- artifact references;
-- central source IDs used in research records.
+Checks required source fields, source-ID and URL uniqueness, evidence and lifecycle values, dates, current-product freshness, artifact references, and central source IDs used in research records.
 
 ```bash
 python3 scripts/validate-source-register.py --warnings-as-errors
@@ -106,7 +90,7 @@ Checks every `schemas/*.schema.yaml` file for:
 - filename and schema-subject agreement;
 - required fields declared in `properties`;
 - duplicate schema and artifact IDs;
-- optional valid and invalid fixture behaviour.
+- valid and invalid fixture behaviour.
 
 ```bash
 python3 scripts/validate-schemas.py --warnings-as-errors
@@ -118,6 +102,26 @@ Fixture naming:
 schemas/examples/<subject>.valid.yaml
 schemas/examples/<subject>.invalid.yaml
 ```
+
+### `validate-templates.py`
+
+Checks every active Markdown template for:
+
+- required frontmatter;
+- valid and unique template IDs;
+- valid content and schema versions;
+- existing repository-local schema paths;
+- filename-to-schema subject agreement;
+- declared schema-version agreement;
+- level-one headings;
+- placeholder explanation;
+- one active template for each active schema.
+
+```bash
+python3 scripts/validate-templates.py --warnings-as-errors
+```
+
+The current validator checks structural mapping. It does not yet infer whether every required schema field is represented semantically in prose or tables; that remains a development review and later validator enhancement.
 
 ### `check-internal-links.py`
 
@@ -133,9 +137,9 @@ python3 scripts/check-internal-links.py
 
 Next after current Cursor skill metadata is verified and the first foundational skills enter activation testing.
 
-### Template-to-schema validation
+### Template field-mapping validation
 
-Will verify template schema declarations, versions, required-field mappings, and duplicate template IDs.
+Will extend structural template validation to check required schema fields against declared template mappings without treating arbitrary prose as machine-readable structure.
 
 ### `generate-status-index.py`
 
@@ -154,18 +158,20 @@ Later validators will check package dependency closure, status eligibility, mani
 3. artifact dependency validation with warnings as failures;
 4. source-register validation with warnings as failures;
 5. JSON Schema validation with warnings as failures;
-6. internal-link validation.
+6. template-to-schema validation with warnings as failures;
+7. internal-link validation.
 
-The workflow runs for pushes to `main` and `scaffold/repository-foundation` and for pull requests targeting `main`.
+Contract-validation logs are retained as short-lived workflow artifacts for diagnostics.
 
 ## Current test coverage
 
-The suite currently contains **25 test scenarios**:
+The suite currently contains **32 test scenarios**:
 
 - 7 dependency-validator scenarios;
 - 5 internal-link scenarios;
 - 6 source-register scenarios;
-- 7 JSON Schema scenarios.
+- 7 JSON Schema scenarios;
+- 7 template-validator scenarios.
 
 Coverage includes:
 
@@ -176,8 +182,8 @@ Coverage includes:
 - valid and duplicate source records;
 - invalid evidence levels and unknown references;
 - valid and invalid JSON Schemas;
-- duplicate schema IDs;
-- valid and invalid schema fixtures.
+- duplicate schema IDs and schema fixtures;
+- missing template schemas, version mismatch, duplicate template IDs, incorrect mappings, and placeholder safety.
 
 ## Safety rules
 
@@ -198,6 +204,6 @@ This script set is development-ready when:
 - CI is green;
 - warnings that indicate metadata drift fail CI;
 - validators enforce documented standards;
-- new schema and skill validators are added as those artifact classes become active.
+- new skill and release validators are added as those artifact classes become active.
 
 Release approval additionally requires package, compatibility, privacy, security, and integrated evaluation checks defined in the release architecture.
