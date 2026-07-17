@@ -1,40 +1,64 @@
 ---
+artifact_id: STD-CORE-005
 status: PLACEHOLDER
-phase: TBD
-priority: TBD
-depends_on: []
-blocks: []
+phase: 1
+priority: high
+depends_on:
+  - artifact_id: ARCH-CORE-001
+    path: ../architecture/agent-architecture.md
+  - artifact_id: STD-CORE-001
+    path: naming-standard.md
+  - artifact_id: STD-CORE-002
+    path: research-standard.md
+  - artifact_id: STD-CORE-003
+    path: citation-standard.md
+  - artifact_id: EX-CORE-001
+    path: ../../knowledge/research-register/trials/cursor-rules-and-skills-trial.md
+  - artifact_id: EX-CORE-002
+    path: ../../knowledge/research-register/trials/internal-source-of-truth-decision-trial.md
+  - artifact_id: EX-FIXED-001
+    path: ../../knowledge/research-register/trials/new-hire-premium-kpi-trial.md
+  - artifact_id: EX-CONSULT-001
+    path: ../../knowledge/research-register/trials/consulting-attribution-trial.md
+  - artifact_id: EX-VIZ-001
+    path: ../../knowledge/research-register/trials/graphical-perception-trial.md
+blocks:
+  - worked examples
+  - benchmark scenarios
+content_version: 0.0.0
 last_reviewed: 2026-07-17
+next_review: 2026-08-17
 ---
 
-# Placeholder Architecture or Standards Artifact
+# Example-authoring standard
 
 ## Purpose
 
-This file reserves an authoritative repository location. Its final purpose is defined by its path, `BUILD-ORDER.md`, and `DEPENDENCIES.md`.
+Define how worked examples and benchmark inputs demonstrate approved behaviour without creating hidden rules or exposing sensitive information.
 
-## What must be completed
+## What this file must establish
 
-- Define the artifact's scope and boundaries.
-- Identify authoritative upstream dependencies and downstream consumers.
-- Conduct the research required by `docs/standards/research-standard.md`.
-- Apply the naming, citation, and authoring standards.
-- Record decisions, assumptions, exclusions, and unresolved questions.
-- Replace generic instructions with artifact-specific acceptance criteria.
+- Example types and intended uses
+- Required audience, decision, domain, consumption mode, assumptions, and constraints
+- Synthetic-data and privacy requirements
+- How examples reference approved skills, knowledge, schemas, and templates
+- How acceptable design alternatives are represented
+- How incomplete, adversarial, and failure examples are written
+- Versioning and review requirements
 
-## Required sections in the finished artifact
+## Required outputs
 
-- Purpose
-- Scope and exclusions
-- Definitions
-- Method or standard
-- Decision rules
-- Dependencies
-- Examples where relevant
-- Anti-patterns and risks
-- Acceptance criteria
-- Sources and review record
+- Example template
+- Benchmark-input template
+- Expected-result structure
+- Synthetic-data standard
+- Redaction checklist
+- Valid and invalid examples
 
-## Completion gate
+## Acceptance criteria
 
-Do not change the status from `PLACEHOLDER` until dependencies are confirmed and an artifact-specific plan has been written. Do not mark `APPROVED` until independent review and relevant validation are complete.
+- Examples are reproducible without conversation memory
+- Inputs and expected behaviour are clearly separated
+- Fictional values cannot be mistaken for real organisational data
+- Examples do not silently override approved methods
+- At least executive, Business Partner, manager, interactive, and static scenarios are represented
