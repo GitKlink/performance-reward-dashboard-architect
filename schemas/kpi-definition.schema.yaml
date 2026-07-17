@@ -1,22 +1,414 @@
-# PLACEHOLDER SCHEMA
-#
-# Purpose
-# Reserve an authoritative machine-readable contract at this path.
-#
-# Complete this file by:
-# - defining the schema version and object purpose;
-# - listing required and optional fields;
-# - specifying types, enums, formats, defaults, and validation rules;
-# - mapping each field to the corresponding template;
-# - adding valid and invalid examples;
-# - documenting backward-compatibility and migration rules;
-# - validating the schema with the repository validation script.
-#
-# Dependencies
-# Consult BUILD-ORDER.md and DEPENDENCIES.md before authoring.
-#
-# Completion gate
-# This placeholder is not a valid production schema and must not be consumed by skills until approved.
-status: PLACEHOLDER
-schema_version: 0.0.0
-artifact_path_defines_subject: true
+$schema: https://json-schema.org/draft/2020-12/schema
+$id: urn:performance-reward-dashboard-architect:schema:kpi-definition:0.1.0
+title: KPI definition
+description: >-
+  Contract for a complete Performance & Reward measure definition, including
+  decision use, formula, population, time logic, aggregation, comparison,
+  interpretation, data quality, privacy, and implementation notes.
+type: object
+additionalProperties: false
+x-repository:
+  artifact_id: SCHEMA-PR-001
+  status: DRAFT
+  phase: 2
+  schema_version: 0.1.0
+  content_version: 0.1.0
+  owner: docs/standards/research-standard.md
+required:
+  - kpi_id
+  - name
+  - status
+  - business_question
+  - decisions_supported
+  - performance_reward_domain
+  - measure_role
+  - definition
+  - formula
+  - grain
+  - population
+  - time_logic
+  - aggregation
+  - unit
+  - direction
+  - comparators
+  - interpretation
+  - data_requirements
+  - data_quality
+  - privacy
+  - limitations
+  - ownership
+properties:
+  kpi_id:
+    type: string
+    pattern: ^KPI-[A-Z0-9-]+-[0-9]{3}$
+  name:
+    type: string
+    minLength: 3
+    maxLength: 120
+  short_name:
+    type: string
+    maxLength: 40
+  status:
+    enum: [DRAFT, IN REVIEW, APPROVED, SUPERSEDED]
+  content_version:
+    type: string
+    pattern: ^[0-9]+\.[0-9]+\.[0-9]+$
+    default: 0.1.0
+  business_question:
+    type: string
+    minLength: 8
+  decisions_supported:
+    type: array
+    minItems: 1
+    uniqueItems: true
+    items:
+      type: string
+      minLength: 3
+  audiences:
+    type: array
+    uniqueItems: true
+    items:
+      enum:
+        - executive
+        - board-or-committee
+        - business-partner
+        - people-manager
+        - reward-partner
+        - performance-reward-specialist
+        - people-analytics-or-reporting
+        - operational-team
+  performance_reward_domain:
+    enum:
+      - cross-domain-performance-reward
+      - performance-management
+      - fixed-reward
+      - variable-reward
+      - market-competitiveness
+      - job-architecture
+      - pay-equity
+      - talent-and-retention
+      - total-rewards
+      - governance-and-controls
+  measure_role:
+    enum: [outcome, driver, leading-signal, activity, control, context, diagnostic]
+  time_orientation:
+    enum: [point-in-time, period-flow, cumulative, rolling, forecast, scenario, not-applicable]
+  definition:
+    type: string
+    minLength: 10
+  conceptual_source:
+    type: object
+    additionalProperties: false
+    properties:
+      source_ids:
+        type: array
+        uniqueItems: true
+        items:
+          type: string
+          pattern: ^[a-z0-9]+(?:-[a-z0-9]+)*$
+      repository_defined:
+        type: boolean
+      organisation_policy_required:
+        type: boolean
+  formula:
+    type: object
+    additionalProperties: false
+    required: [expression, numerator, denominator, null_and_zero_treatment]
+    properties:
+      expression:
+        type: string
+        minLength: 3
+      numerator:
+        type: string
+      denominator:
+        type: string
+      components:
+        type: array
+        items:
+          type: object
+          additionalProperties: false
+          required: [name, definition]
+          properties:
+            name:
+              type: string
+            definition:
+              type: string
+            unit:
+              type: string
+      null_and_zero_treatment:
+        type: string
+        minLength: 3
+      sign_convention:
+        type: string
+      rounding:
+        type: string
+      example_calculation:
+        type: string
+  grain:
+    type: object
+    additionalProperties: false
+    required: [calculation_grain, reporting_grain]
+    properties:
+      calculation_grain:
+        type: string
+      reporting_grain:
+        type: string
+      entity_key:
+        type: string
+      duplicate_treatment:
+        type: string
+  population:
+    type: object
+    additionalProperties: false
+    required: [included, excluded, eligibility_date]
+    properties:
+      included:
+        type: array
+        minItems: 1
+        items:
+          type: string
+      excluded:
+        type: array
+        items:
+          type: string
+      eligibility_date:
+        type: string
+      cohort_logic:
+        type: string
+      survivorship_bias_control:
+        type: string
+      coverage_denominator:
+        type: string
+  time_logic:
+    type: object
+    additionalProperties: false
+    required: [effective_date, reporting_period, comparison_alignment]
+    properties:
+      effective_date:
+        type: string
+      reporting_period:
+        type: string
+      lookback_or_window:
+        type: string
+      snapshot_or_event_rule:
+        type: string
+      comparison_alignment:
+        type: string
+      late_arriving_data:
+        type: string
+  aggregation:
+    type: object
+    additionalProperties: false
+    required: [method, rollup_rule, weighting]
+    properties:
+      method:
+        enum: [sum, count, distinct-count, mean, weighted-mean, median, percentile, ratio-of-sums, average-of-ratios, minimum, maximum, custom]
+      rollup_rule:
+        type: string
+      weighting:
+        type: string
+      non_additive_dimensions:
+        type: array
+        items:
+          type: string
+      small_group_treatment:
+        type: string
+      custom_method:
+        type: string
+  unit:
+    enum: [count, percentage, percentage-points, currency, currency-per-fte, ratio, index, days, months, score, text, other]
+  currency_and_fte_basis:
+    type: object
+    additionalProperties: false
+    properties:
+      currency:
+        type: string
+      fx_date_or_method:
+        type: string
+      annualised:
+        type: boolean
+      fte_adjusted:
+        type: boolean
+      pay_basis:
+        type: string
+  direction:
+    type: object
+    additionalProperties: false
+    required: [interpretation]
+    properties:
+      interpretation:
+        enum: [higher-is-better, lower-is-better, target-range, context-dependent, neutral]
+      rationale:
+        type: string
+      materiality_rule:
+        type: string
+  comparators:
+    type: array
+    minItems: 1
+    items:
+      type: object
+      additionalProperties: false
+      required: [comparator_type, definition]
+      properties:
+        comparator_type:
+          enum: [prior-period, target, budget, forecast, market, peer, policy, distribution, scenario, benchmark, none]
+        definition:
+          type: string
+        source:
+          type: string
+        tolerance:
+          type: string
+        display_priority:
+          enum: [primary, secondary, diagnostic]
+  segmentation:
+    type: array
+    uniqueItems: true
+    items:
+      type: object
+      additionalProperties: false
+      required: [dimension, purpose]
+      properties:
+        dimension:
+          type: string
+        purpose:
+          type: string
+        privacy_risk:
+          enum: [low, moderate, high]
+  interpretation:
+    type: object
+    additionalProperties: false
+    required: [what_it_indicates, what_it_does_not_prove]
+    properties:
+      what_it_indicates:
+        type: array
+        minItems: 1
+        items:
+          type: string
+      what_it_does_not_prove:
+        type: array
+        minItems: 1
+        items:
+          type: string
+      diagnostic_follow_ups:
+        type: array
+        items:
+          type: string
+      causal_language:
+        enum: [descriptive, association-only, diagnostic-signal, causal-supported, not-applicable]
+  data_requirements:
+    type: object
+    additionalProperties: false
+    required: [required_fields, source_systems, historical_depth]
+    properties:
+      required_fields:
+        type: array
+        minItems: 1
+        uniqueItems: true
+        items:
+          type: string
+      source_systems:
+        type: array
+        minItems: 1
+        uniqueItems: true
+        items:
+          type: string
+      historical_depth:
+        type: string
+      effective_dating_required:
+        type: boolean
+      joins_and_keys:
+        type: array
+        items:
+          type: string
+  data_quality:
+    type: object
+    additionalProperties: false
+    required: [coverage_measure, known_risks, validation_rules]
+    properties:
+      coverage_measure:
+        type: string
+      minimum_coverage:
+        type: string
+      known_risks:
+        type: array
+        items:
+          type: string
+      validation_rules:
+        type: array
+        minItems: 1
+        items:
+          type: string
+      reconciliation:
+        type: string
+  privacy:
+    type: object
+    additionalProperties: false
+    required: [sensitivity, minimum_group_rule, employee_level_access]
+    properties:
+      sensitivity:
+        enum: [public, internal, confidential, highly-confidential]
+      minimum_group_rule:
+        type: string
+      employee_level_access:
+        type: string
+      suppression_or_rounding:
+        type: string
+      export_restrictions:
+        type: string
+  display_guidance:
+    type: object
+    additionalProperties: false
+    properties:
+      default_format:
+        type: string
+      preferred_comparison:
+        type: string
+      recommended_visual_relationship:
+        enum: [comparison, trend, distribution, composition, variance, relationship, concentration, status, table, not-specified]
+      headline_suitable:
+        type: boolean
+      tooltip_or_definition_text:
+        type: string
+  implementation_notes:
+    type: object
+    additionalProperties: false
+    properties:
+      semantic_model:
+        type: string
+      dax_or_calculation_notes:
+        type: string
+      performance_risks:
+        type: array
+        items:
+          type: string
+      test_cases:
+        type: array
+        items:
+          type: string
+  limitations:
+    type: array
+    minItems: 1
+    items:
+      type: string
+      minLength: 3
+  ownership:
+    type: object
+    additionalProperties: false
+    required: [business_owner, definition_owner, review_cadence]
+    properties:
+      business_owner:
+        type: string
+      definition_owner:
+        type: string
+      data_owner:
+        type: string
+      review_cadence:
+        type: string
+      last_reviewed:
+        type: string
+        format: date
+      next_review_trigger:
+        type: string
+  superseded_by:
+    type: [string, 'null']
+    pattern: ^KPI-[A-Z0-9-]+-[0-9]{3}$
