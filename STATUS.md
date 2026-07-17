@@ -10,9 +10,9 @@ depends_on:
     path: DEPENDENCIES.md
 blocks:
   - release decisions
-content_version: 0.7.0
+content_version: 0.8.0
 last_reviewed: 2026-07-17
-next_review: 2026-07-24
+next_review: 2026-08-17
 ---
 
 # Repository status
@@ -31,11 +31,31 @@ scaffold/repository-foundation
 
 ## Current activity
 
-Phase 0 governance is internally corrected and ready for a genuinely independent review.
+Phase 0 is **provisionally complete for development** and Phase 1 architecture work has started.
 
-The complete Cursor-native scaffold, three core governance standards, five representative trials, artifact and source registers, validation suite, tests, and CI workflow are present.
+The decision was made to concentrate comprehensive independent testing in Phase 12 and final approval in Phase 13 rather than blocking every development phase with a formal review ceremony.
 
-The standards remain `DRAFT` because the independent-review gate has not yet been satisfied.
+Phase 0 artifacts remain `DRAFT`. They are sufficient to guide controlled development because:
+
+- the scaffold and governance controls exist;
+- five representative trials exercised the standards;
+- internal critical and major defects were corrected;
+- dependency, source, link, and unit-test validation pass;
+- placeholder runtime components cannot activate accidentally.
+
+## Current Phase 1 focus
+
+The active sequence is:
+
+1. agent architecture;
+2. context-management strategy;
+3. skill-routing model;
+4. repository information architecture;
+5. release architecture;
+6. skill, example, and evaluation standards;
+7. research, implementation, and release plans.
+
+The first substantive artifact is `ARCH-CORE-001`.
 
 ## Phase 0 package
 
@@ -55,71 +75,71 @@ The standards remain `DRAFT` because the independent-review gate has not yet bee
 
 ### Governance and validation
 
-- reconciled `ARTIFACT-REGISTER.yaml`
-- central source register with immutable artifact references
-- artifact dependency validator
-- source-register validator
-- internal-link validator
-- 18 unit-test scenarios
-- GitHub Actions quality gate
-- internal pre-review record `EVAL-QA-001`
+- artifact and source registers;
+- dependency, source-register, and internal-link validators;
+- 18 unit-test scenarios;
+- GitHub Actions quality gate;
+- internal pre-review record `EVAL-QA-001`.
 
 ## Automated validation status
 
-The current CI workflow passes with warnings treated as failures for dependency and source-register validation.
-
-It validates:
+The current CI workflow validates:
 
 - artifact IDs, paths, dependencies, cycles, frontmatter, and maturity;
 - source IDs, evidence levels, lifecycle states, dates, artifact references, and central source citations;
 - repository-local Markdown links;
-- all 18 unit-test scenarios.
+- all 18 current unit-test scenarios.
 
-## Internal pre-review outcome
+Warnings fail CI for dependency and source-register validation.
 
-The internal pre-review initially identified one critical, seven major, and four minor findings.
+## Testing strategy
 
-All internal critical and major findings have been resolved, including:
+### During development
 
-- phase approval deadlock;
-- research-record schema circular dependency;
-- missing `TEST` and `INFRA` artifact types;
-- unregistered validation infrastructure;
-- descriptive source-to-artifact references;
-- legacy dependency metadata;
-- new-hire premium survivorship bias;
-- reviewer-independence rules.
+- continuous repository validation;
+- local checks for each new knowledge pack, schema, skill, and workflow;
+- representative examples sufficient to expose obvious architectural defects;
+- correction of critical issues when discovered.
 
-`EVAL-QA-001` now records the outcome:
+### Phase 12
 
-```text
-PASS TO INDEPENDENT REVIEW
-```
+- independent architecture review;
+- complete benchmark and routing suite;
+- context-load and handoff testing;
+- cross-skill contradiction analysis;
+- audience and consumption-mode scenarios;
+- metric, Power BI, accessibility, privacy, licensing, and security review;
+- regression testing.
 
-This does not authorise a status transition.
+### Phase 13
+
+- final approval of runtime artifacts and mandatory dependencies;
+- release-package validation;
+- final regression run;
+- `v0.1.0` preparation.
 
 ## Important current-product finding
 
-IBCS Version 2.0 was released on 2026-06-11 and replaced the prior conceptual, perceptual, and semantic chapter structure with Notation and Composition aligned with ISO 24896. Any scaffold assumptions based on IBCS 1.2 must be reviewed before the IBCS knowledge pack is authored.
+IBCS Version 2.0 was released on 2026-06-11 and replaced the prior conceptual, perceptual, and semantic chapter structure with Notation and Composition aligned with ISO 24896. Later IBCS work must use the current baseline.
 
 ## Status definitions
 
 | Status | Meaning |
 |---|---|
-| `PLACEHOLDER` | Scope exists; substantive content does not |
+| `PLACEHOLDER` | Planned scope only |
 | `RESEARCH IN PROGRESS` | Evidence gathering is active |
-| `DRAFT` | Substantive content exists but has not passed review |
-| `IN REVIEW` | Acceptance criteria are being assessed |
-| `APPROVED` | Authoritative for dependent work |
+| `DRAFT` | Substantive content suitable for controlled development |
+| `IN REVIEW` | Formal review candidate |
+| `APPROVED` | Authoritative for release dependencies |
 | `SUPERSEDED` | Replaced by a named artifact |
 
 ## Phase summary
 
 | Phase | Name | Status | Current result |
 |---:|---|---|---|
-| 0 | Repository controls | DRAFT | Internally corrected; independent review pending |
-| 1 | Architecture and standards | PLACEHOLDER | Artifact-specific placeholders complete; blocked by Phase 0 review |
-| 2 | Schemas and templates | PLACEHOLDER | Blocked by Phase 1 and approved standards |
+| 0 | Repository foundation | DRAFT — provisionally complete | Development unblocked; full review deferred to Phase 12 |
+| 1 | Architecture and standards | IN PROGRESS | Agent architecture drafting started |
+| 2 | Schemas and templates | PLACEHOLDER | Starts after usable Phase 1 drafts exist |
 | 3 | Audience and decision foundation | PLACEHOLDER | Not started |
 | 4 | Holistic P&R foundation | PLACEHOLDER | Not started |
 | 5 | Specialist P&R domains | PLACEHOLDER | Not started |
@@ -129,18 +149,9 @@ IBCS Version 2.0 was released on 2026-06-11 and replaced the prior conceptual, p
 | 9 | Dashboard experience | PLACEHOLDER | Not started |
 | 10 | Power BI implementation | PLACEHOLDER | Not started |
 | 11 | Orchestrator and subagents | PLACEHOLDER | Not started |
-| 12 | Evaluation and validation | PLACEHOLDER | Repository validation foundation implemented early as a Phase 0 control |
-| 13 | Integration and release | PLACEHOLDER | Not started |
-
-## Phase 0 work remaining
-
-1. Complete the independent review under GitHub issue #2.
-2. Resolve any independent critical and major findings.
-3. Move eligible controls and standards to `IN REVIEW`.
-4. Complete final approval review and mark eligible Phase 0 artifacts `APPROVED`.
-5. Merge pull request #1.
-6. Begin substantive Phase 1 architecture work.
+| 12 | Comprehensive evaluation | PLACEHOLDER | Main independent testing phase |
+| 13 | Integration and release | PLACEHOLDER | Final approval and release |
 
 ## Immediate next action
 
-Run the independent Phase 0 review from a fresh reviewer context with no authority to approve its own corrections.
+Complete the first draft of `ARCH-CORE-001`, then use it to author the context-management strategy and skill-routing model.
