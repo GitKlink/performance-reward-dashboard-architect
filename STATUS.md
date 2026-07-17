@@ -10,7 +10,7 @@ depends_on:
     path: DEPENDENCIES.md
 blocks:
   - release decisions
-content_version: 0.4.0
+content_version: 0.5.0
 last_reviewed: 2026-07-17
 next_review: 2026-07-24
 ---
@@ -31,7 +31,7 @@ scaffold/repository-foundation
 
 ## Current activity
 
-Phase 0 repository governance and validation are in progress.
+Phase 0 repository governance is approaching formal review.
 
 The complete initial scaffold has been created. The first three substantive standards exist as drafts:
 
@@ -39,7 +39,7 @@ The complete initial scaffold has been created. The first three substantive stan
 - `STD-CORE-002` — research standard;
 - `STD-CORE-003` — citation standard.
 
-The initial artifact register and central research register exist. All five representative standards trials required for Phase 0 have now been completed:
+The artifact register and central research register exist. All five representative standards trials required for Phase 0 have been completed:
 
 - `EX-CORE-001` — current Cursor rules and skills evidence;
 - `EX-FIXED-001` — new-hire premium KPI definition;
@@ -47,9 +47,9 @@ The initial artifact register and central research register exist. All five repr
 - `EX-VIZ-001` — stable graphical-perception research;
 - `EX-CORE-002` — internal source-of-truth decision.
 
-A first dependency validator and seven unit tests have also been implemented. The test suite covers a valid repository, missing paths, duplicate IDs, unresolved dependencies, dependency cycles, frontmatter mismatches, and invalid approval maturity.
+The branch now includes a working dependency validator, seven unit-test scenarios, and a GitHub Actions validation workflow. The latest workflow run completed successfully: Python setup, dependency installation, unit tests, and branch-wide artifact validation all passed.
 
-The standards remain `DRAFT` pending full branch validation, active-metadata reconciliation, and independent review.
+The standards remain `DRAFT` pending canonical metadata migration, source/link validation expansion, and independent review.
 
 ## Important current-product finding
 
@@ -70,8 +70,8 @@ IBCS Version 2.0 was released on 2026-06-11 and changed the prior conceptual, pe
 
 | Phase | Name | Status | Current result |
 |---:|---|---|---|
-| 0 | Repository controls | DRAFT | Core standards, five trials, source register, and initial validator completed |
-| 1 | Architecture and standards | PLACEHOLDER | Blocked by Phase 0 validation and review |
+| 0 | Repository controls | DRAFT | Core standards, five trials, reconciled register, tests, and successful CI validation |
+| 1 | Architecture and standards | PLACEHOLDER | Placeholders now have specific metadata, dependencies, required outputs, and acceptance criteria |
 | 2 | Schemas and templates | PLACEHOLDER | Blocked by Phase 1 and approved standards |
 | 3 | Audience and decision foundation | PLACEHOLDER | Not started |
 | 4 | Holistic P&R foundation | PLACEHOLDER | Not started |
@@ -82,7 +82,7 @@ IBCS Version 2.0 was released on 2026-06-11 and changed the prior conceptual, pe
 | 9 | Dashboard experience | PLACEHOLDER | Not started |
 | 10 | Power BI implementation | PLACEHOLDER | Not started |
 | 11 | Orchestrator and subagents | PLACEHOLDER | Not started |
-| 12 | Evaluation and validation | PLACEHOLDER | Initial repository validator started early as a Phase 0 control |
+| 12 | Evaluation and validation | PLACEHOLDER | Initial repository validation implemented early as a Phase 0 control |
 | 13 | Integration and release | PLACEHOLDER | Not started |
 
 ## Scaffold inventory
@@ -98,7 +98,8 @@ The branch contains the planned repository locations for:
 - eight output schemas and nine output templates;
 - audience and format examples;
 - five benchmark scenarios with expected-result locations;
-- validation and generation scripts.
+- validation and generation scripts;
+- automated repository validation through GitHub Actions.
 
 ## Completed Phase 0 work
 
@@ -109,19 +110,21 @@ The branch contains the planned repository locations for:
 5. Completed all five representative standards trials.
 6. Recorded the required rename from `holistic-pr-value-drivers` to `holistic-performance-reward-value-drivers` before Phase 4.
 7. Defined validation-script contracts and development dependencies.
-8. Implemented the initial dependency validator.
-9. Added seven passing unit-test scenarios for the validator in an isolated local test fixture.
+8. Implemented the dependency validator and seven unit tests.
+9. Reconciled Phase 0 and Phase 1 artifacts in `ARTIFACT-REGISTER.yaml`.
+10. Replaced generic Phase 1 placeholders with artifact-specific instructions and canonical metadata.
+11. Added a GitHub Actions validation workflow.
+12. Passed branch-wide unit tests and dependency validation in CI.
 
 ## Phase 0 work remaining
 
-1. Add the newest trials and validation artifacts to `ARTIFACT-REGISTER.yaml`.
-2. Reconcile active file frontmatter with the canonical dependency-object format.
-3. Run the dependency validator against the complete branch and resolve all findings.
-4. Add source-register validation and internal-link validation design.
-5. Conduct independent review of `STD-CORE-001` to `STD-CORE-003` and the five trials.
-6. Resolve review findings and move eligible controls to `IN REVIEW`.
-7. Merge the scaffold and governance pull request when the review gate is satisfied.
+1. Migrate remaining active Phase 0 files from accepted legacy dependency syntax to the canonical dependency-object format.
+2. Register the validation workflow as a governed infrastructure artifact.
+3. Add source-register validation and internal-link validation.
+4. Conduct independent review of `STD-CORE-001` to `STD-CORE-003` and the five trials.
+5. Resolve review findings and move eligible controls to `IN REVIEW`.
+6. Merge the scaffold and governance pull request when the review gate is satisfied.
 
 ## Immediate next action
 
-Complete artifact-register reconciliation and run the dependency validator against the full branch before beginning substantive Phase 1 architecture work.
+Implement source-register and internal-link validation, then create the Phase 0 independent-review package.
