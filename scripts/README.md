@@ -12,8 +12,7 @@ depends_on:
     path: ../docs/standards/naming-standard.md
 blocks:
   - repository validation workflow
-  - Phase 0 review
-content_version: 0.2.0
+content_version: 0.3.0
 last_reviewed: 2026-07-17
 next_review: 2026-08-17
 ---
@@ -22,7 +21,7 @@ next_review: 2026-08-17
 
 ## Purpose
 
-This directory contains deterministic validation and generation utilities for repository governance. Scripts enforce approved standards; they do not silently invent, reinterpret, or rewrite policy.
+This directory contains deterministic validation and generation utilities. Scripts enforce documented repository policy; they do not silently invent, reinterpret, or rewrite it.
 
 ## Development environment
 
@@ -32,7 +31,7 @@ Use Python 3.11 or later.
 python3 -m pip install -r requirements-dev.txt
 ```
 
-Run the full test suite:
+Run all tests:
 
 ```bash
 python3 -m unittest discover -s tests -p "test_*.py"
@@ -40,7 +39,7 @@ python3 -m unittest discover -s tests -p "test_*.py"
 
 ## Script contract
 
-Every active script must define:
+Every active script defines:
 
 - authoritative inputs;
 - supported runtime;
@@ -52,22 +51,22 @@ Every active script must define:
 - tests and fixtures;
 - limitations and non-goals.
 
-Scripts default to read-only behaviour unless mutation is explicitly documented and approved.
+Validation scripts are read-only.
 
 ## Exit codes
 
 | Code | Meaning |
 |---:|---|
-| `0` | Validation completed successfully |
-| `1` | Validation failed or required input was invalid |
-| `2` | Warnings were promoted to errors |
+| `0` | Validation passed |
+| `1` | Validation or input failed |
+| `2` | Warnings were promoted to failures |
 | `3` | Environment or dependency failure |
 
-## Active scripts
+## Active validators
 
 ### `validate-dependencies.py`
 
-Validates:
+Checks:
 
 - artifact-ID and path uniqueness;
 - registered-file existence;
@@ -75,33 +74,54 @@ Validates:
 - lifecycle statuses;
 - dependency references and cycles;
 - frontmatter/register agreement;
-- dependency maturity for `IN REVIEW` and `APPROVED` artifacts.
+- approval maturity.
 
 ```bash
-python3 scripts/validate-dependencies.py
+python3 scripts/validate-dependencies.py --warnings-as-errors
 ```
-
-The validator accepts canonical dependency objects and temporarily recognises legacy Phase 0 forms with warnings.
 
 ### `validate-source-register.py`
 
-Validates:
+Checks:
 
-- required source-record fields;
+- required source fields;
 - source-ID and URL uniqueness;
-- source quality and lifecycle enums;
+- evidence and lifecycle enums;
 - publication, update, and retrieval dates;
-- current-product freshness warnings;
-- relevant-artifact references;
-- central source IDs cited by research-register Markdown files.
+- current-product freshness;
+- artifact references;
+- central source IDs used in research records.
 
 ```bash
-python3 scripts/validate-source-register.py
+python3 scripts/validate-source-register.py --warnings-as-errors
+```
+
+### `validate-schemas.py`
+
+Checks every `schemas/*.schema.yaml` file for:
+
+- valid YAML;
+- JSON Schema Draft 2020-12 structure;
+- stable `$id` and repository artifact metadata;
+- filename and schema-subject agreement;
+- required fields declared in `properties`;
+- duplicate schema and artifact IDs;
+- optional valid and invalid fixture behaviour.
+
+```bash
+python3 scripts/validate-schemas.py --warnings-as-errors
+```
+
+Fixture naming:
+
+```text
+schemas/examples/<subject>.valid.yaml
+schemas/examples/<subject>.invalid.yaml
 ```
 
 ### `check-internal-links.py`
 
-Validates repository-local Markdown and MDC links while ignoring external URLs, anchor-only links, and fenced-code examples.
+Checks repository-local Markdown and MDC links while ignoring external URLs, anchor-only links, and fenced-code examples.
 
 ```bash
 python3 scripts/check-internal-links.py
@@ -111,57 +131,73 @@ python3 scripts/check-internal-links.py
 
 ### `validate-skill-frontmatter.py`
 
-Blocked by the skill-authoring standard and current Cursor schema verification.
+Next after current Cursor skill metadata is verified and the first foundational skills enter activation testing.
 
-### `validate-schemas.py`
+### Template-to-schema validation
 
-Blocked by Phase 2 schema design.
+Will verify template schema declarations, versions, required-field mappings, and duplicate template IDs.
 
 ### `generate-status-index.py`
 
-Will generate a human-readable index from `ARTIFACT-REGISTER.yaml`. Generated output must never become a competing source of truth.
+Will generate a human-readable index from `ARTIFACT-REGISTER.yaml`. Generated output cannot become a competing authority.
+
+### Release validation
+
+Later validators will check package dependency closure, status eligibility, manifests, hashes, placeholder exclusion, and reproducibility.
 
 ## Continuous integration
 
 `.github/workflows/repository-validation.yml` runs:
 
-1. development-dependency installation;
+1. dependency installation;
 2. all unit tests;
-3. artifact dependency validation;
-4. source-register validation;
-5. internal-link validation.
+3. artifact dependency validation with warnings as failures;
+4. source-register validation with warnings as failures;
+5. JSON Schema validation with warnings as failures;
+6. internal-link validation.
 
-The workflow currently runs for pushes to `main` and `scaffold/repository-foundation` and for pull requests targeting `main`.
+The workflow runs for pushes to `main` and `scaffold/repository-foundation` and for pull requests targeting `main`.
 
-## Test coverage
+## Current test coverage
 
-Current tests cover:
+The suite currently contains **25 test scenarios**:
+
+- 7 dependency-validator scenarios;
+- 5 internal-link scenarios;
+- 6 source-register scenarios;
+- 7 JSON Schema scenarios.
+
+Coverage includes:
 
 - valid and invalid artifact graphs;
 - missing paths, duplicate IDs, unresolved dependencies, and cycles;
 - frontmatter/register mismatch and approval maturity;
-- valid, external, anchor, fenced-code, root-relative, and missing Markdown links;
+- local, external, anchor, fenced-code, root-relative, and missing Markdown links;
 - valid and duplicate source records;
-- invalid evidence levels;
-- unknown artifact and central source references;
-- legacy descriptive source-to-artifact references.
+- invalid evidence levels and unknown references;
+- valid and invalid JSON Schemas;
+- duplicate schema IDs;
+- valid and invalid schema fixtures.
 
 ## Safety rules
 
 - Use safe YAML loading.
 - Never execute repository content as code.
 - Do not follow external links during core validation.
-- Do not mutate authoritative files during validation.
-- Do not refresh dates automatically.
+- Do not mutate authoritative artifacts during validation.
+- Do not refresh evidence dates automatically.
 - Do not expose credentials, environment variables, or private paths.
 - Return all detectable findings in one run where practical.
+- Do not turn subjective design preferences into deterministic failures.
 
 ## Acceptance criteria
 
-This artifact can move to `IN REVIEW` when:
+This script set is development-ready when:
 
-- all active scripts and the workflow are registered;
-- all tests and branch-wide validators pass;
-- remaining legacy metadata is either migrated or explicitly accepted for the review period;
-- validator outputs are suitable for future required status checks;
-- independent review confirms that scripts enforce rather than redefine the standards.
+- all active validators have tests;
+- CI is green;
+- warnings that indicate metadata drift fail CI;
+- validators enforce documented standards;
+- new schema and skill validators are added as those artifact classes become active.
+
+Release approval additionally requires package, compatibility, privacy, security, and integrated evaluation checks defined in the release architecture.
