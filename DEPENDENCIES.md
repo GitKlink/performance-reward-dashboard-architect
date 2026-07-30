@@ -9,9 +9,9 @@ depends_on:
 blocks:
   - all dependent artifacts
   - dependency validation
-content_version: 0.4.0
-last_reviewed: 2026-07-17
-next_review: 2026-08-17
+content_version: 0.5.0
+last_reviewed: 2026-07-31
+next_review: 2026-08-31
 ---
 
 # Artifact dependency map
@@ -23,30 +23,30 @@ This file defines dependency semantics, source-of-truth boundaries, development 
 ## Dependency chain
 
 ```text
-Repository controls and evidence standards
+Minimum repository controls, architecture, standards, schemas, and validation
         ↓
-Agent architecture and context strategy
+Performance & Reward ontology and shared definitions
         ↓
-Schemas and output contracts
+Priority specialist domain packs
         ↓
-Audience and decision framework
+Domain workflows and product archetypes
         ↓
-Holistic Performance & Reward foundation
+Performance & Reward audience and decision treatment
         ↓
-Specialist domain packs
+Microsoft Power BI skill integration and gap handling
         ↓
-Consulting, visual-design, and visualisation knowledge
+Performance & Reward-specific implementation knowledge
         ↓
-Dashboard experience patterns
+Domain communication and visual patterns
         ↓
-Power BI implementation patterns
+Active skills, orchestrator rules, subagents, and comprehensive evaluation
         ↓
-Active skills, orchestrator rules, and subagents
-        ↓
-Comprehensive evaluation, approval, packaging, and release
+Approval, packaging, and release
 ```
 
 The chain controls order and ownership. It does not require formal approval of every upstream draft before downstream authoring begins.
+
+Generic Power BI implementation knowledge is no longer an automatic upstream dependency for domain authoring. Domain artifacts may begin once their minimum structural, evidence, and schema dependencies are substantive drafts.
 
 ## Required metadata
 
@@ -75,12 +75,13 @@ The ID is authoritative. The path supports navigation and must agree with the ar
 | Type | Meaning | Example |
 |---|---|---|
 | Structural | Defines format or component boundaries | skill depends on skill-authoring standard |
-| Semantic | Defines concepts or terminology | domain skill depends on domain knowledge |
-| Data contract | Defines fields or machine-readable structure | template depends on schema |
+| Semantic | Defines concepts or terminology | domain skill depends on domain ontology |
+| Data contract | Defines fields or machine-readable structure | KPI catalogue depends on KPI schema |
 | Evidence | Defines research required for claims | knowledge depends on research standards |
 | Behavioural | Defines invocation or orchestration | main rule depends on routing model |
 | Validation | Defines tests or acceptance criteria | release depends on evaluation standard |
-| Implementation | Defines platform feasibility | interaction pattern depends on Power BI evidence |
+| Implementation | Defines platform feasibility | domain workflow depends on verified implementation constraints |
+| External capability | Defines delegated platform behaviour | local integration rule depends on a verified Microsoft skill capability |
 
 ## Lifecycle semantics
 
@@ -141,7 +142,9 @@ A later phase may begin substantive draft work when:
 - no unresolved critical defect makes the downstream work predictably invalid;
 - runtime placeholders remain disabled.
 
-Formal independent review is concentrated in Phase 12 and approval in Phase 13, except where an earlier decision is high-risk, legally sensitive, security-sensitive, or difficult to reverse.
+Domain-first vertical slices may cross nominal phase boundaries when they are used to validate the ontology, schemas, routing, and implementation constraints together.
+
+Formal independent review is concentrated in Phase 8 and approval in Phase 9, except where an earlier decision is high-risk, legally sensitive, security-sensitive, or difficult to reverse.
 
 ## Source-of-truth rules
 
@@ -155,6 +158,9 @@ Formal independent review is concentrated in Phase 12 and approval in Phase 13, 
 8. Generated indexes never replace the artifact register.
 9. Source records identify evidence; they do not replace claim-level citations.
 10. A draft may guide development without becoming release authority.
+11. Performance & Reward ontology owns business terminology, calculations, process semantics, grain rules, and control meanings.
+12. Microsoft Power BI skills may own delegated platform procedures but do not become authority for domain definitions.
+13. Local integration artifacts own delegate, supplement, override, fallback, and verification decisions.
 
 ## Circular dependencies
 
@@ -170,40 +176,36 @@ When a cycle appears:
 4. update frontmatter and the register;
 5. rerun validation.
 
-## Phase 0 and Phase 1 graph
+## Domain-first graph
 
 ```text
 CTRL-CORE-001  BUILD ORDER
         ↓
 CTRL-CORE-002  DEPENDENCIES
         ↓
-STD-CORE-001   NAMING
+Core standards + architecture + minimum schemas
         ↓
-STD-CORE-002   RESEARCH
-        ↓
-STD-CORE-003   CITATION
-        ↓
-CTRL-CORE-004  ARTIFACT REGISTER
-        ↓
-Phase 0 trials and automated validation
-        ↓
-ARCH-CORE-001  AGENT ARCHITECTURE
-        ├──→ ARCH-CORE-002  CONTEXT STRATEGY
-        ├──→ ARCH-CORE-004  INFORMATION ARCHITECTURE
-        └──→ ARCH-CORE-005  RELEASE ARCHITECTURE
+P&R ONTOLOGY
+        ├──→ FIXED REWARD
+        ├──→ VARIABLE REWARD
+        ├──→ PERFORMANCE MANAGEMENT
+        ├──→ JOB ARCHITECTURE
+        ├──→ MARKET COMPETITIVENESS
+        └──→ GOVERNANCE AND CONTROLS
 
-ARCH-CORE-001 + ARCH-CORE-002
+P&R ONTOLOGY + PRIORITY DOMAIN PACKS
         ↓
-ARCH-CORE-003  SKILL ROUTING
+DOMAIN WORKFLOWS
+        ├──→ PRE-EOY SALARY AND BONUS PLANNING
+        ├──→ MANAGER SALARY REVIEW
+        └──→ FIXED-REWARD BUDGET ALLOCATION
+
+DOMAIN WORKFLOWS + MICROSOFT SKILL INTEGRATION
         ↓
-STD-CORE-004   SKILL AUTHORING
+P&R-SPECIFIC IMPLEMENTATION + RUNTIME ORCHESTRATION
         ↓
-STD-CORE-005   EXAMPLE AUTHORING
-        ↓
-STD-CORE-006   EVALUATION STANDARD
+COMPREHENSIVE EVALUATION AND RELEASE
 ```
-
-All artifacts may remain drafts during development. Phase 12 tests the integrated system; Phase 13 approves release dependencies.
 
 ## Group dependencies
 
@@ -211,61 +213,13 @@ All artifacts may remain drafts during development. Phase 12 tests the integrate
 |---|---|---|
 | Repository controls | Build order, dependency model, artifact register | all governed artifacts |
 | Research governance | naming, research, and citation standards | knowledge and evidence-based skills |
-| Architecture | Phase 0 controls and trials | rules, agents, skills, schemas, release packaging |
-| Schemas | architecture and naming | templates, skills, evaluations, validators |
-| Audience knowledge | architecture, schemas, research governance | discovery, KPI, UX, storyline |
-| Performance & Reward foundation | audience framework and research governance | specialist packs and diagnostics |
-| Consulting and visual knowledge | research and citation standards | communication, UX, and design skills |
-| Power BI knowledge | design patterns and current product evidence | implementation skills and verifier |
-| Orchestrator | routing model and foundational skills | final Cursor runtime |
-| Evaluation | schemas, skills, examples, and evaluation standard | release approval |
-
-## Change impact
-
-When a draft or approved artifact changes materially:
-
-1. increment `content_version`;
-2. identify direct and transitive dependants;
-3. classify the change as compatible or breaking;
-4. update affected artifacts or mark them for review;
-5. run dependency, source, link, and unit-test validation;
-6. update `CHANGELOG.md` when the change is notable;
-7. block release until breaking impacts are resolved.
-
-A major content-version change is presumed breaking unless demonstrated otherwise.
-
-## Exceptions
-
-A dependency exception requires:
-
-- the missing dependency to be named;
-- the work to be explicitly exploratory;
-- a rework trigger;
-- no runtime activation or public release;
-- no bypass of privacy, security, regulation, citation, or public-repository safety.
-
-## Validation requirements
-
-The dependency validator must confirm:
-
-- registered paths exist;
-- IDs and paths are unique;
-- frontmatter and register metadata agree;
-- dependencies resolve;
-- no formal dependency cycle exists;
-- no artifact is approved while a mandatory dependency remains below its required release status;
-- superseded artifacts identify replacements;
-- path changes preserve IDs;
-- canonical dependency syntax is used.
-
-## Acceptance criteria
-
-This control is suitable for continued development when:
-
-- artifact and frontmatter validation passes;
-- the graph is acyclic;
-- draft and release maturity are clearly distinguished;
-- representative architecture, skill-to-knowledge, schema-to-template, and validation relationships are modelled;
-- automated validation runs in CI.
-
-It becomes `APPROVED` during the Phase 12–13 review and release process after critical and major findings are resolved.
+| Minimum architecture | controls, context strategy, routing, authoring standards | ontology, schemas, skills, release packaging |
+| Minimum schemas | architecture and naming | domain catalogues, workflows, templates, evaluations |
+| P&R ontology | research governance and minimum schemas | all specialist packs and domain workflows |
+| Specialist domains | ontology and relevant evidence | workflows, diagnostics, audience treatment, implementation |
+| Domain workflows | ontology, specialist packs, schemas | runtime routes, evaluations, product archetypes |
+| P&R audiences | ontology and workflows | discovery, explanation, UX, storyline |
+| Microsoft skill integration | routing model and verified external capability evidence | delegated implementation routes and verifier |
+| P&R implementation | domain workflows and verified platform capability | implementation skills and handoffs |
+| Domain communication | audiences, workflows, and evidence standards | page, visual, and narrative skills |
+| Orchestrator | routing model, domain skills, integration rules, and evaluations | final Cursor runtime |
