@@ -10,7 +10,7 @@ depends_on:
     path: DEPENDENCIES.md
 blocks:
   - release decisions
-content_version: 1.0.0
+content_version: 1.0.1
 last_reviewed: 2026-07-31
 next_review: 2026-08-31
 ---
@@ -159,7 +159,7 @@ The last recorded workflow passed with dependency, source, and schema warnings t
 
 ## Current limitations
 
-- `DEPENDENCIES.md`, `ARTIFACT-REGISTER.yaml`, and planning artifacts still reflect the previous 14-phase sequence.
+- `ARTIFACT-REGISTER.yaml` and planning artifacts still reflect the previous 14-phase sequence.
 - Phase metadata in existing files has not yet been migrated to the revised phase model.
 - The 49 skill placeholders have not yet been classified against Microsoft Power BI skills.
 - Domain ontology artifacts do not yet exist.
@@ -169,7 +169,7 @@ The last recorded workflow passed with dependency, source, and schema warnings t
 
 ## Immediate next actions
 
-1. Reconcile `DEPENDENCIES.md`, the artifact register, and planning artifacts with the revised build order.
+1. Reconcile the artifact register and planning artifacts with the revised build order.
 2. Inventory and classify all 49 skill placeholders as domain core, domain-aware implementation, Microsoft-delegated, or deprioritised generic.
 3. Create the Performance & Reward ontology artifact set.
 4. Begin the fixed-reward specialist pack.
