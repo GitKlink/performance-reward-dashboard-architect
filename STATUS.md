@@ -10,9 +10,9 @@ depends_on:
     path: DEPENDENCIES.md
 blocks:
   - release decisions
-content_version: 0.9.0
-last_reviewed: 2026-07-17
-next_review: 2026-08-17
+content_version: 1.0.0
+last_reviewed: 2026-07-31
+next_review: 2026-08-31
 ---
 
 # Repository status
@@ -21,7 +21,7 @@ This is the authoritative high-level completion register.
 
 ## Current milestone
 
-`v0.1 — Cursor Agent Foundation`
+`v0.1 — Domain-first Performance & Reward Architect`
 
 ## Current branch
 
@@ -31,13 +31,15 @@ scaffold/repository-foundation
 
 ## Current activity
 
-Phase 1 has a complete first-pass architecture and standards set. Phase 2 output contracts and templates are now in progress.
+The programme has been reprioritised around Performance & Reward domain knowledge following the emergence of maintained Microsoft Power BI skills.
 
-Comprehensive independent testing remains concentrated in Phase 12, followed by final approval and release in Phase 13.
+The immediate objective is no longer to finish every generic architecture, audience, visualisation, dashboard, and Power BI layer before beginning the domain. The repository will complete the minimum operating foundation needed for safe authoring, then begin the shared Performance & Reward ontology and highest-value specialist packs.
 
-## Phase 1 draft set
+Generic Power BI capabilities will be assessed for delegation to Microsoft skills. Repository-owned authority remains with business definitions, calculations, processes, decisions, grain, history, controls, governance, and domain-specific implementation constraints.
 
-Completed first substantive drafts:
+## Completed foundation
+
+Completed substantive drafts include:
 
 - `ARCH-CORE-001` — agent architecture;
 - `ARCH-CORE-002` — context-management strategy;
@@ -51,119 +53,124 @@ Completed first substantive drafts:
 - `PLAN-CORE-002` — implementation roadmap;
 - `PLAN-CORE-003` — release plan.
 
-The files retain `PLACEHOLDER` lifecycle status until the cross-artifact consistency pass and artifact-register reconciliation are complete.
+Eight development schemas and aligned Markdown templates exist for:
+
+- research records;
+- audience and decision profiles;
+- KPI definitions;
+- dashboard briefs;
+- page specifications;
+- visual specifications;
+- design reviews;
+- implementation handoffs.
+
+The files retain draft or placeholder lifecycle states until cross-artifact consistency and artifact-register reconciliation are complete.
 
 ## Skill inventory
 
 The repository retains 49 safe non-invokable skill placeholders across nine capability groups.
 
-Completed consistency work:
+The inventory will now be classified into four treatments:
 
-- replaced `holistic-pr-value-drivers` with `holistic-performance-reward-value-drivers`;
-- documented the exact canonical inventory;
-- mapped conceptual architecture labels to actual folder names;
-- defined four activation waves;
-- retained placeholder protection for every skill.
+1. **Domain core** — accelerate and retain locally;
+2. **Domain-aware implementation** — retain where Performance & Reward changes the technical answer;
+3. **Microsoft-delegated** — route to maintained Microsoft Power BI skills;
+4. **Deprioritised generic** — leave as a placeholder or thin reference until a documented gap exists.
 
-## Phase 2 schemas
+No skill is active yet.
 
-Eight development schemas now use JSON Schema Draft 2020-12 expressed in YAML:
+## Domain-first workstream
 
-- research record;
-- audience and decision profile;
-- KPI definition;
-- dashboard brief;
-- page specification;
-- visual specification;
-- design review;
-- implementation handoff.
+### Shared ontology
 
-They define stable IDs, required fields, controlled values, status, versions, and repository metadata.
+The first new substantive domain artifacts will define:
 
-## Phase 2 templates
+- domain boundaries and shared terminology;
+- business processes and decision points;
+- holistic value drivers;
+- KPI classes;
+- grain, effective dating, population, and time conventions;
+- cross-domain relationships;
+- sensitivity, governance, and control classifications;
+- BAU and non-BAU scenarios.
 
-Eight Markdown templates are aligned to the schema set:
+### Specialist pack order
 
-- research record;
-- audience and decision profile;
-- KPI definition;
-- dashboard brief;
-- page specification;
-- visual specification;
-- design review;
-- implementation handoff.
+1. Fixed reward
+2. Variable reward
+3. Performance management
+4. Job architecture
+5. Market competitiveness
+6. Governance and controls
+7. Pay equity
+8. Talent and retention
+9. Benefits and recognition
 
-`wireframe-specification.md` remains a derived placeholder pending practical page and visual examples.
+### First vertical slices
+
+The first workflows used to validate the architecture will be:
+
+1. pre-EOY salary and bonus planning;
+2. manager salary review;
+3. fixed-reward budget allocation.
+
+These will force early resolution of point-in-time modelling, employee and position history, budget and recommendation facts, audience differences, sensitive-data controls, and non-technical semantic-model design.
+
+## Microsoft Power BI skill integration
+
+A new integration workstream will establish:
+
+- the Microsoft skill inventory;
+- overlap with the repository's planned skills;
+- delegate, supplement, override, or retain decisions;
+- domain-context injection requirements;
+- validation and fallback rules;
+- a maintained gap register.
+
+This workstream does not block the start of domain ontology authoring.
 
 ## Automated validation
 
-The repository now includes:
+The repository includes:
 
 - dependency validation;
 - source-register validation;
 - internal-link validation;
 - JSON Schema validation;
 - 25 unit-test scenarios;
-- GitHub Actions running the complete active suite.
+- GitHub Actions running the active suite.
 
-The latest workflow run passed successfully with dependency, source, and schema warnings treated as failures.
+The last recorded workflow passed with dependency, source, and schema warnings treated as failures. Validation must be rerun after the control-file and dependency reconciliation changes.
 
-## Development strategy
-
-### During development
-
-- substantive drafts may guide downstream work;
-- assumptions and limitations remain visible;
-- CI and local checks run continuously;
-- each vertical slice receives representative tests;
-- critical defects return to the owning upstream artifact.
-
-### Phase 12
-
-- independent architecture review;
-- complete routing and skill benchmarks;
-- context-load and handoff testing;
-- cross-skill contradiction analysis;
-- audience and product-mode scenarios;
-- metric, Power BI, accessibility, privacy, security, evidence, and licensing review;
-- regression testing.
-
-### Phase 13
-
-- runtime and mandatory dependency approval;
-- release-package validation;
-- final regression;
-- `v0.1.0` publication.
-
-## Phase summary
+## Revised phase summary
 
 | Phase | Name | Status | Current result |
 |---:|---|---|---|
-| 0 | Repository foundation | DRAFT — provisionally complete | Development unblocked; full review deferred to Phase 12 |
-| 1 | Architecture and standards | DRAFT CONTENT COMPLETE | Consistency and register reconciliation remain |
-| 2 | Schemas and templates | IN PROGRESS | Eight schemas and eight templates drafted; fixtures and template validation remain |
-| 3 | Audience and decision foundation | PLACEHOLDER | Starts after the first Phase 2 vertical slice validates |
-| 4 | Holistic P&R foundation | PLACEHOLDER | Not started |
-| 5 | Specialist P&R domains | PLACEHOLDER | Not started |
-| 6 | Consulting communication | PLACEHOLDER | Not started |
-| 7 | Visual-design foundation | PLACEHOLDER | Not started |
-| 8 | Visualisation patterns | PLACEHOLDER | Not started |
-| 9 | Dashboard experience | PLACEHOLDER | Not started |
-| 10 | Power BI implementation | PLACEHOLDER | Not started |
-| 11 | Orchestrator and subagents | PLACEHOLDER | Not started |
-| 12 | Comprehensive evaluation | PLACEHOLDER | Main independent testing phase |
-| 13 | Integration and release | PLACEHOLDER | Final approval and release |
+| 0 | Minimum operating foundation | IN PROGRESS | Core controls, architecture, schemas, and templates exist; reconciliation remains |
+| 1 | P&R ontology and shared foundation | STARTING | First substantive domain workstream |
+| 2 | Core specialist P&R domains | PLACEHOLDER | Fixed reward is first pack |
+| 3 | Domain workflows and product archetypes | PLACEHOLDER | First three vertical slices selected |
+| 4 | P&R audiences and decision treatment | PLACEHOLDER | Generic archetypes narrowed to domain roles |
+| 5 | Microsoft Power BI skill integration | STARTING | Inventory and overlap assessment required |
+| 6 | P&R-specific Power BI implementation | PLACEHOLDER | Generic implementation guidance narrowed |
+| 7 | Domain communication and visual patterns | PLACEHOLDER | Previous generic phases consolidated |
+| 8 | Orchestration and comprehensive evaluation | PLACEHOLDER | Main independent testing phase |
+| 9 | Integration and release | PLACEHOLDER | Final approval and release |
 
 ## Current limitations
 
-- Phase 1 artifact statuses and register entries still need reconciliation.
-- The eight schemas and active schema validator need artifact-register entries.
-- Template frontmatter must be standardised with immutable artifact IDs and phase metadata before registration.
-- Valid and invalid schema fixtures have not yet been committed.
-- Template-to-schema mapping validation has not yet been implemented.
+- `DEPENDENCIES.md`, `ARTIFACT-REGISTER.yaml`, and planning artifacts still reflect the previous 14-phase sequence.
+- Phase metadata in existing files has not yet been migrated to the revised phase model.
+- The 49 skill placeholders have not yet been classified against Microsoft Power BI skills.
+- Domain ontology artifacts do not yet exist.
+- Schema fixtures and template-to-schema validation remain incomplete.
 - Current Cursor skill and subagent metadata still requires activation-time verification.
 - No skill has been activated.
 
-## Immediate next action
+## Immediate next actions
 
-Add schema fixtures and template validation, reconcile Phase 1 and Phase 2 artifact metadata, then build the first audience-to-page synthetic vertical slice.
+1. Reconcile `DEPENDENCIES.md`, the artifact register, and planning artifacts with the revised build order.
+2. Inventory and classify all 49 skill placeholders as domain core, domain-aware implementation, Microsoft-delegated, or deprioritised generic.
+3. Create the Performance & Reward ontology artifact set.
+4. Begin the fixed-reward specialist pack.
+5. Use pre-EOY salary and bonus planning as the first end-to-end validation slice.
