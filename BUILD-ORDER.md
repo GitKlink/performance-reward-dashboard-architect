@@ -6,14 +6,16 @@ priority: critical
 depends_on: []
 blocks:
   - all repository implementation work
-content_version: 0.3.0
-last_reviewed: 2026-07-17
-next_review: 2026-08-17
+content_version: 0.4.0
+last_reviewed: 2026-07-31
+next_review: 2026-08-31
 ---
 
 # Authoritative build order
 
 This file defines the development sequence for the Performance & Reward Dashboard Architect.
+
+The repository's durable differentiation is Performance & Reward decision, process, metric, control, and data-model knowledge. Generic Power BI capability should be integrated from maintained Microsoft skills where suitable rather than recreated without a domain-specific reason.
 
 The sequence protects architectural dependencies without requiring every phase to complete a formal approval ceremony before useful development can continue. Comprehensive independent testing and approval occur before the first release.
 
@@ -26,6 +28,8 @@ The sequence protects architectural dependencies without requiring every phase t
 - Automated validation runs continuously.
 - Each phase performs only the checks needed to avoid building on an obviously broken foundation.
 - Findings discovered through later implementation may revise earlier drafts.
+- Domain-first vertical slices may proceed once the minimum schema, routing, and authoring controls they need are available.
+- Generic Power BI guidance is expanded only where Microsoft skills do not provide adequate capability or where Performance & Reward constraints materially alter the answer.
 
 ### Before release
 
@@ -43,218 +47,214 @@ The sequence protects architectural dependencies without requiring every phase t
 6. `APPROVED` is required for the release package, not for every intermediate development step.
 7. Critical defects return to the owning upstream artifact rather than being hidden in local workarounds.
 8. `ARTIFACT-REGISTER.yaml`, `DEPENDENCIES.md`, and `STATUS.md` must remain consistent.
+9. Microsoft Power BI skills are treated as external implementation capabilities, not as authority for Performance & Reward business definitions.
+10. Domain definitions, calculations, grain rules, governance constraints, and decision logic remain repository-owned even when implementation is delegated.
 
-## Phase 0 — Repository foundation
+## Phase 0 — Minimum operating foundation
 
 ### Deliverables
 
 1. Build order, dependency model, and status register
-2. Naming, research, and citation standards
+2. Naming, research, citation, skill-authoring, example-authoring, and evaluation standards
 3. Artifact and source registers
-4. Representative evidence and decision trials
-5. Repository validation scripts, tests, and CI
-6. Safe non-operational scaffold for later components
+4. Agent architecture, context-management strategy, and skill-routing model
+5. Minimum schemas and templates required for domain authoring
+6. Repository validation scripts, tests, and CI
+7. Safe non-operational scaffold for later components
 
 ### Development gate
 
 Phase 0 is provisionally complete when:
 
 - the scaffold and control artifacts exist;
-- standards are substantive drafts;
+- core standards and architecture are substantive drafts;
+- KPI, audience, research, dashboard-brief, and implementation-handoff contracts can support domain work;
 - representative trials have exercised the standards;
 - known internal critical and major defects are resolved;
-- dependency, source, link, and unit-test validation pass;
+- dependency, source, link, and schema validation pass;
 - placeholders cannot activate accidentally.
 
-An independent Phase 0-only review is not required to begin Phase 1. The Phase 0 artifacts remain `DRAFT` and are included in the comprehensive pre-release review.
+Phase 0 is intentionally narrower than the previous architecture-first programme. Repository information architecture, release detail, and secondary templates may continue in parallel when they do not block domain authoring.
 
-## Phase 1 — Architecture and authoring standards
+## Phase 1 — Performance & Reward ontology and shared foundation
 
 Complete in this order:
 
-1. `ARCH-CORE-001` — agent architecture
-2. `ARCH-CORE-002` — context-management strategy
-3. `ARCH-CORE-003` — skill-routing model
-4. `ARCH-CORE-004` — repository information architecture
-5. `ARCH-CORE-005` — release architecture
-6. `STD-CORE-004` — skill-authoring standard
-7. `STD-CORE-005` — example-authoring standard
-8. `STD-CORE-006` — evaluation standard
-9. `PLAN-CORE-001` — research program
-10. `PLAN-CORE-002` — implementation roadmap
-11. `PLAN-CORE-003` — release plan
+1. Domain boundaries and shared terminology
+2. Business-process and decision map
+3. Holistic value-driver tree
+4. KPI classification framework
+5. Grain, effective-dating, population, and time conventions
+6. Cross-domain relationship map
+7. Sensitivity, privacy, governance, and control classification
+8. BAU and non-BAU scenario catalogue
+9. Holistic Performance & Reward value-driver skill
 
 ### Development gate
 
-The draft architecture must define component boundaries, context strategy, routing logic, source-of-truth ownership, skill format, evaluation approach, and release boundary clearly enough to support schemas and foundational skills.
+The shared ontology must be coherent enough to prevent specialist packs from creating materially overlapping or contradictory definitions.
 
 Minimum checks:
 
-- no obvious authority overlap or circular dependency;
-- current Cursor claims use official evidence;
-- three representative dashboard workflows can be traced through the architecture;
-- placeholder runtime components remain disabled.
+- every core concept has an owner and definition;
+- decision points connect to processes, measures, audiences, and data grain;
+- point-in-time, period, event, and lifecycle concepts are distinguishable;
+- sensitive remuneration and performance concepts have explicit handling rules;
+- three representative workflows can trace from business question to data and decision.
 
-## Phase 2 — Schemas and templates
+## Phase 2 — Core specialist Performance & Reward domains
 
-Create schemas before their templates:
+Develop in priority order:
 
-1. Research record
-2. Audience and decision profile
-3. KPI definition
-4. Dashboard brief
-5. Page specification
-6. Visual specification
-7. Design review
-8. Implementation handoff
-
-### Development gate
-
-- Schemas parse and validate representative records.
-- Templates map to schema fields.
-- Versioning and migration rules are explicit.
-- At least one end-to-end draft workflow uses the contracts.
-
-## Phase 3 — Audience and decision foundation
-
-1. Audience archetypes
-2. Decision modes
-3. Consumption modes
-4. Audience-specific knowledge
-5. `audience-decision-framing`
-6. `dashboard-discovery`
-7. `grill-dashboard-requirements`
-
-### Development gate
-
-The agent can distinguish executive, Business Partner, people-manager, Reward Partner, and specialist needs and can select interactive, static, or hybrid consumption appropriately.
-
-## Phase 4 — Holistic Performance & Reward foundation
-
-1. Holistic value-driver tree
-2. BAU scenarios
-3. Non-BAU scenarios
-4. Domain boundaries and shared terminology
-5. KPI classification framework
-6. Holistic Performance & Reward value-driver skill
-
-### Development gate
-
-The cross-domain value-driver model is coherent enough to prevent specialist packs from creating materially overlapping or contradictory definitions.
-
-## Phase 5 — Specialist Performance & Reward domains
-
-Develop:
-
-- performance management;
-- fixed reward;
-- variable reward;
-- market competitiveness;
-- job architecture;
-- pay equity;
-- talent and retention;
-- benefits and recognition;
-- governance and controls.
+1. fixed reward;
+2. variable reward;
+3. performance management;
+4. job architecture;
+5. market competitiveness;
+6. governance and controls;
+7. pay equity;
+8. talent and retention;
+9. benefits and recognition.
 
 Each domain pack includes:
 
+- domain purpose and boundaries;
+- business-process and decision map;
 - value-driver branch;
 - business-question catalogue;
 - KPI catalogue and calculation definitions;
+- canonical entities, grain, and dimensional-model patterns;
+- effective-dating and point-in-time implications;
 - diagnostic patterns;
-- audience-specific treatment;
+- audience-specific interpretation;
 - BAU and non-BAU use cases;
-- governance risks and anti-patterns.
+- cross-domain dependencies;
+- Power BI implementation implications;
+- governance risks, contradiction rules, and anti-patterns.
 
 ### Development gate
 
-Each pack passes local evidence and metric-definition checks and works in at least one representative audience scenario. Full cross-domain contradiction testing occurs in Phase 12.
+Each pack passes local evidence and metric-definition checks, identifies its data and governance requirements, and works in at least one representative decision scenario. Full cross-domain contradiction testing occurs in Phase 8.
 
-## Phase 6 — Consulting communication
+## Phase 3 — Domain workflows and product archetypes
 
-Develop:
+Build end-to-end vertical slices for:
 
-- technique catalogue;
-- Pyramid Principle;
-- SCQA;
-- issue trees;
-- action titles;
-- executive storytelling;
-- technique-selection matrix;
-- corresponding skills.
+1. pre-EOY salary and bonus planning;
+2. manager salary review;
+3. performance outcome reporting;
+4. fixed-reward budget allocation;
+5. variable-reward calibration;
+6. market-data and benchmark-cycle analysis;
+7. job-architecture diagnostics;
+8. executive remuneration reporting;
+9. pay-equity investigation;
+10. reward governance and control monitoring.
 
-### Development gate
+Each vertical slice should exercise:
 
-The agent distinguishes published methodology, published examples, observed conventions, general practice, and project synthesis and selects techniques based on audience and decision.
-
-## Phase 7 — Visual-design foundation
-
-Develop:
-
-- visual perception and hierarchy;
-- Gestalt principles;
-- preattentive processing;
-- typography;
-- colour;
-- layout and grids;
-- data-ink ratio;
-- accessibility;
-- corresponding skills.
+- discovery and business framing;
+- audience and decision requirements;
+- ontology and specialist-domain routing;
+- KPI definitions;
+- canonical data grain and semantic model;
+- page and visual specification;
+- implementation handoff;
+- control, privacy, and validation rules.
 
 ### Development gate
 
-Recommendations are evidence-grounded, accessible, audience-appropriate, and expressed as selection rules rather than universal aesthetic preferences.
+At least three priority workflows produce coherent end-to-end outputs and expose any missing schema, routing, or domain-definition requirements.
 
-## Phase 8 — Visualisation patterns
+## Phase 4 — Performance & Reward audiences and decision treatment
 
-Develop:
+Develop role-specific knowledge for:
 
-- analytical-relationship map;
-- chart-pattern catalogue;
-- executive exhibit patterns;
-- current IBCS guidance;
-- visualisation anti-patterns;
-- chart-selection and exhibit skills.
+- Group Executives and executives;
+- People Leaders;
+- HR Business Partners;
+- Reward Partners;
+- Performance Partners;
+- Executive Reward;
+- People Analytics and reporting specialists;
+- Governance, Risk, and Control;
+- Payroll and HRIS operational users.
 
-### Development gate
+Retain only the generic audience concepts required to support these roles:
 
-Each visual pattern identifies the analytical relationship, required data, audience, comparison logic, Power BI feasibility, and misuse conditions.
-
-## Phase 9 — Dashboard experience
-
-Develop:
-
-- dashboard information architecture;
-- guided versus exploratory design;
-- interactive dashboard UX;
-- static deck-style design;
-- executive decision patterns;
-- Business Partner diagnostic patterns;
-- manager action patterns.
+- decision modes;
+- consumption modes;
+- interactive, static, and hybrid delivery;
+- audience-decision framing;
+- dashboard discovery;
+- requirements challenge and validation.
 
 ### Development gate
 
-The agent produces materially different designs for executives, Business Partners, and managers rather than reskinning one report.
+The agent produces materially different decision framing, measures, explanations, controls, and delivery patterns for Performance & Reward roles rather than reskinning one generic report.
 
-## Phase 10 — Power BI implementation
+## Phase 5 — Microsoft Power BI skill integration
 
 Develop:
 
-- feasibility rules;
-- interaction and export patterns;
-- semantic-model and DAX patterns;
-- performance guidance;
-- security;
-- accessibility;
-- theme design.
+1. Microsoft skill inventory and capability map;
+2. overlap assessment against repository placeholders and planned skills;
+3. delegation and fallback rules;
+4. domain-context injection contract;
+5. domain-constraint override rules;
+6. output verification rules;
+7. version and change-monitoring approach;
+8. explicit gap register.
 
 ### Development gate
 
-Implementation guidance can realise the draft design architecture without obvious security, accessibility, performance, or export failures.
+For each generic Power BI capability, the repository can identify whether to delegate, supplement, override, or retain locally. Delegation must not transfer ownership of business definitions, calculations, controls, or domain semantics.
 
-## Phase 11 — Orchestrator and subagents
+## Phase 6 — Performance & Reward-specific Power BI implementation
 
-Develop:
+Develop only the implementation knowledge where domain requirements materially change the design:
+
+- employee, employment, position, job, organisation, and remuneration history;
+- effective dating and slowly changing dimensions;
+- position-of-record and point-in-time modelling;
+- pre-outcome versus outcome models;
+- remuneration review and pay-element facts;
+- budget, allocation, recommendation, and outcome facts;
+- local-currency and reporting-currency treatment;
+- management, HR-partner, and specialist security hierarchies;
+- sensitive remuneration and performance data controls;
+- snapshot, movement, event, and lifecycle analysis;
+- reconciliation, auditability, export, and offline-distribution risks;
+- non-technical consumer semantic-model design.
+
+Generic DAX, visual selection, accessibility, performance optimisation, theme design, and ordinary interactions should normally use Microsoft skills unless a documented gap or domain constraint requires local guidance.
+
+### Development gate
+
+Implementation guidance can realise the priority domain workflows without obvious grain, history, security, privacy, reconciliation, performance, accessibility, or export failures.
+
+## Phase 7 — Domain communication and visual patterns
+
+Consolidate the previous consulting, visual-design, visualisation, and dashboard-experience phases into a domain-focused layer.
+
+Develop only what materially improves Performance & Reward decisions:
+
+- issue trees and value-driver communication;
+- Pyramid Principle, SCQA, action titles, and executive storytelling;
+- high-data-to-ink executive exhibits;
+- comparison, distribution, movement, exception, and allocation patterns;
+- executive, Business Partner, Reward Partner, and manager page patterns;
+- static versus interactive decision products;
+- domain-specific visual and interpretation anti-patterns;
+- accessibility and disclosure controls for sensitive data.
+
+### Development gate
+
+Recommendations are evidence-grounded, decision-specific, accessible, and materially different by audience and domain. Generic chart catalogues or aesthetic guidance do not block progress.
+
+## Phase 8 — Orchestration, comprehensive evaluation, and correction
+
+Develop and test:
 
 1. Main Cursor project rule
 2. Repository-wide `AGENTS.md` only where it does not duplicate the project rule
@@ -263,46 +263,44 @@ Develop:
 5. Power BI verifier
 6. Evidence and authoring rules
 7. Runtime quality gates
-
-### Development gate
-
-- Persistent instructions remain concise.
-- Skill routing works across benchmark prompts.
-- Subagent handoffs are bounded.
-- No placeholder can be invoked accidentally.
-- The source repository can generate the intended release package.
-
-## Phase 12 — Comprehensive evaluation and correction
-
-This is the main testing phase.
-
-Run:
-
-- independent architecture review;
-- complete benchmark suite;
-- automatic and explicit skill-routing tests;
-- context-load and handoff tests;
-- cross-skill contradiction and duplication analysis;
-- executive, Business Partner, manager, specialist, interactive, and static scenarios;
-- metric and calculation review;
-- Power BI feasibility, security, accessibility, performance, and export review;
-- evidence, citation, privacy, licensing, and public-repository review;
-- regression testing after corrections.
+8. Complete benchmark suite
+9. Automatic and explicit skill-routing tests
+10. Context-load and handoff tests
+11. Cross-skill contradiction and duplication analysis
+12. Executive, Business Partner, manager, specialist, interactive, and static scenarios
+13. Metric and calculation review
+14. Power BI feasibility, security, accessibility, performance, and export review
+15. Evidence, citation, privacy, licensing, and public-repository review
+16. Regression testing after corrections
 
 ### Gate
 
 No critical failure remains. Major failures are resolved or explicitly accepted by the release authority. Runtime components and mandatory release dependencies are ready to move to `APPROVED`.
 
-## Phase 13 — Integration and release
+## Phase 9 — Integration and release
 
 - Resolve release-blocking placeholders.
 - Approve runtime components and mandatory dependencies.
 - Validate artifact IDs, dependencies, schemas, sources, and links.
 - Verify skill discovery and explicit invocation in current Cursor.
+- Verify Microsoft Power BI skill delegation and fallback behaviour.
 - Run the final benchmark and regression suite.
 - Review package contents for confidential or licensed material.
 - Produce the release manifest and migration notes.
 - Prepare and tag `v0.1.0`.
+
+## Deprioritised generic content
+
+The following may remain placeholders, thin reference layers, or integration notes until a documented domain need exists:
+
+- generic executive archetypes;
+- broad consulting-method summaries;
+- generic visual-perception explainers;
+- broad chart catalogues;
+- generic Power BI feasibility guidance;
+- generic DAX and semantic-model guidance;
+- ordinary dashboard UX patterns;
+- generic accessibility, performance, and theme guidance already covered by maintained Microsoft skills.
 
 ## Status requirements
 
@@ -316,4 +314,4 @@ No critical failure remains. Major failures are resolved or explicitly accepted 
 
 ## Review timing
 
-Independent review is concentrated in Phase 12 and final release approval in Phase 13. Earlier independent review remains optional when a decision is high-risk, legally sensitive, security-sensitive, or difficult to reverse.
+Independent review is concentrated in Phase 8 and final release approval in Phase 9. Earlier independent review remains optional when a decision is high-risk, legally sensitive, security-sensitive, or difficult to reverse.
