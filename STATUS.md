@@ -10,7 +10,7 @@ depends_on:
     path: DEPENDENCIES.md
 blocks:
   - release decisions
-content_version: 1.0.1
+content_version: 1.1.0
 last_reviewed: 2026-07-31
 next_review: 2026-08-31
 ---
@@ -31,146 +31,151 @@ scaffold/repository-foundation
 
 ## Current activity
 
-The programme has been reprioritised around Performance & Reward domain knowledge following the emergence of maintained Microsoft Power BI skills.
+The programme is being rebuilt around repository-owned Performance & Reward semantics with maintained Microsoft Power BI skills used as implementation capabilities where appropriate.
 
-The immediate objective is no longer to finish every generic architecture, audience, visualisation, dashboard, and Power BI layer before beginning the domain. The repository will complete the minimum operating foundation needed for safe authoring, then begin the shared Performance & Reward ontology and highest-value specialist packs.
+The current development pattern is a vertical slice:
 
-Generic Power BI capabilities will be assessed for delegation to Microsoft skills. Repository-owned authority remains with business definitions, calculations, processes, decisions, grain, history, controls, governance, and domain-specific implementation constraints.
+```text
+shared ontology
+  -> specialist domain knowledge
+  -> repeatable analysis skill
+  -> workflow and benchmark scenario
+  -> Microsoft Power BI implementation delegation
+```
+
+No skill is active yet. Domain and skill drafts remain subject to evidence review, dependency reconciliation, benchmark testing, and activation controls.
 
 ## Completed foundation
 
-Completed substantive drafts include:
+Substantive drafts exist for:
 
-- `ARCH-CORE-001` — agent architecture;
-- `ARCH-CORE-002` — context-management strategy;
-- `ARCH-CORE-003` — skill-routing model;
-- `ARCH-CORE-004` — repository information architecture;
-- `ARCH-CORE-005` — release architecture;
-- `STD-CORE-004` — skill-authoring standard;
-- `STD-CORE-005` — example-authoring standard;
-- `STD-CORE-006` — evaluation standard;
-- `PLAN-CORE-001` — research program;
-- `PLAN-CORE-002` — implementation roadmap;
-- `PLAN-CORE-003` — release plan.
+- five core architecture artifacts;
+- skill, example, evaluation, research, citation, and naming standards;
+- research, implementation, and release plans;
+- eight schemas and aligned templates;
+- repository dependency, source, schema, template, and link validation.
 
-Eight development schemas and aligned Markdown templates exist for:
-
-- research records;
-- audience and decision profiles;
-- KPI definitions;
-- dashboard briefs;
-- page specifications;
-- visual specifications;
-- design reviews;
-- implementation handoffs.
-
-The files retain draft or placeholder lifecycle states until cross-artifact consistency and artifact-register reconciliation are complete.
-
-## Skill inventory
-
-The repository retains 49 safe non-invokable skill placeholders across nine capability groups.
-
-The inventory will now be classified into four treatments:
-
-1. **Domain core** — accelerate and retain locally;
-2. **Domain-aware implementation** — retain where Performance & Reward changes the technical answer;
-3. **Microsoft-delegated** — route to maintained Microsoft Power BI skills;
-4. **Deprioritised generic** — leave as a placeholder or thin reference until a documented gap exists.
-
-No skill is active yet.
-
-## Domain-first workstream
+## Domain-first progress
 
 ### Shared ontology
 
-The first new substantive domain artifacts will define:
+`knowledge/performance-reward/holistic-value-driver-tree.md` is now a substantive draft defining:
 
-- domain boundaries and shared terminology;
-- business processes and decision points;
-- holistic value drivers;
-- KPI classes;
-- grain, effective dating, population, and time conventions;
+- overall Performance & Reward outcomes;
+- eight connected value-driver branches;
+- decision and outcome chains;
 - cross-domain relationships;
-- sensitivity, governance, and control classifications;
-- BAU and non-BAU scenarios.
+- analytical dimensions;
+- grain, time, population, and lifecycle conventions;
+- diagnostic and governance principles;
+- Microsoft Power BI delegation boundaries.
 
-### Specialist pack order
+### Completed specialist vertical slices
 
-1. Fixed reward
-2. Variable reward
-3. Performance management
-4. Job architecture
+#### Fixed reward
+
+Drafted:
+
+- `knowledge/performance-reward/fixed-reward.md`;
+- `.cursor/skills/performance-reward/fixed-reward-analysis/SKILL.md`.
+
+Coverage includes positioning, movement, budget, compression, new-hire premium, effective dating, recommendation-to-payment lifecycle, audience routes, modelling implications, and controls.
+
+#### Variable reward
+
+Drafted:
+
+- `knowledge/performance-reward/variable-reward.md`;
+- `.cursor/skills/performance-reward/variable-reward-analysis/SKILL.md`.
+
+Coverage includes eligibility, target opportunity, pro-ration, organisational and individual factors, funded pools, differentiation, salary concentration, fairness, calibration, approvals, payment reconciliation, and GVRP-style analysis.
+
+#### Performance management
+
+Drafted:
+
+- `knowledge/performance-reward/performance-management.md`;
+- `.cursor/skills/performance-reward/performance-management-analysis/SKILL.md`.
+
+Coverage includes lifecycle stages, completion, assessment quality, outcome distributions, manager patterns, calibration movement, fairness, governance, downstream reward linkage, and historical accountability.
+
+### Activation state
+
+All three specialist skills remain deliberately disabled through `activation: DISABLED` until:
+
+- dependencies are reviewed;
+- the skill-authoring standard is satisfied;
+- benchmark scenarios pass;
+- routing boundaries are tested;
+- Microsoft delegation and fallback behaviour is verified.
+
+## Specialist pack order
+
+1. Fixed reward — DRAFT
+2. Variable reward — DRAFT
+3. Performance management — DRAFT
+4. Job architecture — NEXT
 5. Market competitiveness
 6. Governance and controls
 7. Pay equity
 8. Talent and retention
 9. Benefits and recognition
 
-### First vertical slices
+Governance and controls is also a cross-cutting dependency and may be advanced before the full sequence reaches it.
 
-The first workflows used to validate the architecture will be:
+## First workflow slices
+
+The selected validation workflows remain:
 
 1. pre-EOY salary and bonus planning;
 2. manager salary review;
-3. fixed-reward budget allocation.
+3. fixed-reward budget allocation;
+4. variable-reward calibration;
+5. performance outcome reporting.
 
-These will force early resolution of point-in-time modelling, employee and position history, budget and recommendation facts, audience differences, sensitive-data controls, and non-technical semantic-model design.
+The first workflow should combine the fixed-reward, variable-reward, and performance-management slices and force resolution of shared population, history, budget, lifecycle, and security rules.
 
 ## Microsoft Power BI skill integration
 
-A new integration workstream will establish:
+The planned classification remains:
 
-- the Microsoft skill inventory;
-- overlap with the repository's planned skills;
-- delegate, supplement, override, or retain decisions;
-- domain-context injection requirements;
-- validation and fallback rules;
-- a maintained gap register.
+1. **Domain core** — retain and accelerate locally;
+2. **Domain-aware implementation** — retain where Performance & Reward changes the technical answer;
+3. **Microsoft-delegated** — route to maintained Microsoft skills;
+4. **Deprioritised generic** — leave as placeholders or thin references until a gap exists.
 
-This workstream does not block the start of domain ontology authoring.
-
-## Automated validation
-
-The repository includes:
-
-- dependency validation;
-- source-register validation;
-- internal-link validation;
-- JSON Schema validation;
-- 25 unit-test scenarios;
-- GitHub Actions running the active suite.
-
-The last recorded workflow passed with dependency, source, and schema warnings treated as failures. Validation must be rerun after the control-file and dependency reconciliation changes.
+The 49 skill placeholders still require a formal file-by-file classification register.
 
 ## Revised phase summary
 
 | Phase | Name | Status | Current result |
 |---:|---|---|---|
-| 0 | Minimum operating foundation | IN PROGRESS | Core controls, architecture, schemas, and templates exist; reconciliation remains |
-| 1 | P&R ontology and shared foundation | STARTING | First substantive domain workstream |
-| 2 | Core specialist P&R domains | PLACEHOLDER | Fixed reward is first pack |
-| 3 | Domain workflows and product archetypes | PLACEHOLDER | First three vertical slices selected |
-| 4 | P&R audiences and decision treatment | PLACEHOLDER | Generic archetypes narrowed to domain roles |
-| 5 | Microsoft Power BI skill integration | STARTING | Inventory and overlap assessment required |
-| 6 | P&R-specific Power BI implementation | PLACEHOLDER | Generic implementation guidance narrowed |
-| 7 | Domain communication and visual patterns | PLACEHOLDER | Previous generic phases consolidated |
-| 8 | Orchestration and comprehensive evaluation | PLACEHOLDER | Main independent testing phase |
-| 9 | Integration and release | PLACEHOLDER | Final approval and release |
+| 0 | Minimum operating foundation | IN PROGRESS | Core controls and tooling exist; register reconciliation remains |
+| 1 | P&R ontology and shared foundation | IN PROGRESS | Holistic ontology drafted; shared process and KPI controls remain |
+| 2 | Core specialist P&R domains | IN PROGRESS | Fixed reward, variable reward, and performance management drafted |
+| 3 | Domain workflows and product archetypes | STARTING | First five workflow slices selected |
+| 4 | P&R audiences and decision treatment | PLACEHOLDER | Generic archetypes still require domain-role refocus |
+| 5 | Microsoft Power BI skill integration | STARTING | Formal overlap classification remains |
+| 6 | P&R-specific Power BI implementation | PLACEHOLDER | Domain contracts now beginning to define requirements |
+| 7 | Domain communication and visual patterns | PLACEHOLDER | Generic content remains deprioritised |
+| 8 | Orchestration and comprehensive evaluation | PLACEHOLDER | Activation and routing tests not yet run |
+| 9 | Integration and release | PLACEHOLDER | Release remains blocked |
 
 ## Current limitations
 
-- `ARTIFACT-REGISTER.yaml` and planning artifacts still reflect the previous 14-phase sequence.
-- Phase metadata in existing files has not yet been migrated to the revised phase model.
-- The 49 skill placeholders have not yet been classified against Microsoft Power BI skills.
-- Domain ontology artifacts do not yet exist.
-- Schema fixtures and template-to-schema validation remain incomplete.
-- Current Cursor skill and subagent metadata still requires activation-time verification.
+- `ARTIFACT-REGISTER.yaml` and some planning metadata still reflect the previous phase model.
+- The skill inventory has not been formally classified against Microsoft Power BI skills.
+- Shared business-process, KPI-classification, sensitivity, and governance ontology artifacts remain incomplete.
+- The governance-and-controls specialist dependency is still a placeholder.
+- No workflow artifact or new benchmark scenario has been implemented yet.
+- Formal sources have not yet been registered for the new domain drafts.
 - No skill has been activated.
 
 ## Immediate next actions
 
-1. Reconcile the artifact register and planning artifacts with the revised build order.
-2. Inventory and classify all 49 skill placeholders as domain core, domain-aware implementation, Microsoft-delegated, or deprioritised generic.
-3. Create the Performance & Reward ontology artifact set.
-4. Begin the fixed-reward specialist pack.
-5. Use pre-EOY salary and bonus planning as the first end-to-end validation slice.
+1. Draft governance and controls as the cross-cutting dependency.
+2. Draft job architecture and market competitiveness vertical slices.
+3. Implement the pre-EOY salary and bonus planning workflow contract.
+4. Create benchmark scenarios for fixed reward, variable reward, and performance management.
+5. Build the formal Microsoft skill-overlap classification register.
+6. Reconcile `ARTIFACT-REGISTER.yaml` and remaining phase metadata.
