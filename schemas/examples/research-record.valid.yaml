@@ -1,0 +1,110 @@
+record_id: RESEARCH-CURSOR-SKILLS-001
+title: Current Cursor Agent Skills baseline for repository activation
+status: DRAFT
+content_version: 0.1.0
+research_question: Which current Cursor Agent Skills behaviours and metadata are sufficiently supported to begin controlled activation testing in this repository?
+decisions_supported:
+  - select the provisional skill frontmatter contract
+  - define which behaviours require activation-time verification
+intended_consumers:
+  - skill-authoring standard
+  - foundational skill activation workstream
+audiences:
+  - people-analytics-or-reporting
+domains:
+  - repository-governance
+consumption_modes:
+  - not-applicable
+jurisdictions:
+  - global
+as_of_date: '2026-07-17'
+scope:
+  included:
+    - official Cursor evidence for SKILL.md packages
+    - dynamic skill loading and explicit invocation
+    - repository implications for placeholder safety
+  excluded:
+    - unverified organisation-specific Cursor configuration
+    - final subagent schema and release compatibility
+source_requirements:
+  required_source_types:
+    - primary-authoritative
+  freshness_requirement: Reverify within 30 days of controlled activation and immediately before release.
+  required_primary_sources: 2
+  triangulation_required: false
+assumptions:
+  - assumption: The documented Cursor 2.4 Agent Skills behaviour remains available in the installed development version.
+    materiality: high
+    treatment: validate
+open_questions:
+  - Which current metadata fields are accepted without affecting skill discovery?
+findings:
+  - finding_id: F-001
+    finding: Cursor documents Agent Skills as SKILL.md packages that may contain instructions, scripts, and reusable commands.
+    confidence: established
+    applicability: Current repository skill packaging baseline, subject to installed-version verification.
+    implications:
+      - Use SKILL.md as the intended active skill file.
+      - Keep planned skills non-discoverable until activation testing begins.
+  - finding_id: F-002
+    finding: Dynamically loaded skills are more appropriate than persistent rules for specialised methods and domain knowledge.
+    confidence: supported-synthesis
+    applicability: Repository context-management and routing design.
+    implications:
+      - Keep project rules concise.
+      - Load only the skills required by the current request.
+claims:
+  - claim_id: CUR-001
+    claim: Cursor Agent Skills use SKILL.md files.
+    claim_type: factual
+    source_ids:
+      - cursor-2-4-subagents-skills
+    confidence: established
+    applicability: Cursor 2.4 and later behaviour must be rechecked in the installed version.
+    limitations:
+      - The release note does not prove every later metadata field or plan-specific behaviour.
+    repository_treatment: publish-evidence
+  - claim_id: CUR-002
+    claim: Dynamic skill loading should help reduce persistent context compared with embedding all specialised instructions in project rules.
+    claim_type: interpretive
+    source_ids:
+      - cursor-agent-best-practices
+      - cursor-rules
+    confidence: supported-synthesis
+    applicability: Repository architecture and context strategy.
+    limitations:
+      - Actual context and routing behaviour require practical testing.
+    repository_treatment: publish-synthesis
+sources:
+  - cursor-2-4-subagents-skills
+  - cursor-agent-best-practices
+  - cursor-rules
+conflicts_and_gaps:
+  - description: The exact current skill metadata schema has not yet been verified in the installed Cursor version.
+    treatment: further-research
+    rationale: Official evidence supports the package concept, but activation must test current parser behaviour.
+limitations:
+  - Product behaviour can change after the retrieved documentation date.
+  - This record does not approve custom subagent metadata.
+repository_treatment:
+  recommended_changes:
+    - artifact: STD-CORE-004
+      change: Use the supported SKILL.md baseline provisionally and require installed-version verification before activation.
+      priority: high
+    - artifact: ARCH-CORE-002
+      change: Keep specialist procedures out of persistent rules and test actual context load during the foundational vertical slice.
+      priority: high
+  downstream_revalidation:
+    - foundational Agent Skills
+    - release compatibility manifest
+review:
+  review_status: internal-review
+  reviewers:
+    - repository implementation workflow
+  last_reviewed: '2026-07-17'
+  next_review_date: null
+  next_review_trigger: Before the first skill receives valid active Cursor frontmatter.
+  reviewed_source_ids:
+    - cursor-2-4-subagents-skills
+    - cursor-agent-best-practices
+    - cursor-rules

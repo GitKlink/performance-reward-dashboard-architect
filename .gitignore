@@ -1,0 +1,30 @@
+# Operating-system files
+.DS_Store
+Thumbs.db
+
+# Editors
+.vscode/
+.idea/
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.pytest_cache/
+
+# Generated validation output
+build/
+dist/
+coverage/
+reports/generated/
+
+# Local research working files
+.tmp/
+temp/
+working/
+
+# Secrets and local configuration
+.env
+.env.*
+!.env.example

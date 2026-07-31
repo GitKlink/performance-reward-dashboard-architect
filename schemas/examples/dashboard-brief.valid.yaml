@@ -1,0 +1,173 @@
+brief_id: BRIEF-EXEC-FIXED-001
+title: Executive fixed-reward investment summary
+status: DRAFT
+content_version: 0.1.0
+objective: Provide an executive decision product showing whether forecast fixed-reward investment is within the approved envelope, why the result moved, and which material risks require action.
+audience_decision_profile:
+  profile_id: AUD-EXEC-FIXED-001
+  primary_audience: executive
+  secondary_audiences:
+    - reward-partner
+  decision_owner: Executive Reward Committee
+  decision_mode: decide
+  decision: Endorse or redirect the proposed fixed-reward investment before final allocation.
+  actions_supported:
+    - endorse the proposed investment
+    - redirect investment toward material risks
+    - request a revised scenario
+business_context:
+  situation: The annual fixed-reward review is approaching executive endorsement and the forecast must be assessed against the approved budget and workforce priorities.
+  why_now: Material allocation changes become difficult after recommendations are released to managers.
+  cadence: cycle-based
+  decision_deadline: null
+  current_process_or_product: Existing reporting provides totals but does not connect variance, drivers, and workforce risk in one decision view.
+  known_pain_points:
+    - forecast and budget use can be interpreted on different population bases
+    - executives cannot immediately identify the primary driver of variance
+scope:
+  included:
+    - governed fixed-reward review population
+    - approved budget and current forecast
+    - investment components and material portfolio drivers
+  excluded:
+    - employee-level approval decisions
+    - variable reward
+    - unapproved policy scenarios
+  populations:
+    - employees eligible for the selected fixed-reward cycle
+  organisations_or_markets:
+    - governed enterprise portfolio
+  time_horizon: Current reward cycle with prior-cycle context where comparable.
+  jurisdictions:
+    - general public-repository example
+performance_reward_framing:
+  primary_domain: fixed-reward
+  supporting_domains:
+    - market-competitiveness
+    - governance-and-controls
+  value_driver_branch: Reward portfolio effectiveness and workforce investment productivity.
+  business_condition: bau
+  primary_questions:
+    - Is the forecast within the approved budget and tolerance?
+    - Which investment components and portfolios explain the variance?
+    - Which material market, fairness, or control risks require redirection?
+  secondary_questions:
+    - How has the forecast changed since the previous review point?
+  governance_questions:
+    - Are budget and forecast calculated on the same population and pay basis?
+analytical_requirements:
+  measure_roles:
+    - outcome
+    - driver
+    - control
+    - context
+  kpi_ids:
+    - KPI-FIXED-001
+  comparisons:
+    - budget
+    - forecast
+    - market
+    - policy
+  diagnostics:
+    - variance
+    - contribution
+    - segmentation
+    - scenario
+  required_segments:
+    - organisational portfolio
+    - investment component
+    - material workforce risk category
+  grain_and_population_notes: Headline measures use the governed eligible population; diagnostic views use approved aggregate segments.
+  causal_constraints: Risk indicators are diagnostic and must not be presented as proof that an allocation caused a workforce outcome.
+experience:
+  consumption_mode: hybrid
+  experience_mode: executive-decision
+  expected_reading_time: three minutes for the summary page
+  page_roles:
+    - summary
+    - driver
+    - diagnostic
+    - methodology
+  navigation_depth: 3
+  interaction_requirements:
+    - portfolio filter
+    - scenario selector
+    - guided navigation from summary to drivers
+  export_requirements:
+    - pdf
+    - powerpoint
+  mobile_required: false
+  accessibility_requirements:
+    - do not rely on colour alone for budget status
+    - provide a defined reading order and sufficient contrast
+data:
+  available_sources:
+    - governed reward planning dataset
+    - approved budget dataset
+    - approved market and risk indicators
+  required_grain: Employee reward case for calculation and governed aggregate segment for executive reporting.
+  effective_dating: Use the approved cycle population date and planned reward effective date.
+  history_available: Current cycle snapshots and prior-cycle summary.
+  model_or_dataset: Draft executive fixed-reward semantic model.
+  known_gaps:
+    - final organisation-approved tolerance has not been supplied
+  data_quality_requirements:
+    - reconcile budget and forecast populations
+    - measure valid recommendation coverage
+    - flag duplicate or stale scenarios
+  refresh_requirement: Refresh at each governed executive review point.
+governance:
+  sensitivity: confidential
+  access_model: Executives receive aggregate content; authorised Reward Partners receive controlled diagnostic access.
+  privacy_requirements:
+    - suppress small diagnostic populations
+    - exclude employee-level data from executive export
+  policy_dependencies:
+    - approved fixed-reward eligibility and budget methodology
+  regulatory_dependencies: []
+  export_restrictions:
+    - no employee-level data in PDF or PowerPoint outputs
+  audit_or_control_requirements:
+    - reconcile headline values to the approved financial control file
+    - display data-as-of and scenario context
+power_bi_constraints:
+  target_environment: Power BI Desktop and Power BI Service using supported native visuals where practical.
+  implementation_deadline: null
+  existing_model_constraints:
+    - implementation model is not yet finalised
+  visual_or_interaction_constraints:
+    - summary must remain understandable in PDF export
+  performance_constraints:
+    - summary page should not depend on high-cardinality employee visuals
+  theme_or_brand_constraints:
+    - use a restrained executive theme with semantic status notation
+deliverables:
+  - audience-decision-profile
+  - kpi-definitions
+  - page-architecture
+  - page-specifications
+  - visual-specifications
+  - design-review
+  - implementation-handoff
+assumptions:
+  - assumption: Approved budget and forecast can be reconciled on one governed population.
+    materiality: high
+    status: unvalidated
+    owner: Reward Data Owner
+    validation_action: Complete a population and value reconciliation before executive review.
+open_questions:
+  - question: What budget tolerance should trigger executive escalation?
+    materiality: high
+    owner: Performance & Reward Product Owner
+    resolution_required_before: design
+success_criteria:
+  - Executives can identify status, primary variance driver, material risk, and required action within three minutes.
+  - Static exports retain the core message and scope without relying on interaction.
+  - Headline values reconcile to the approved budget control.
+approvals:
+  product_owner: Performance & Reward Product Owner
+  business_owner: Executive Reward Committee
+  data_owner: Reward Data Owner
+  approval_status: not-requested
+  approved_date: null
+next_action: Resolve the approved tolerance and create the summary page and primary visual specifications.

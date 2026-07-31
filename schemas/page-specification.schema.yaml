@@ -1,0 +1,376 @@
+$schema: https://json-schema.org/draft/2020-12/schema
+$id: urn:performance-reward-dashboard-architect:schema:page-specification:0.1.0
+title: Page specification
+description: >-
+  Contract for the business role, content hierarchy, measures, exhibits,
+  interactions, layout, accessibility, and implementation requirements of one
+  dashboard or static-report page.
+type: object
+additionalProperties: false
+x-repository:
+  artifact_id: SCHEMA-UX-001
+  status: DRAFT
+  phase: 2
+  schema_version: 0.1.0
+  content_version: 0.1.0
+  owner: docs/architecture/agent-architecture.md
+required:
+  - page_id
+  - title
+  - status
+  - page_role
+  - audience
+  - decision_supported
+  - governing_message_or_question
+  - scope_context
+  - content_hierarchy
+  - measures
+  - visual_ids
+  - interactions
+  - layout
+  - accessibility
+  - power_bi
+  - quality_checks
+properties:
+  page_id:
+    type: string
+    pattern: ^PAGE-[A-Z0-9-]+-[0-9]{3}$
+  title:
+    type: string
+    minLength: 3
+    maxLength: 120
+  display_order:
+    type: integer
+    minimum: 1
+  status:
+    enum: [DRAFT, IN REVIEW, APPROVED, SUPERSEDED]
+  content_version:
+    type: string
+    pattern: ^[0-9]+\.[0-9]+\.[0-9]+$
+    default: 0.1.0
+  dashboard_brief_id:
+    type: string
+  page_role:
+    enum: [summary, driver, diagnostic, detail, action, methodology, appendix]
+  audience:
+    type: array
+    minItems: 1
+    uniqueItems: true
+    items:
+      enum:
+        - executive
+        - board-or-committee
+        - business-partner
+        - people-manager
+        - reward-partner
+        - performance-reward-specialist
+        - people-analytics-or-reporting
+        - operational-team
+  decision_supported:
+    type: string
+    minLength: 5
+  actions_supported:
+    type: array
+    items:
+      type: string
+  governing_message_or_question:
+    type: string
+    minLength: 5
+  action_title:
+    type: string
+    maxLength: 160
+  subtitle_or_scope_line:
+    type: string
+    maxLength: 200
+  expected_reading_time:
+    type: string
+  consumption_mode:
+    enum: [interactive, static, hybrid]
+  scope_context:
+    type: object
+    additionalProperties: false
+    required: [population, time_period, organisational_scope, currency_or_unit]
+    properties:
+      population:
+        type: string
+      time_period:
+        type: string
+      organisational_scope:
+        type: string
+      currency_or_unit:
+        type: string
+      filter_context_visible:
+        type: boolean
+      comparison_context:
+        type: array
+        items:
+          type: string
+  content_hierarchy:
+    type: array
+    minItems: 1
+    items:
+      type: object
+      additionalProperties: false
+      required: [level, purpose, content]
+      properties:
+        level:
+          type: integer
+          minimum: 1
+          maximum: 5
+        purpose:
+          enum: [orientation, conclusion, evidence, driver, context, action, definition, source]
+        content:
+          type: string
+        dominant:
+          type: boolean
+        reading_order:
+          type: integer
+          minimum: 1
+  measures:
+    type: array
+    minItems: 1
+    items:
+      type: object
+      additionalProperties: false
+      required: [kpi_id, role, display_priority]
+      properties:
+        kpi_id:
+          type: string
+        role:
+          enum: [outcome, driver, leading-signal, activity, control, context, diagnostic]
+        display_priority:
+          enum: [primary, secondary, supporting, detail-only]
+        comparator:
+          type: string
+        target_or_tolerance:
+          type: string
+        display_format:
+          type: string
+        commentary_required:
+          type: boolean
+  visual_ids:
+    type: array
+    minItems: 1
+    uniqueItems: true
+    items:
+      type: string
+      pattern: ^VISUAL-[A-Z0-9-]+-[0-9]{3}$
+  commentary:
+    type: object
+    additionalProperties: false
+    properties:
+      required:
+        type: boolean
+      purpose:
+        enum: [conclusion, explanation, implication, recommendation, action, methodology]
+      source:
+        enum: [authored, rules-based, model-assisted, not-applicable]
+      maximum_length:
+        type: integer
+        minimum: 1
+  interactions:
+    type: object
+    additionalProperties: false
+    required: [filtering, navigation, detail_access, reset_behavior]
+    properties:
+      filtering:
+        type: array
+        items:
+          type: object
+          additionalProperties: false
+          required: [filter, scope, persistence]
+          properties:
+            filter:
+              type: string
+            scope:
+              enum: [page, section, report]
+            persistence:
+              enum: [none, page, report, session]
+            default:
+              type: string
+      cross_filtering:
+        type: boolean
+      navigation:
+        type: array
+        items:
+          type: object
+          additionalProperties: false
+          required: [destination, trigger]
+          properties:
+            destination:
+              type: string
+            trigger:
+              enum: [button, tab, visual-selection, drill-through, bookmark, link]
+            context_preserved:
+              type: boolean
+      detail_access:
+        type: array
+        items:
+          enum: [tooltip, drill-down, drill-through, detail-table, export, none]
+      reset_behavior:
+        type: string
+      scenario_or_input_controls:
+        type: array
+        items:
+          type: string
+      static_fallback:
+        type: string
+  layout:
+    type: object
+    additionalProperties: false
+    required: [canvas, grid, zones, whitespace_strategy]
+    properties:
+      canvas:
+        type: object
+        additionalProperties: false
+        required: [width, height, unit]
+        properties:
+          width:
+            type: number
+            exclusiveMinimum: 0
+          height:
+            type: number
+            exclusiveMinimum: 0
+          unit:
+            enum: [pixels, points, inches, millimetres]
+          aspect_ratio:
+            type: string
+      grid:
+        type: object
+        additionalProperties: false
+        required: [columns, outer_margin, gutter]
+        properties:
+          columns:
+            type: integer
+            minimum: 1
+          rows:
+            type: integer
+            minimum: 1
+          outer_margin:
+            type: number
+            minimum: 0
+          gutter:
+            type: number
+            minimum: 0
+          baseline:
+            type: number
+            minimum: 0
+      zones:
+        type: array
+        minItems: 1
+        items:
+          type: object
+          additionalProperties: false
+          required: [zone_id, purpose, x, y, width, height]
+          properties:
+            zone_id:
+              type: string
+            purpose:
+              enum: [title, context, kpi, primary-exhibit, secondary-evidence, commentary, action, navigation, source]
+            x:
+              type: number
+              minimum: 0
+            y:
+              type: number
+              minimum: 0
+            width:
+              type: number
+              exclusiveMinimum: 0
+            height:
+              type: number
+              exclusiveMinimum: 0
+            contained_visual_ids:
+              type: array
+              items:
+                type: string
+      whitespace_strategy:
+        type: string
+      responsive_or_mobile_notes:
+        type: string
+  accessibility:
+    type: object
+    additionalProperties: false
+    required: [reading_order, colour_independence, keyboard_and_focus, alternative_text]
+    properties:
+      reading_order:
+        type: array
+        items:
+          type: string
+      colour_independence:
+        type: string
+      keyboard_and_focus:
+        type: string
+      alternative_text:
+        type: string
+      contrast_requirements:
+        type: string
+      text_size_requirements:
+        type: string
+      cognitive_load_notes:
+        type: string
+  power_bi:
+    type: object
+    additionalProperties: false
+    required: [feasibility_status, required_features, model_dependencies, export_behavior]
+    properties:
+      feasibility_status:
+        enum: [not-reviewed, feasible, feasible-with-constraints, not-feasible, requires-prototype]
+      required_features:
+        type: array
+        items:
+          type: string
+      model_dependencies:
+        type: array
+        items:
+          type: string
+      measure_dependencies:
+        type: array
+        items:
+          type: string
+      performance_risks:
+        type: array
+        items:
+          type: string
+      security_requirements:
+        type: array
+        items:
+          type: string
+      export_behavior:
+        type: string
+      implementation_notes:
+        type: string
+  sources_and_definitions:
+    type: object
+    additionalProperties: false
+    properties:
+      visible_source_note:
+        type: string
+      definition_access:
+        enum: [direct-label, footnote, tooltip, methodology-page, linked-document]
+      data_as_of_label:
+        type: string
+  quality_checks:
+    type: array
+    minItems: 1
+    items:
+      type: object
+      additionalProperties: false
+      required: [check, status]
+      properties:
+        check:
+          type: string
+        status:
+          enum: [not-run, pass, fail, not-applicable]
+        finding:
+          type: string
+  assumptions:
+    type: array
+    items:
+      type: string
+  open_questions:
+    type: array
+    items:
+      type: string
+  superseded_by:
+    type: [string, 'null']
+    pattern: ^PAGE-[A-Z0-9-]+-[0-9]{3}$
