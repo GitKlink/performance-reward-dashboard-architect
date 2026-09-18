@@ -1,0 +1,150 @@
+visual_id: VISUAL-EXEC-FIXED-001
+title: Forecast investment versus approved budget
+status: DRAFT
+content_version: 0.1.0
+page_id: PAGE-EXEC-FIXED-001
+purpose: Show whether forecast fixed-reward investment is within the approved budget and tolerance.
+business_question: Is forecast fixed-reward investment within the approved budget and tolerance?
+conclusion_or_message: Forecast status and variance are visible immediately, with the approved tolerance shown directly.
+analytical_relationship: actual-versus-target
+precision_requirement: precise-comparison
+visual_type: bullet-chart
+custom_visual_type: ''
+measures:
+  - kpi_id: KPI-FIXED-001
+    role: primary
+    aggregation: Sum forecast annualised FTE fixed-reward investment.
+    display_format: Currency in millions.
+    axis: value
+  - kpi_id: KPI-FIXED-001-BUDGET
+    role: target
+    aggregation: Approved budget value for the selected population and scenario.
+    display_format: Currency in millions.
+    axis: value
+  - kpi_id: KPI-FIXED-001-VARIANCE
+    role: label
+    aggregation: Forecast minus budget and percentage variance.
+    display_format: Currency and percentage.
+    axis: none
+dimensions:
+  - field: selected forecast scenario
+    role: filter
+    data_type: text
+comparison_logic:
+  primary_comparison: budget
+  comparator_definition: Approved fixed-reward budget for the same population, pay basis, and scenario context.
+  variance_calculation: Forecast investment minus approved budget, with percentage variance calculated against budget.
+  tolerance_or_band: Organisation-approved budget tolerance shown as a labelled qualitative band.
+  scale_consistency: Use one common currency scale and do not compare values from different scenarios or population bases.
+encoding:
+  position: Forecast and budget are encoded on a common horizontal quantitative axis.
+  length: Forecast investment is encoded by the length of the primary bar.
+  colour: Semantic colour is used only as secondary status emphasis.
+  size: No additional metric is encoded by size.
+  shape: A target marker identifies the approved budget.
+  line_style: Tolerance boundaries use subtle reference markers where supported.
+  orientation: horizontal
+  zero_baseline: required
+  uniform_scale: true
+  semantic_notation: Forecast, budget, and variance labels use consistent scenario notation across the report.
+sorting:
+  method: none
+  direction: not-applicable
+  custom_order: []
+labels_and_annotations:
+  title_style: conclusion
+  data_labels: all
+  direct_labels: true
+  annotation_rules:
+    - display forecast, budget, currency variance, percentage variance, and tolerance status
+    - label the selected scenario and data-as-of context
+  tooltip_content:
+    - KPI definition
+    - governed population
+    - pay basis
+    - scenario
+    - data quality coverage
+  definition_text: Forecast annualised FTE fixed-reward investment compared with the approved budget for the same governed population and pay basis.
+  source_note: Governed reward planning and approved budget datasets.
+  data_as_of_label: Selected executive scenario refresh.
+interactions:
+  selection_behavior: none
+  filtering_behavior: Responds to governed report-level portfolio and scenario filters.
+  detail_behavior: tooltip
+  reset_behavior: Report-level reset restores the enterprise portfolio and current executive scenario.
+  static_fallback: Direct labels and tolerance status remain visible in PDF and PowerPoint export.
+colour:
+  semantic_roles:
+    - role: within tolerance
+      meaning: Forecast is within the approved tolerance.
+      usage: Secondary status marker accompanied by text.
+    - role: outside tolerance
+      meaning: Forecast is outside the approved tolerance and requires explanation.
+      usage: Secondary exception marker accompanied by sign and label.
+  palette_constraints:
+    - do not use colour as the only indicator of status
+    - use one restrained emphasis colour for material exception
+  exception_emphasis: Use stronger contrast and an explicit text label only when the approved threshold is exceeded.
+typography:
+  title_size: 16
+  label_size: 11
+  value_size: 24
+  font_family: Repository-approved sans serif theme font.
+  emphasis_rules: Forecast variance and status receive strongest typographic emphasis; source and method notes remain subordinate.
+accessibility:
+  colour_independent: Status is expressed through text, sign, target position, and variance labels in addition to colour.
+  alternative_text: Forecast fixed-reward investment compared with approved budget, including variance and tolerance status.
+  keyboard_and_focus: The visual is non-interactive and appears in the declared page reading order.
+  contrast: All text, target markers, and status elements meet the approved contrast requirements.
+  cognitive_load: Show one forecast, one budget, one variance, and one status without decorative elements.
+  small_text_or_density_risk: Definition and source detail move to tooltip or methodology page rather than shrinking headline labels.
+power_bi:
+  implementation_type: native-visual
+  feasibility_status: requires-prototype
+  required_fields:
+    - selected scenario
+  required_measures:
+    - forecast investment
+    - approved budget
+    - currency variance
+    - percentage variance
+    - tolerance status
+  formatting_notes:
+    - use a native visual or composite bar and target-marker treatment if the required bullet chart is not available natively
+    - keep direct labels visible in static export
+  interaction_notes:
+    - disable unnecessary visual selection and cross-filtering
+  performance_risks:
+    - unfiltered scenario or snapshot dimensions could duplicate forecast values
+  export_behavior: Forecast, budget, variance, tolerance status, scope, and data-as-of label remain visible.
+  custom_visual_dependency: Avoid a custom visual unless the native or composite implementation cannot meet accessibility and export requirements.
+selected_because:
+  - the decision requires precise actual-versus-target comparison
+  - a common position and length scale supports fast interpretation
+  - direct labels remain usable in a static export
+alternatives_considered:
+  - alternative: KPI card with variance text
+    rejection_reason: It shows status but provides weaker visual comparison with the target and tolerance.
+  - alternative: gauge
+    rejection_reason: Radial encoding uses more space and provides less precise comparison for this decision.
+misuse_conditions:
+  - forecast and budget use different populations, currency methods, or pay-component definitions
+  - several scenarios are aggregated into one value
+  - an unapproved tolerance is presented as policy
+  - colour is used as the only status indicator
+assumptions:
+  - The final implementation can reproduce the target marker, tolerance, labels, and export behaviour using supported Power BI components.
+validation:
+  - check: KPI definition complete
+    status: pass
+    finding: The fixture references a complete draft KPI definition.
+  - check: Comparator alignment
+    status: not-run
+    finding: Budget and forecast reconciliation must be tested with implementation data.
+  - check: Accessibility
+    status: not-run
+    finding: Contrast and alternative-text behaviour require implementation testing.
+  - check: Static export
+    status: not-run
+    finding: PDF and PowerPoint output require a prototype.
+superseded_by: null

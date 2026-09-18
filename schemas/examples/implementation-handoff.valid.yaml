@@ -1,0 +1,414 @@
+handoff_id: HANDOFF-EXEC-FIXED-001
+title: Executive fixed-reward investment summary implementation handoff
+status: DRAFT
+content_version: 0.1.0
+source_artifacts:
+  - artifact_id: SCHEMA-CORE-002
+    path: schemas/examples/dashboard-brief.valid.yaml
+    content_version: 0.1.0
+    approval_status: DRAFT
+  - artifact_id: SCHEMA-PR-001
+    path: schemas/examples/kpi-definition.valid.yaml
+    content_version: 0.1.0
+    approval_status: DRAFT
+  - artifact_id: SCHEMA-UX-001
+    path: schemas/examples/page-specification.valid.yaml
+    content_version: 0.1.0
+    approval_status: DRAFT
+  - artifact_id: SCHEMA-VIZ-001
+    path: schemas/examples/visual-specification.valid.yaml
+    content_version: 0.1.0
+    approval_status: DRAFT
+audience_and_decision:
+  primary_audience: executive
+  secondary_audiences:
+    - reward-partner
+  decision: Endorse or redirect the proposed fixed-reward investment before final allocation.
+  actions_supported:
+    - endorse the proposed investment
+    - redirect investment toward material risks
+    - request a revised scenario
+  consumption_mode: hybrid
+  expected_reading_time: three minutes for the summary page
+scope:
+  included:
+    - governed fixed-reward review population
+    - approved budget and current forecast
+    - material investment-component and portfolio drivers
+  excluded:
+    - employee-level executive approval
+    - variable reward
+    - unapproved policy scenarios
+  population: Employees eligible for the selected fixed-reward cycle.
+  organisational_scope: Governed enterprise portfolio.
+  time_horizon: Current reward cycle and selected forecast snapshot.
+  jurisdictions:
+    - general public-repository example
+  currencies_and_pay_basis: Approved reporting currency and annualised FTE fixed-reward basis.
+target_environment:
+  power_bi_desktop_version: current supported version at implementation time
+  power_bi_service_environment: governed development workspace
+  workspace: to be assigned
+  deployment_pipeline: not yet defined
+  capacity_or_licence: to be confirmed
+  gateway: to be confirmed from source architecture
+  supporting_tools:
+    - repository validation scripts
+data_sources:
+  - source_name: governed reward planning dataset
+    source_type: semantic-model
+    location_or_connection: approved development source
+    owner: Reward Data Owner
+    refresh: each governed executive review point
+    credentials_and_gateway: use approved service credentials and gateway configuration
+    data_classification: highly-confidential
+    known_limitations:
+      - final source and refresh architecture is not yet confirmed
+  - source_name: approved fixed-reward budget dataset
+    source_type: file
+    location_or_connection: governed financial control location
+    owner: Reward Finance Control Owner
+    refresh: when the approved budget or governed restatement changes
+    credentials_and_gateway: restricted to authorised implementation and control users
+    data_classification: confidential
+    known_limitations:
+      - population keys and scenario alignment require reconciliation
+semantic_model:
+  model_type: import
+  grain:
+    - one governed reward case per employee, cycle, and selected scenario snapshot
+    - one budget record per governed organisational allocation and cycle
+  fact_tables:
+    - name: FactRewardCase
+      grain: Employee reward case by cycle and scenario snapshot.
+      purpose: Store eligibility, current reward, proposed reward, investment components, and recommendation status.
+      keys:
+        - RewardCaseKey
+        - EmployeeKey
+        - CycleKey
+        - ScenarioKey
+        - OrganisationKey
+    - name: FactRewardBudget
+      grain: Approved budget by cycle, organisation, and budget component.
+      purpose: Store the governed investment envelope used for comparison and reconciliation.
+      keys:
+        - BudgetKey
+        - CycleKey
+        - OrganisationKey
+        - BudgetComponentKey
+  dimensions:
+    - name: DimEmployee
+      key: EmployeeKey
+      purpose: Provide authorised worker attributes needed for reward calculations and controlled diagnostics.
+      type_two_or_effective_dated: true
+    - name: DimOrganisation
+      key: OrganisationKey
+      purpose: Support governed portfolio reporting and row-level access.
+      type_two_or_effective_dated: true
+    - name: DimCycle
+      key: CycleKey
+      purpose: Define reward-cycle dates and governed population context.
+      type_two_or_effective_dated: false
+    - name: DimScenario
+      key: ScenarioKey
+      purpose: Ensure one explicit forecast scenario and snapshot is selected.
+      type_two_or_effective_dated: false
+    - name: DimInvestmentComponent
+      key: InvestmentComponentKey
+      purpose: Explain mandatory, market, promotion, and discretionary contribution to investment.
+      type_two_or_effective_dated: false
+  relationships:
+    - from: DimEmployee.EmployeeKey
+      to: FactRewardCase.EmployeeKey
+      cardinality: one-to-many
+      filter_direction: single
+      active: true
+    - from: DimOrganisation.OrganisationKey
+      to: FactRewardCase.OrganisationKey
+      cardinality: one-to-many
+      filter_direction: single
+      active: true
+    - from: DimOrganisation.OrganisationKey
+      to: FactRewardBudget.OrganisationKey
+      cardinality: one-to-many
+      filter_direction: single
+      active: true
+    - from: DimCycle.CycleKey
+      to: FactRewardCase.CycleKey
+      cardinality: one-to-many
+      filter_direction: single
+      active: true
+    - from: DimCycle.CycleKey
+      to: FactRewardBudget.CycleKey
+      cardinality: one-to-many
+      filter_direction: single
+      active: true
+    - from: DimScenario.ScenarioKey
+      to: FactRewardCase.ScenarioKey
+      cardinality: one-to-many
+      filter_direction: single
+      active: true
+  effective_dating: Resolve employee and organisation attributes at the governed cycle population date and cost at the planned reward effective date.
+  role_playing_dates:
+    - population date
+    - recommendation snapshot date
+    - reward effective date
+  calculation_groups:
+    - scenario and comparison selection only if implementation testing confirms clarity and performance
+  model_assumptions:
+    - budget and reward-case populations can be reconciled through governed cycle and organisation keys
+measures:
+  - kpi_id: KPI-FIXED-001
+    measure_name: Forecast Fixed Reward Investment
+    definition_status: draft
+    dax_or_calculation: Sum employee-level annualised FTE proposed fixed reward less current fixed reward for the selected cycle and scenario.
+    implementation_status: prototype
+    format_string: reporting currency in millions
+    dependencies:
+      - selected cycle
+      - selected scenario
+      - approved eligibility population
+      - current and proposed annualised FTE fixed reward
+    performance_notes: Require one selected scenario and prevent aggregation across scenario snapshots.
+    test_cases:
+      - case: forecast equals approved budget
+        expected_result: currency and percentage variance are zero
+        tolerance: exact before display rounding
+      - case: budget is missing
+        expected_result: variance returns unknown and a data-quality flag is raised
+        tolerance: no zero substitution
+  - kpi_id: KPI-FIXED-001-VARIANCE
+    measure_name: Forecast Budget Variance
+    definition_status: draft
+    dax_or_calculation: Forecast Fixed Reward Investment minus Approved Fixed Reward Budget.
+    implementation_status: not-started
+    format_string: reporting currency and percentage
+    dependencies:
+      - Forecast Fixed Reward Investment
+      - Approved Fixed Reward Budget
+    performance_notes: Reuse base measures and do not calculate from formatted values.
+    test_cases:
+      - case: forecast is 103 and budget is 100
+        expected_result: currency variance is 3 and percentage variance is 3 percent
+        tolerance: exact before display rounding
+pages:
+  - page_id: PAGE-EXEC-FIXED-001
+    title: Fixed-reward investment decision summary
+    role: summary
+    page_specification: schemas/examples/page-specification.valid.yaml
+    visual_specifications:
+      - schemas/examples/visual-specification.valid.yaml
+    build_order: 1
+    implementation_notes:
+      - prototype the budget comparison and export behaviour before building diagnostic pages
+interactions:
+  navigation:
+    - summary to driver page using a visible button with context preserved
+    - authorised drill-through from portfolio exceptions to controlled diagnostics
+  filters:
+    - governed cycle
+    - forecast scenario
+    - organisational portfolio
+  drill:
+    - executive summary to authorised portfolio diagnostic
+  tooltips:
+    - KPI definition, population, pay basis, scenario, and coverage
+  reset: Visible reset restores the governed cycle, enterprise portfolio, and current executive scenario.
+  bookmarks_or_parameters:
+    - use only where the scenario selector remains understandable and export-safe
+  cross_highlight_or_filter: Disable nonessential cross-filtering on the executive summary.
+  interaction_tests:
+    - verify the summary cannot display more than one forecast scenario at once
+    - verify navigation preserves cycle and portfolio context
+security_and_privacy:
+  sensitivity: highly-confidential
+  row_level_security:
+    required: true
+    design: Executives receive governed aggregate access; Reward Partners receive authorised portfolio diagnostics through the organisation entitlement hierarchy.
+    hierarchy_or_entitlement_source: approved organisation and user-entitlement mapping
+    test_users:
+      - enterprise executive test user
+      - restricted portfolio Reward Partner test user
+      - unauthorised user
+  object_level_security: Hide employee-level fields and technical control measures from executive-facing semantic-model consumers where required.
+  export_controls:
+    - executive exports exclude employee-level fields and suppressed groups
+    - diagnostic export is restricted to authorised users
+  minimum_group_or_suppression: Apply the approved minimum-group and suppression rules to diagnostic segments.
+  employee_level_access: Restricted to authorised Reward Partners and implementation users with a defined business need.
+  privacy_tests:
+    - verify unauthorised users cannot infer employee detail through drill-through, tooltip, export, or small groups
+    - verify executive export contains aggregate values only
+accessibility:
+  reading_order: Title and scope, budget status, driver exhibit, action summary, source and data-as-of note.
+  keyboard_navigation: All interactive controls and navigation follow the declared reading order.
+  contrast: Use approved text and semantic-status contrast thresholds.
+  colour_independence: Status uses text, sign, labels, and target position in addition to colour.
+  alt_text: Provide a concise summary of forecast, budget, variance, driver, and required action.
+  text_size_and_zoom: Validate meeting-room readability, browser zoom, and exported formats.
+  tests:
+    - keyboard-only navigation through filters and page controls
+    - contrast and colour-independence review
+    - screen-reader reading-order and alternative-text review
+performance:
+  targets:
+    - executive summary interactions should respond within the agreed report-performance target
+    - export should complete reliably for the selected executive scope
+  risks:
+    - high-cardinality reward-case detail could slow summary queries
+    - multiple scenario snapshots could duplicate forecast values
+  optimisation_actions:
+    - aggregate executive summary measures at query time from a star schema
+    - enforce one selected cycle and scenario
+    - avoid employee-level visuals on the summary page
+  tests:
+    - use Power BI Performance Analyzer for summary interactions
+    - test report opening, filter changes, and export with expected data volume
+  expected_data_volume: One governed reward case per eligible employee for the current cycle plus controlled snapshot history.
+export_and_distribution:
+  required_formats:
+    - pdf
+    - powerpoint
+  static_behavior: The core conclusion, forecast, budget, variance, primary driver, actions, scope, scenario, and data-as-of context remain visible without interaction.
+  distribution_channels:
+    - governed Power BI workspace
+    - approved executive meeting pack
+  subscription_or_alerting: Outside the first implementation scope.
+  mobile_behavior: Not required for the first executive summary.
+  export_tests:
+    - compare PDF and PowerPoint output with the approved page specification
+    - verify no labels are clipped and no core message depends on a tooltip
+theme_and_layout:
+  theme_file: to be created under the approved Power BI theme workflow
+  canvas_and_grid: 1280 by 720 pixel, 12-column executive grid from PAGE-EXEC-FIXED-001
+  font_requirements: Use the repository-approved sans serif theme font with meeting-room readable sizes.
+  semantic_colour_rules: Use restrained status and exception emphasis with text and sign redundancy.
+  custom_visuals: []
+implementation_sequence:
+  - sequence: 1
+    work_item: Reconcile governed population, budget, and forecast measures.
+    dependencies:
+      - approved source extracts
+      - KPI-FIXED-001 definition
+    owner: Reward Data Owner
+    completion_criteria:
+      - population counts reconcile
+      - budget and forecast use the same pay and currency basis
+      - missing and duplicate scenarios are flagged
+    status: not-started
+  - sequence: 2
+    work_item: Build the semantic-model prototype and base measures.
+    dependencies:
+      - completed reconciliation
+    owner: Power BI Developer
+    completion_criteria:
+      - measure test cases pass
+      - one cycle and scenario are enforced
+      - row-level security prototype is functional
+    status: not-started
+  - sequence: 3
+    work_item: Prototype the executive summary and static export.
+    dependencies:
+      - semantic-model prototype
+      - page and visual specifications
+    owner: Power BI Developer
+    completion_criteria:
+      - comparison visual is feasible and accessible
+      - PDF and PowerPoint retain the required message
+      - summary performance meets the agreed target
+    status: not-started
+testing:
+  data_tests:
+    - reconcile eligible population and approved exclusions
+    - reconcile budget and forecast values by portfolio
+  measure_tests:
+    - execute every KPI test case
+    - verify no scenario or snapshot double counting
+  visual_tests:
+    - compare the implemented page with the page and visual specifications
+  interaction_tests:
+    - test filters, reset, navigation, and authorised drill-through
+  security_tests:
+    - test executive, Reward Partner, and unauthorised user roles
+  accessibility_tests:
+    - run keyboard, contrast, colour-independence, reading-order, and alt-text checks
+  performance_tests:
+    - test summary opening, filter response, and export at expected data volume
+  export_tests:
+    - verify PDF and PowerPoint retain scope, labels, and core message
+  user_acceptance:
+    - executive decision owner confirms the page supports endorsement or redirection
+    - Reward Partner confirms diagnostic handoff is sufficient
+  regression_scenarios:
+    - multiple scenarios selected
+    - missing approved budget
+    - small diagnostic population
+    - unauthorised employee-level drill-through
+deployment_and_operations:
+  environments:
+    - development
+    - test
+    - production
+  deployment_steps:
+    - deploy semantic model and report through the governed release process
+    - validate refresh, permissions, and package version in each environment
+  refresh_monitoring: Monitor source refresh, scenario selection, population coverage, and reconciliation controls.
+  support_owner: Performance & Reward Reporting Product Owner
+  incident_process: Record critical metric, privacy, security, and availability defects through the governed support process.
+  change_control: Schema, KPI, security, and page changes require versioned artifacts and regression testing.
+  documentation_location: repository implementation handoff and release documentation
+assumptions:
+  - assumption: The approved budget can be joined to the governed cycle and organisation structure without material manual allocation.
+    materiality: high
+    owner: Reward Finance Control Owner
+    validation: Complete budget-to-population reconciliation before build approval.
+    status: unvalidated
+  - assumption: A supported Power BI implementation can reproduce the target comparison and static export requirements.
+    materiality: high
+    owner: Power BI Verifier
+    validation: Build a prototype in the target Power BI version.
+    status: unvalidated
+open_questions:
+  - question: What approved tolerance determines executive budget status?
+    owner: Performance & Reward Product Owner
+    materiality: high
+    resolution_required_before: build
+  - question: Which workspace, capacity, and deployment pipeline will host the product?
+    owner: Power BI Platform Owner
+    materiality: medium
+    resolution_required_before: deploy
+risks:
+  - risk: Budget and forecast population misalignment produces a misleading variance.
+    severity: critical
+    probability: medium
+    mitigation: Reconcile population, pay basis, currency method, and scenario before publication.
+    owner: Reward Data Owner
+    trigger: Population counts or value totals do not reconcile to the approved control.
+  - risk: Executive exports expose restricted employee or small-group information.
+    severity: critical
+    probability: low
+    mitigation: Restrict fields, apply suppression, test export roles, and inspect staged outputs.
+    owner: Security and Privacy Reviewer
+    trigger: Employee fields or unsuppressed small groups appear in executive output.
+  - risk: Static export loses the target marker or core conclusion.
+    severity: major
+    probability: medium
+    mitigation: Prototype export and use direct labels and a composite implementation if necessary.
+    owner: Power BI Developer
+    trigger: PDF or PowerPoint output differs materially from the page specification.
+acceptance_criteria:
+  - budget and forecast populations and values reconcile to approved controls
+  - all KPI test cases pass
+  - executive and Reward Partner access behaves as designed
+  - static export preserves the decision message and scope
+  - accessibility and performance tests pass
+  - no unresolved critical or major implementation finding remains
+approvals:
+  design_owner: Performance & Reward Dashboard Architect
+  business_owner: Executive Reward Committee
+  data_owner: Reward Data Owner
+  technical_owner: Power BI Product Owner
+  security_or_privacy_owner: to be assigned
+  status: not-requested
+  date: null
+next_action: Confirm the approved tolerance and source architecture, then build the governed semantic-model and summary-page prototype.

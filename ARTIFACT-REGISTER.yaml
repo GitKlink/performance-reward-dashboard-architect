@@ -1,0 +1,632 @@
+# Authoritative artifact identifier and lifecycle register.
+#
+# Status: DRAFT
+# Phase: 0
+# Content version: 0.4.0
+# Last reviewed: 2026-07-17
+#
+# IDs are immutable after publication. Placeholder files receive IDs when they
+# enter active planning or become dependencies of active work.
+
+register:
+  artifact_id: CTRL-CORE-004
+  status: DRAFT
+  content_version: 0.4.0
+  last_reviewed: 2026-07-17
+  naming_standard: STD-CORE-001
+  dependency_standard: CTRL-CORE-002
+
+status_values:
+  - PLACEHOLDER
+  - RESEARCH IN PROGRESS
+  - DRAFT
+  - IN REVIEW
+  - APPROVED
+  - SUPERSEDED
+
+artifacts:
+  - artifact_id: CTRL-CORE-001
+    path: BUILD-ORDER.md
+    type: CTRL
+    domain: CORE
+    phase: 0
+    status: DRAFT
+    minimum_status_to_unblock: APPROVED
+    depends_on: []
+    blocks:
+      - all implementation phases
+
+  - artifact_id: CTRL-CORE-002
+    path: DEPENDENCIES.md
+    type: CTRL
+    domain: CORE
+    phase: 0
+    status: DRAFT
+    minimum_status_to_unblock: APPROVED
+    depends_on:
+      - CTRL-CORE-001
+    blocks:
+      - dependency validation
+      - approval of governed artifacts
+
+  - artifact_id: CTRL-CORE-003
+    path: STATUS.md
+    type: CTRL
+    domain: CORE
+    phase: 0
+    status: DRAFT
+    minimum_status_to_unblock: DRAFT
+    depends_on:
+      - CTRL-CORE-001
+      - CTRL-CORE-002
+    blocks:
+      - release decisions
+
+  - artifact_id: CTRL-CORE-004
+    path: ARTIFACT-REGISTER.yaml
+    type: CTRL
+    domain: CORE
+    phase: 0
+    status: DRAFT
+    minimum_status_to_unblock: APPROVED
+    depends_on:
+      - CTRL-CORE-001
+      - CTRL-CORE-002
+      - STD-CORE-001
+    blocks:
+      - immutable artifact identification
+      - dependency validation
+      - status-index generation
+
+  - artifact_id: STD-CORE-001
+    path: docs/standards/naming-standard.md
+    type: STD
+    domain: CORE
+    phase: 0
+    status: DRAFT
+    minimum_status_to_unblock: APPROVED
+    depends_on:
+      - CTRL-CORE-001
+      - CTRL-CORE-002
+    blocks:
+      - STD-CORE-002
+      - STD-CORE-003
+      - STD-CORE-004
+      - all named governed artifacts
+
+  - artifact_id: STD-CORE-002
+    path: docs/standards/research-standard.md
+    type: STD
+    domain: CORE
+    phase: 0
+    status: DRAFT
+    minimum_status_to_unblock: APPROVED
+    depends_on:
+      - CTRL-CORE-001
+      - CTRL-CORE-002
+      - STD-CORE-001
+    blocks:
+      - STD-CORE-003
+      - PLAN-CORE-001
+      - all governed knowledge artifacts
+
+  - artifact_id: STD-CORE-003
+    path: docs/standards/citation-standard.md
+    type: STD
+    domain: CORE
+    phase: 0
+    status: DRAFT
+    minimum_status_to_unblock: APPROVED
+    depends_on:
+      - CTRL-CORE-001
+      - CTRL-CORE-002
+      - STD-CORE-001
+      - STD-CORE-002
+    blocks:
+      - KNOW-CORE-001
+      - KNOW-CORE-002
+      - research-record schema
+      - evidence-based knowledge approval
+
+  - artifact_id: KNOW-CORE-001
+    path: knowledge/research-register/README.md
+    type: KNOW
+    domain: CORE
+    phase: 0
+    status: DRAFT
+    minimum_status_to_unblock: APPROVED
+    depends_on:
+      - STD-CORE-001
+      - STD-CORE-002
+      - STD-CORE-003
+    blocks:
+      - KNOW-CORE-002
+      - source freshness reporting
+      - evidence review of knowledge artifacts
+
+  - artifact_id: KNOW-CORE-002
+    path: knowledge/research-register/sources.yaml
+    type: KNOW
+    domain: CORE
+    phase: 0
+    status: DRAFT
+    minimum_status_to_unblock: IN REVIEW
+    depends_on:
+      - KNOW-CORE-001
+      - STD-CORE-002
+      - STD-CORE-003
+    blocks:
+      - EX-CORE-001
+      - EX-CORE-002
+      - EX-FIXED-001
+      - EX-CONSULT-001
+      - EX-VIZ-001
+      - reusable source provenance
+
+  - artifact_id: EX-CORE-001
+    path: knowledge/research-register/trials/cursor-rules-and-skills-trial.md
+    type: EX
+    domain: CORE
+    phase: 0
+    status: DRAFT
+    minimum_status_to_unblock: IN REVIEW
+    depends_on:
+      - STD-CORE-001
+      - STD-CORE-002
+      - STD-CORE-003
+      - KNOW-CORE-001
+      - KNOW-CORE-002
+    blocks:
+      - Phase 0 current-product evidence review
+      - ARCH-CORE-001
+      - ARCH-CORE-002
+
+  - artifact_id: EX-CORE-002
+    path: knowledge/research-register/trials/internal-source-of-truth-decision-trial.md
+    type: EX
+    domain: CORE
+    phase: 0
+    status: DRAFT
+    minimum_status_to_unblock: IN REVIEW
+    depends_on:
+      - CTRL-CORE-001
+      - CTRL-CORE-002
+      - STD-CORE-001
+      - STD-CORE-002
+      - STD-CORE-003
+    blocks:
+      - Phase 0 internal-decision review
+      - ARCH-CORE-001
+      - ARCH-CORE-005
+
+  - artifact_id: EX-FIXED-001
+    path: knowledge/research-register/trials/new-hire-premium-kpi-trial.md
+    type: EX
+    domain: FIXED
+    phase: 0
+    status: DRAFT
+    minimum_status_to_unblock: IN REVIEW
+    depends_on:
+      - STD-CORE-001
+      - STD-CORE-002
+      - STD-CORE-003
+      - KNOW-CORE-001
+      - KNOW-CORE-002
+    blocks:
+      - Phase 0 KPI evidence review
+      - future fixed-reward KPI catalogue
+
+  - artifact_id: EX-CONSULT-001
+    path: knowledge/research-register/trials/consulting-attribution-trial.md
+    type: EX
+    domain: CONSULT
+    phase: 0
+    status: DRAFT
+    minimum_status_to_unblock: IN REVIEW
+    depends_on:
+      - STD-CORE-001
+      - STD-CORE-002
+      - STD-CORE-003
+      - KNOW-CORE-001
+      - KNOW-CORE-002
+    blocks:
+      - Phase 0 consulting-attribution review
+      - future consulting-technique catalogue
+
+  - artifact_id: EX-VIZ-001
+    path: knowledge/research-register/trials/graphical-perception-trial.md
+    type: EX
+    domain: VIZ
+    phase: 0
+    status: DRAFT
+    minimum_status_to_unblock: IN REVIEW
+    depends_on:
+      - STD-CORE-001
+      - STD-CORE-002
+      - STD-CORE-003
+      - KNOW-CORE-001
+      - KNOW-CORE-002
+    blocks:
+      - Phase 0 stable-research review
+      - future visual-perception knowledge pack
+      - future chart-selection skill
+
+  - artifact_id: EVAL-QA-001
+    path: knowledge/research-register/reviews/phase-0-internal-pre-review-2026-07-17.md
+    type: EVAL
+    domain: QA
+    phase: 0
+    status: DRAFT
+    minimum_status_to_unblock: IN REVIEW
+    depends_on:
+      - CTRL-CORE-001
+      - CTRL-CORE-002
+      - STD-CORE-001
+      - STD-CORE-002
+      - STD-CORE-003
+      - EX-CORE-001
+      - EX-CORE-002
+      - EX-FIXED-001
+      - EX-CONSULT-001
+      - EX-VIZ-001
+    blocks:
+      - independent Phase 0 review
+      - Phase 0 status transition
+
+  - artifact_id: SCRIPT-CORE-001
+    path: scripts/README.md
+    type: SCRIPT
+    domain: CORE
+    phase: 0
+    status: DRAFT
+    minimum_status_to_unblock: IN REVIEW
+    depends_on:
+      - CTRL-CORE-002
+      - CTRL-CORE-004
+      - STD-CORE-001
+    blocks:
+      - SCRIPT-CORE-002
+      - SCRIPT-CORE-004
+      - SCRIPT-CORE-005
+      - repository validation workflow
+
+  - artifact_id: SCRIPT-CORE-002
+    path: scripts/validate-dependencies.py
+    type: SCRIPT
+    domain: CORE
+    phase: 0
+    status: DRAFT
+    minimum_status_to_unblock: IN REVIEW
+    depends_on:
+      - SCRIPT-CORE-001
+      - CTRL-CORE-004
+      - STD-CORE-001
+    blocks:
+      - TEST-QA-001
+      - INFRA-CORE-001
+      - branch-wide dependency validation
+
+  - artifact_id: SCRIPT-CORE-003
+    path: requirements-dev.txt
+    type: SCRIPT
+    domain: CORE
+    phase: 0
+    status: DRAFT
+    minimum_status_to_unblock: DRAFT
+    depends_on:
+      - SCRIPT-CORE-001
+    blocks:
+      - SCRIPT-CORE-002
+      - SCRIPT-CORE-004
+      - TEST-QA-001
+      - TEST-QA-002
+      - TEST-QA-003
+      - INFRA-CORE-001
+
+  - artifact_id: SCRIPT-CORE-004
+    path: scripts/validate-source-register.py
+    type: SCRIPT
+    domain: CORE
+    phase: 0
+    status: DRAFT
+    minimum_status_to_unblock: IN REVIEW
+    depends_on:
+      - SCRIPT-CORE-001
+      - SCRIPT-CORE-003
+      - CTRL-CORE-004
+      - KNOW-CORE-002
+      - STD-CORE-002
+      - STD-CORE-003
+    blocks:
+      - TEST-QA-003
+      - INFRA-CORE-001
+      - source-register quality gate
+
+  - artifact_id: SCRIPT-CORE-005
+    path: scripts/check-internal-links.py
+    type: SCRIPT
+    domain: CORE
+    phase: 0
+    status: DRAFT
+    minimum_status_to_unblock: IN REVIEW
+    depends_on:
+      - SCRIPT-CORE-001
+      - STD-CORE-001
+      - STD-CORE-003
+    blocks:
+      - TEST-QA-002
+      - INFRA-CORE-001
+      - internal-link quality gate
+
+  - artifact_id: TEST-QA-001
+    path: tests/test_validate_dependencies.py
+    type: TEST
+    domain: QA
+    phase: 0
+    status: DRAFT
+    minimum_status_to_unblock: IN REVIEW
+    depends_on:
+      - SCRIPT-CORE-001
+      - SCRIPT-CORE-002
+      - SCRIPT-CORE-003
+    blocks:
+      - INFRA-CORE-001
+      - dependency-validator review
+
+  - artifact_id: TEST-QA-002
+    path: tests/test_check_internal_links.py
+    type: TEST
+    domain: QA
+    phase: 0
+    status: DRAFT
+    minimum_status_to_unblock: IN REVIEW
+    depends_on:
+      - SCRIPT-CORE-003
+      - SCRIPT-CORE-005
+    blocks:
+      - INFRA-CORE-001
+      - internal-link-validator review
+
+  - artifact_id: TEST-QA-003
+    path: tests/test_validate_source_register.py
+    type: TEST
+    domain: QA
+    phase: 0
+    status: DRAFT
+    minimum_status_to_unblock: IN REVIEW
+    depends_on:
+      - SCRIPT-CORE-003
+      - SCRIPT-CORE-004
+      - KNOW-CORE-002
+    blocks:
+      - INFRA-CORE-001
+      - source-register-validator review
+
+  - artifact_id: INFRA-CORE-001
+    path: .github/workflows/repository-validation.yml
+    type: INFRA
+    domain: CORE
+    phase: 0
+    status: DRAFT
+    minimum_status_to_unblock: IN REVIEW
+    depends_on:
+      - SCRIPT-CORE-002
+      - SCRIPT-CORE-003
+      - SCRIPT-CORE-004
+      - SCRIPT-CORE-005
+      - TEST-QA-001
+      - TEST-QA-002
+      - TEST-QA-003
+    blocks:
+      - automated repository quality gate
+      - Phase 0 review evidence
+
+  - artifact_id: KNOW-QA-001
+    path: docs/reviews/README.md
+    type: KNOW
+    domain: QA
+    phase: 1
+    status: PLACEHOLDER
+    minimum_status_to_unblock: APPROVED
+    depends_on:
+      - STD-CORE-006
+    blocks:
+      - formal review records
+
+  - artifact_id: ARCH-CORE-001
+    path: docs/architecture/agent-architecture.md
+    type: ARCH
+    domain: CORE
+    phase: 1
+    status: PLACEHOLDER
+    minimum_status_to_unblock: APPROVED
+    depends_on:
+      - STD-CORE-001
+      - STD-CORE-002
+      - STD-CORE-003
+      - EX-CORE-001
+      - EX-CORE-002
+    blocks:
+      - ARCH-CORE-002
+      - ARCH-CORE-003
+      - STD-CORE-004
+      - final Cursor agent structure
+
+  - artifact_id: ARCH-CORE-002
+    path: docs/architecture/context-management-strategy.md
+    type: ARCH
+    domain: CORE
+    phase: 1
+    status: PLACEHOLDER
+    minimum_status_to_unblock: APPROVED
+    depends_on:
+      - ARCH-CORE-001
+      - STD-CORE-001
+      - STD-CORE-002
+      - EX-CORE-001
+    blocks:
+      - ARCH-CORE-003
+      - Cursor rules
+      - subagent handoffs
+
+  - artifact_id: ARCH-CORE-003
+    path: docs/architecture/skill-routing-model.md
+    type: ARCH
+    domain: CORE
+    phase: 1
+    status: PLACEHOLDER
+    minimum_status_to_unblock: APPROVED
+    depends_on:
+      - ARCH-CORE-001
+      - ARCH-CORE-002
+    blocks:
+      - active Cursor skills
+      - main orchestrator rule
+      - routing evaluations
+
+  - artifact_id: ARCH-CORE-004
+    path: docs/architecture/information-architecture.md
+    type: ARCH
+    domain: CORE
+    phase: 1
+    status: PLACEHOLDER
+    minimum_status_to_unblock: APPROVED
+    depends_on:
+      - ARCH-CORE-001
+      - STD-CORE-001
+    blocks:
+      - repository navigation
+      - release packaging
+
+  - artifact_id: ARCH-CORE-005
+    path: docs/architecture/release-architecture.md
+    type: ARCH
+    domain: CORE
+    phase: 1
+    status: PLACEHOLDER
+    minimum_status_to_unblock: APPROVED
+    depends_on:
+      - ARCH-CORE-001
+      - ARCH-CORE-004
+      - EX-CORE-002
+    blocks:
+      - PLAN-CORE-003
+      - package validation
+
+  - artifact_id: STD-CORE-004
+    path: docs/standards/skill-authoring-standard.md
+    type: STD
+    domain: CORE
+    phase: 1
+    status: PLACEHOLDER
+    minimum_status_to_unblock: APPROVED
+    depends_on:
+      - ARCH-CORE-001
+      - ARCH-CORE-002
+      - ARCH-CORE-003
+      - STD-CORE-001
+      - STD-CORE-002
+      - STD-CORE-003
+    blocks:
+      - all active Cursor skills
+
+  - artifact_id: STD-CORE-005
+    path: docs/standards/example-authoring-standard.md
+    type: STD
+    domain: CORE
+    phase: 1
+    status: PLACEHOLDER
+    minimum_status_to_unblock: APPROVED
+    depends_on:
+      - ARCH-CORE-001
+      - STD-CORE-001
+      - STD-CORE-002
+      - STD-CORE-003
+      - EX-CORE-001
+      - EX-CORE-002
+      - EX-FIXED-001
+      - EX-CONSULT-001
+      - EX-VIZ-001
+    blocks:
+      - worked examples
+      - benchmark scenarios
+
+  - artifact_id: STD-CORE-006
+    path: docs/standards/evaluation-standard.md
+    type: STD
+    domain: CORE
+    phase: 1
+    status: PLACEHOLDER
+    minimum_status_to_unblock: APPROVED
+    depends_on:
+      - ARCH-CORE-001
+      - ARCH-CORE-003
+      - STD-CORE-005
+    blocks:
+      - evaluation rubric
+      - release quality gates
+
+  - artifact_id: PLAN-CORE-001
+    path: docs/plans/research-program.md
+    type: PLAN
+    domain: CORE
+    phase: 1
+    status: PLACEHOLDER
+    minimum_status_to_unblock: APPROVED
+    depends_on:
+      - STD-CORE-002
+      - STD-CORE-003
+      - ARCH-CORE-001
+      - KNOW-CORE-001
+    blocks:
+      - domain research waves
+
+  - artifact_id: PLAN-CORE-002
+    path: docs/plans/implementation-roadmap.md
+    type: PLAN
+    domain: CORE
+    phase: 1
+    status: PLACEHOLDER
+    minimum_status_to_unblock: APPROVED
+    depends_on:
+      - CTRL-CORE-001
+      - ARCH-CORE-001
+      - ARCH-CORE-003
+    blocks:
+      - milestone planning
+
+  - artifact_id: PLAN-CORE-003
+    path: docs/plans/release-plan.md
+    type: PLAN
+    domain: CORE
+    phase: 1
+    status: PLACEHOLDER
+    minimum_status_to_unblock: APPROVED
+    depends_on:
+      - ARCH-CORE-005
+      - STD-CORE-006
+      - PLAN-CORE-002
+    blocks:
+      - tagged releases
+
+reserved_id_namespaces:
+  RULE: 1-99
+  AGENT: 1-99
+  SKILL: 1-999
+  KNOW: 1-999
+  SCHEMA: 1-99
+  TPL: 1-99
+  EX: 1-999
+  EVAL: 1-999
+  SCRIPT: 1-99
+  TEST: 1-999
+  INFRA: 1-99
+
+validation_requirements:
+  - every active substantive artifact must appear in this register
+  - path and artifact_id must match file frontmatter where frontmatter is supported
+  - artifact_id values must be unique
+  - depends_on values must resolve to registered artifact IDs
+  - circular dependencies are prohibited
+  - SUPERSEDED artifacts must identify superseded_by
+  - approved artifacts cannot depend on lower-status mandatory prerequisites

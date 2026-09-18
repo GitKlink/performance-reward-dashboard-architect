@@ -1,0 +1,33 @@
+---
+description: Placeholder Cursor rule. Do not apply.
+globs:
+  - "__never_apply_placeholder__"
+alwaysApply: false
+status: PLACEHOLDER
+phase: 11
+last_reviewed: 2026-07-17
+---
+
+# Placeholder Cursor Rule
+
+## Purpose
+
+Reserve the final rule location without affecting Cursor behaviour.
+
+## Complete only after
+
+- Agent architecture, context strategy, and routing model are approved.
+- Relevant skills, schemas, and quality gates are stable.
+- The rule has a clear reason to remain in persistent context.
+
+## Required content
+
+- Scope and trigger behaviour
+- Required workflow
+- Authoritative source hierarchy
+- Context and evidence constraints
+- Prohibited behaviour
+- References to approved skills and standards
+- Acceptance and benchmark criteria
+
+Keep the final rule concise. Detailed knowledge and methods belong in skills and references.
