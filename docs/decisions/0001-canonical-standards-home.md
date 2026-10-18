@@ -1,7 +1,7 @@
 ---
 decision_id: ADR-0001
 title: Canonical Power BI and Fabric Engineering Standards Home
-status: proposed-for-review
+status: accepted
 decision_date: 2026-10-16
 owner: GitKlink
 tracking_issue: 5
@@ -68,11 +68,11 @@ Normative, approved policy must be distinguishable from drafts, guidance, resear
 
 ## Migration decision
 
-Migrate the existing File Library `Semantic Model Standards/` pack **semantically unchanged** into `semantic-model/`, maintaining original relative paths and content before any refactor. Inventory targets are the existing README, `semantic_measure_standard.md`, `business_glossary.md`, improvement backlog and seven domain extensions (Workforce, Organisation, Performance, Fixed Reward, Variable Reward, Equity, International Assignments).
+The existing File Library `Semantic Model Standards/` pack has been migrated **byte-for-byte** into `semantic-model/`, maintaining original relative paths and content before any refactor. Inventory targets are the existing README, `semantic_measure_standard.md`, `business_glossary.md`, improvement backlog and seven domain extensions (Workforce, Organisation, Performance, Fixed Reward, Variable Reward, Equity, International Assignments).
 
-The current independent existence of each of the seven original domain Markdown source files must be verified. References and HTML explorer renderings are not themselves proof of byte-identical original files. Do not mark parity accepted unless the source files and resulting content have been checked.
+All seven original domain Markdown source files were recovered directly from the File Library, not reconstructed from HTML. The merged standards PR #1 and the `main` branch contain all 11 original files, with their original Git blob IDs independently verified. Source parity is accepted; see the standards repository's `docs/migration/2026-10-16-semantic-model.md`.
 
-Only after migration parity is verified should issue #6 decide how current domain extension text is separated between P&R business truth and generic semantic-model representation.
+Now that migration parity is verified, issue #6 should decide how current domain extension text is separated between P&R business truth and generic semantic-model representation.
 
 ## Alternatives considered
 
@@ -80,15 +80,16 @@ Only after migration parity is verified should issue #6 decide how current domai
 - **Place standards inside `dax-m-query-library`:** conflicts with the agreed implementation-only boundary.
 - **Maintain standards only in the File Library:** preserves existing drafts but lacks a single versioned, reviewable engineering policy home.
 
-A dedicated repository is the recommended scope and authority fit for the current Power BI vertical slice.
+A dedicated repository is the selected authority model for the current Power BI vertical slice.
 
 ## Status and next actions
 
-- **Decision:** dedicated repository selected.
-- **Not complete:** physical repository not created through the current GitHub connector; no Semantic Model Standards migrated.
-- **Implementation:** issue #21 creates the repository, inventories/copies eleven source files and verifies migration parity.
-- **Architecture research:** issue #17 remains open; it governs how the sources are installed/loaded/composed, not this canonical-home decision.
-- **Decision tracking:** issue #5. Promote ADR status to accepted following PR review, and close #5 when the decision record is merged; do not misrepresent migration as complete.
+- **Decision:** accepted — dedicated standards repository at `GitKlink/power-bi-fabric-standards`.
+- **Implementation:** completed in standards [PR #1](https://github.com/GitKlink/power-bi-fabric-standards/pull/1), merged 16 October 2026. All eleven migrated originals verified on `main`. Wayfinder #21 is closed.
+- **Authority:** the root README of the standards repository identifies the canonical engineering-policy home. File Library originals remain a historical source snapshot, not a competing version-controlled authority.
+- **Domain separation:** issue #6 governs post-migration allocation of business meaning vs generic semantic-model conventions.
+- **Architecture research:** issue #17 remains open; it governs how the sources are installed/loaded/composed and their version/pinning mechanics, not the settled physical-home decision.
+- **Decision tracking:** close issue #5 when this ADR is merged. This ADR does not claim the Wayfinder agent has a standards-loading integration yet.
 
 ## References
 
