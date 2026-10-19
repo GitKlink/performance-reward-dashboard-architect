@@ -36,7 +36,7 @@
 - **PBIP project:** owns its actual local code, model, reports, tests and adopted pinned dependency revisions.
 - **Microsoft Power BI/Fabric skills:** prefer upstream maintained platform capability; adapt/delegate rather than fork by default.
 
-**Evidence labels used below:** **DOCUMENTED** = current official documentation or open specification; **OBSERVED** = R1/R3 reference implementation; **INFERENCE** = proposed design consequence; **UNTES​TED** = needs host/environment verification. No installed Cursor, Claude or Codex runtime was exercised as part of this R7 research.
+**Evidence labels used below:** **DOCUMENTED** = current official documentation or open specification; **OBSERVED** = R1/R3 reference implementation; **INFERENCE** = proposed design consequence; **UNTESTED** = needs host/environment verification. No installed Cursor, Claude or Codex runtime was exercised as part of this R7 research.
 
 ## 2. Portable primitives
 
@@ -53,7 +53,7 @@ This is content portability, not automatic instruction loading. A host requires 
 **DOCUMENTED:**
 - Cursor supports root and nested AGENTS.md in current Rules documentation: [Cursor Rules](https://cursor.com/docs/rules).
 - Codex walks its instruction hierarchy from global scope through repo root to the working directory; AGENTS.override.md, fallback filenames and size limits are Codex-specific: [Codex AGENTS.md](https://learn.chatgpt.com/docs/agent-configuration/agents-md).
-- **Important October 2026 update:** Claude Code supports AGENTS.md natively starting with its recent built-in support (**v2.1.277+**). By default, it reads AGENTS.md **only when no CLAUDE.md (or CLAUDE.local.md) is present at the working directory or above it**. An explicit user/managed setting can elect to read both. Older versions lack native support; a CLAUDE.md with an \`@AGENTS.md\` import remains a compatibility adapter. [Claude Code memory/AGENTS.md](https://code.claude.com/docs/en/memory#agentsmd).
+- **Important October 2026 update:** Claude Code supports AGENTS.md natively starting with its recent built-in support (**v2.1.277+**). By default, it reads AGENTS.md **only when no CLAUDE.md (or CLAUDE.local.md) is present at the working directory or above it**. An explicit user/managed setting can elect to read both. Older versions lack native support; a CLAUDE.md with an `@AGENTS.md` import remains a compatibility adapter. [Claude Code memory/AGENTS.md](https://code.claude.com/docs/en/memory#agentsmd).
 
 **INFERENCE:** one concise **canonical project-level AGENTS.md**, in the **project repository that will be opened by the agent**, is the leading portable *router*. It may say: identify project write root; resolve pinned standards revision; load required standards/glossary/domain meaning; never write to reference repos without explicit authorization; record evidence.
 
@@ -63,7 +63,7 @@ This is content portability, not automatic instruction loading. A host requires 
 
 ### 2.3 Agent Skills / SKILL.md
 
-**DOCUMENTED:** [Agent Skills open specification](https://agentskills.io/specification) defines a directory with SKILL.md YAML frontmatter including required \`name\` and \`description\`, Markdown workflow, and optional scripts/references/assets. Cursor and Codex both document project Agent Skill locations, especially \`.agents/skills/<name>/SKILL.md\`. Claude Code has its own project skill discovery under \`.claude/skills/\`, including skills from additional directories. [Cursor Skills](https://cursor.com/help/customization/skills), [Codex skills](https://learn.chatgpt.com/docs/build-skills), [Claude Code skills](https://code.claude.com/docs/en/skills).
+**DOCUMENTED:** [Agent Skills open specification](https://agentskills.io/specification) defines a directory with SKILL.md YAML frontmatter including required `name` and `description`, Markdown workflow, and optional scripts/references/assets. Cursor and Codex both document project Agent Skill locations, especially `.agents/skills/<name>/SKILL.md`. Claude Code has its own project skill discovery under `.claude/skills/`, including skills from additional directories. [Cursor Skills](https://cursor.com/help/customization/skills), [Codex skills](https://learn.chatgpt.com/docs/build-skills), [Claude Code skills](https://code.claude.com/docs/en/skills).
 
 **INFERENCE:** a **canonical skill source** (for example, "review-semantic-model-measures") can use only the open-spec essentials so the main instructions are portable. The skill tells an agent *how* to load relevant standards and inspect a model; it does **not** duplicate the canonical standards.
 
@@ -81,7 +81,7 @@ This is content portability, not automatic instruction loading. A host requires 
 
 ## 3. Cursor-specific primitives
 
-**DOCUMENTED / R1:** Cursor Project Rules under \`.cursor/rules/*.mdc\` have their own activation modes and globs; Cursor-specific hooks, agents/subagents, commands, MCP configuration and plugin packaging provide extra ergonomics and control. Cursor also supports both its own \`.cursor-plugin/plugin.json\` format and the portable **Agent Plugins** root \`plugin.json\` format for skills/MCP; the latter is a smaller common surface, **not** a universal guarantee that every other host installs it without adaptation. [Cursor Rules](https://cursor.com/docs/rules), [Cursor Plugins](https://cursor.com/docs/plugins), [Cursor Plugin reference](https://prod.cursor.com/docs/reference/plugins).
+**DOCUMENTED / R1:** Cursor Project Rules under `.cursor/rules/*.mdc` have their own activation modes and globs; Cursor-specific hooks, agents/subagents, commands, MCP configuration and plugin packaging provide extra ergonomics and control. Cursor also supports both its own `.cursor-plugin/plugin.json` format and the portable **Agent Plugins** root `plugin.json` format for skills/MCP; the latter is a smaller common surface, **not** a universal guarantee that every other host installs it without adaptation. [Cursor Rules](https://cursor.com/docs/rules), [Cursor Plugins](https://cursor.com/docs/plugins), [Cursor Plugin reference](https://prod.cursor.com/docs/reference/plugins).
 
 **Design:** keep a Cursor adapter that can:
 - expose a small relevance trigger or Project Rule referring to the **pinned canonical standard**;
@@ -92,28 +92,28 @@ This is content portability, not automatic instruction loading. A host requires 
 
 **Important R4 limitation:** multi-root is useful **locally** to expose sibling Git repos to Cursor Agent, but official Cursor docs say **Cloud Agents do not support multi-root workspaces**. File-pattern Rules also require actual file/context activation. A cross-root accessible standard is not proof that Agent used it. See [R4 review PR #23](https://github.com/GitKlink/performance-reward-dashboard-architect/pull/23), [Cursor search](https://cursor.com/docs/agent/tools/search).
 
-**Not portable by syntax:** \`.mdc\` frontmatter, globs/activation, Cursor-specific plugin variables, hook event names and any orchestration assumptions about multi-root. A converter must **interpret desired behaviour**, not merely rename a file to CLAUDE.md.
+**Not portable by syntax:** `.mdc` frontmatter, globs/activation, Cursor-specific plugin variables, hook event names and any orchestration assumptions about multi-root. A converter must **interpret desired behaviour**, not merely rename a file to CLAUDE.md.
 
 ## 4. Other-agent-specific primitives
 
 ### Codex
 
 **DOCUMENTED:**
-- \`AGENTS.md\` / \`AGENTS.override.md\` are instruction-discovery files; Codex reads a scoped chain at start. [Codex AGENTS.md](https://learn.chatgpt.com/docs/agent-configuration/agents-md).
-- \`.agents/skills/\` exposes SKILL.md workflows, with project and user/admin skill discovery. [Codex skills](https://learn.chatgpt.com/docs/build-skills).
+- `AGENTS.md` / `AGENTS.override.md` are instruction-discovery files; Codex reads a scoped chain at start. [Codex AGENTS.md](https://learn.chatgpt.com/docs/agent-configuration/agents-md).
+- `.agents/skills/` exposes SKILL.md workflows, with project and user/admin skill discovery. [Codex skills](https://learn.chatgpt.com/docs/build-skills).
 - MCP is a common tool integration pattern. [Codex MCP](https://developers.openai.com/codex/mcp).
 
-**INFERENCE:** no Codex-only clone of canonical standards should exist. Keep Codex path/skill registration, permissions, tool config and invocation documentation in a thin adapter. Native product plugin conventions and agent runtime permissions must be tested against the actual Codex environment being targeted; they are **not** simply Cursor's \`.cursor-plugin\` contract.
+**INFERENCE:** no Codex-only clone of canonical standards should exist. Keep Codex path/skill registration, permissions, tool config and invocation documentation in a thin adapter. Native product plugin conventions and agent runtime permissions must be tested against the actual Codex environment being targeted; they are **not** simply Cursor's `.cursor-plugin` contract.
 
 ### Claude Code
 
 **DOCUMENTED:**
-- Project instructions normally use \`CLAUDE.md\`; recent versions can read \`AGENTS.md\` subject to the fallback/config/version rules above. [Claude memory](https://code.claude.com/docs/en/memory).
-- Project skills use \`.claude/skills/\`; subagents live under Claude's agent conventions, while tool hooks and permissions have their **own** structured settings/event contracts. [Claude skills](https://code.claude.com/docs/en/skills), [subagents](https://code.claude.com/docs/en/sub-agents), [hooks](https://code.claude.com/docs/en/hooks).
-- Claude Code plugins and marketplaces use \`.claude-plugin\`-specific installation structure and semantics. [Claude plugins](https://code.claude.com/docs/en/plugins).
-- A \`CLAUDE.md\` \`@AGENTS.md\` import **expands into context**; it is not a zero-token pointer. External imports can require consent.
+- Project instructions normally use `CLAUDE.md`; recent versions can read `AGENTS.md` subject to the fallback/config/version rules above. [Claude memory](https://code.claude.com/docs/en/memory).
+- Project skills use `.claude/skills/`; subagents live under Claude's agent conventions, while tool hooks and permissions have their **own** structured settings/event contracts. [Claude skills](https://code.claude.com/docs/en/skills), [subagents](https://code.claude.com/docs/en/sub-agents), [hooks](https://code.claude.com/docs/en/hooks).
+- Claude Code plugins and marketplaces use `.claude-plugin`-specific installation structure and semantics. [Claude plugins](https://code.claude.com/docs/en/plugins).
+- A `CLAUDE.md` `@AGENTS.md` import **expands into context**; it is not a zero-token pointer. External imports can require consent.
 
-**INFERENCE:** rely first on direct AGENTS.md when tested on a supported Claude version; use a **small generated CLAUDE.md adapter** only where an existing CLAUDE.md or older host forces it. Keep optional Claude-specific hooks/subagents isolated in \`.claude/\`. Their absence in Codex or Cursor must not make the core semantic-model review impossible.
+**INFERENCE:** rely first on direct AGENTS.md when tested on a supported Claude version; use a **small generated CLAUDE.md adapter** only where an existing CLAUDE.md or older host forces it. Keep optional Claude-specific hooks/subagents isolated in `.claude/`. Their absence in Codex or Cursor must not make the core semantic-model review impossible.
 
 ### GitHub Copilot (secondary check)
 
@@ -168,7 +168,7 @@ PBIP project (product implementation authority)
 1. **Source selection:** resolve authoritative repo + exact approved release/SHA and verify private-repo access, integrity and license/scope.
 2. **Capability check:** detect target host/version/platform and supported instruction, Skill, MCP, plugin and hook features. Do not equate capability by filename alone.
 3. **Materialisation:** place **only required** portable skills and thin host adapters under correct host-specific roots. Preserve a manifest with source ID, content digest, generator version and target.
-4. **Conflict detection:** before touching files, identify local user modifications and duplicate capability installations. Avoid overwriting unrelated \`AGENTS.md\`, \`CLAUDE.md\`, \`.cursor/rules\` or any private application settings.
+4. **Conflict detection:** before touching files, identify local user modifications and duplicate capability installations. Avoid overwriting unrelated `AGENTS.md`, `CLAUDE.md`, `.cursor/rules` or any private application settings.
 5. **Activation smoke test:** prove the host discovers the router, can resolve the approved standard, reads the target domain rule and can invoke required tools.
 6. **Conformance test:** run a host-independent validator on a small PBIP fixture. Store evidence: project revision, standards/domain/library versions, host version, files inspected, rules applied and test outputs.
 7. **Lifecycle:** upgrades and removals touch only *managed* projections with matching recorded digests; changed local files require a merge/override path. A failed dependency update must not silently fall back to latest.
@@ -203,10 +203,10 @@ Host adapters can add the trigger/discovery needed by Cursor or Claude without m
 | Distribution pattern | Portable content? | Host discovery? | Security/update implications | R7 assessment |
 |---|---|---|---|---|
 | Plain Git clone + small AGENTS.md | Strong | Mixed: host/version depends | Independent access/version checks | Good common baseline, insufficient automation |
-| One canonical \`SKILL.md\` tree + host paths | Strong | Good where path supported | Installer must manage paths and source provenance | **Preferred workflow content design** |
-| Cursor Plugin \`.cursor-plugin\` | Host-specific | Cursor-native | Cursor version/marketplace trust | Optional Cursor enhancement |
-| Root Agent Plugin \`plugin.json\` | Portable **format subset**: skills/MCP | Cursor documents support; others must be checked | Config/variable differences remain | Worth testing, **not** assumed universal |
-| Claude \`.claude-plugin\` | Host-specific | Claude-native | Different runtime/install/marketplace | Optional Claude enhancement |
+| One canonical `SKILL.md` tree + host paths | Strong | Good where path supported | Installer must manage paths and source provenance | **Preferred workflow content design** |
+| Cursor Plugin `.cursor-plugin` | Host-specific | Cursor-native | Cursor version/marketplace trust | Optional Cursor enhancement |
+| Root Agent Plugin `plugin.json` | Portable **format subset**: skills/MCP | Cursor documents support; others must be checked | Config/variable differences remain | Worth testing, **not** assumed universal |
+| Claude `.claude-plugin` | Host-specific | Claude-native | Different runtime/install/marketplace | Optional Claude enhancement |
 | Codex-native registration/plugin/config | Host-specific | Codex-native | Host-specific auth/approval | Thin adapter only |
 | Manually copied SKILL.md files | Content is transferable | Maybe | Divergence/duplicate capability risk | Suitable prototype, not long-term authority |
 | Immutable dependency manifest + managed materialisation | Host-neutral contract possible | Requires adapters/resolver | Best potential provenance, private access and rollback | **Recommended design direction** |
@@ -221,9 +221,9 @@ Legend: **P** = portable content/contract with host test; **N** = native syntax/
 | Concern | Cursor | Codex | Claude Code | Portable core recommendation |
 |---|---|---|---|---|
 | Ordinary Markdown canonical standards | P with accessible checkout | P with access | P with access | Yes: versioned references, not duplicated prompts |
-| \`AGENTS.md\` project router | P (current docs) | P (native) | P **conditional** (version/config/fallback) | Yes, short/invariant only |
-| Full host-specific rule files | **N** \`.cursor/rules/*.mdc\` | **A** AGENTS/custom instructions | **N** \`.claude/rules/*.md\` | No full-rule parity; generate thin adapters |
-| Open-spec Agent Skills \`SKILL.md\` | P in supported dirs | P in supported dirs | P in Claude-compatible paths | Yes: canonical procedures with minimal required metadata |
+| `AGENTS.md` project router | P (current docs) | P (native) | P **conditional** (version/config/fallback) | Yes, short/invariant only |
+| Full host-specific rule files | **N** `.cursor/rules/*.mdc` | **A** AGENTS/custom instructions | **N** `.claude/rules/*.md` | No full-rule parity; generate thin adapters |
+| Open-spec Agent Skills `SKILL.md` | P in supported dirs | P in supported dirs | P in Claude-compatible paths | Yes: canonical procedures with minimal required metadata |
 | Skill auto-selection and scoping | N/U | N/U | N/U | Test route accuracy per host |
 | Custom subagents | N | N/U | N | Not required for minimum viable task |
 | Hooks/lifecycle controls | N | N/U | N | Avoid behavioral assumptions; external validator for required controls |
@@ -257,7 +257,7 @@ Adopt **portable core + thin host adapters + host-independent acceptance tests**
 
 **Tier 3 — Unsupported:** only generic natural-language advice; no conformance/portability claims.
 
-Do not market every \`SKILL.md\`-capable host as Tier 1 without a documented pilot and installed dependency path.
+Do not market every `SKILL.md`-capable host as Tier 1 without a documented pilot and installed dependency path.
 
 ## 9. Implications for the Power BI Architect
 
@@ -268,9 +268,9 @@ A user requests a measure naming/metadata refactor in a Performance & Reward mod
 **Host-neutral task contract:**
 
 1. Identify PBIP project root and enumerate measures with actual DAX, folders, descriptions, format strings and dependencies.
-2. Confirm pinned standards source \`GitKlink/power-bi-fabric-standards\` and reference the core semantic-model standard, glossary, Variable Reward representation guidance.
+2. Confirm pinned standards source `GitKlink/power-bi-fabric-standards` and reference the core semantic-model standard, glossary, Variable Reward representation guidance.
 3. Confirm domain-owned definitions of the target Opportunity, Payout and IPM measures. Do not infer business semantics from names.
-4. Propose model-local changes: root-first business measure names and family relationships, controlled \`Change\` versus \`Variance\`, appropriate hidden/support prefixes and display-folder treatment.
+4. Propose model-local changes: root-first business measure names and family relationships, controlled `Change` versus `Variance`, appropriate hidden/support prefixes and display-folder treatment.
 5. Preserve business meaning and existing dependency links; compare model outputs before/after where a calculation or relationship is changed.
 6. Run a deterministic conformance check for naming, descriptions, visibility, folder ownership, collision avoidance, DAX parse/model compile and numerical reconciliation where relevant.
 7. Emit structured evidence recording **source revisions**, host/runtime, standards/skill IDs, measures checked, pass/fail and unresolved exceptions.
