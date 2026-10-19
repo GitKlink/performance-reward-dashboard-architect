@@ -17,7 +17,7 @@ The source repositories are deliberately independent:
 | Component | Existing authority | Content a setup tool may consume | Ownership constraint |
 |---|---|---|---|
 | Architect / workflow | [GitKlink/performance-reward-dashboard-architect](https://github.com/GitKlink/performance-reward-dashboard-architect) | Capability definitions, routing, future adapters, domain-pack interfaces | Orchestration, not full copies of standards |
-| Engineering policy | **Private** [GitKlink/power-bi-fabric-standards](https://github.com/GitKlink/power-bi-fabric-standards) | \`semantic-model/README.md\`, core naming standard, glossary, seven original domain extensions | Canonical engineering-policy text; 11 original sources already migrated and parity-checked |
+| Engineering policy | **Private** [GitKlink/power-bi-fabric-standards](https://github.com/GitKlink/power-bi-fabric-standards) | `semantic-model/README.md`, core naming standard, glossary, seven original domain extensions | Canonical engineering-policy text; 11 original sources already migrated and parity-checked |
 | Executable patterns | [GitKlink/dax-m-query-library](https://github.com/GitKlink/dax-m-query-library) | Versioned DAX, M, Python and Deneb assets | Code/patterns, not standards authority |
 | Domain pack | P&R authority (not yet finally separated; see [#6](https://github.com/GitKlink/performance-reward-dashboard-architect/issues/6)) | KPI meaning, grain, eligibility, periods, calculation contracts, tests | Business truth must not be silently inferred from semantic-model folder layouts |
 | Actual Power BI product | Its PBIP/product repository | PBIP, TMDL, report definitions, local project decisions | Primary **write target** for a report/model task |
@@ -53,7 +53,7 @@ The source repositories are deliberately independent:
 
 **R4 alignment:** sibling clones plus a multi-root IDE workspace are the lowest-coupling **local development** path, but not a dependency resolver. Cursor officially supports local multi-root and says **Cloud Agents do not support multi-root**; some single-root Git features such as worktrees are disabled within multi-root. See [Cursor search FAQ](https://cursor.com/docs/agent/tools/search).
 
-**R7 alignment:** host-neutral information and \`SKILL.md\` workflows may be shared; host-specific trigger/plugin/hook/tool configuration remains a thin adapter. An installer must not silently copy canonical standards into all hosts' prompt files.
+**R7 alignment:** host-neutral information and `SKILL.md` workflows may be shared; host-specific trigger/plugin/hook/tool configuration remains a thin adapter. An installer must not silently copy canonical standards into all hosts' prompt files.
 
 ### Decision-oriented synthesis
 
@@ -69,7 +69,7 @@ R8 must approve the final distribution and lockfile contracts. R5 should not dec
 
 ### Two explicit modes (proposed)
 
-| Behaviour | \`managed\` — default for consumers | \`editable\` — contributor |
+| Behaviour | `managed` — default for consumers | `editable` — contributor |
 |---|---|---|
 | Wayfinder capability/adapter files | Installed from approved pinned revision; **owned by tool** | Source checkout in normal Git repo, intentionally editable |
 | Standards/library reference files | Pinned, treated **read-only** except explicitly delegated authority task | Independent writable Git checkouts only when working on their own authority |
@@ -89,8 +89,8 @@ A user may have **mixed roles across repositories**, e.g. Wayfinder editable and
 
 A project-specific dependency declaration should identify each required source by:
 
-- stable logical ID (\`engineering-standards\`, \`wayfinder\`, \`reusable-implementations\`, optionally \`domain-pr\`);
-- GitHub repository identity, expected access class, expected content entrypoint and role (\`policy\`, \`domain\`, \`library\`, \`architect\`);
+- stable logical ID (`engineering-standards`, `wayfinder`, `reusable-implementations`, optionally `domain-pr`);
+- GitHub repository identity, expected access class, expected content entrypoint and role (`policy`, `domain`, `library`, `architect`);
 - **immutable full commit SHA** or approved verified release resolved to a commit;
 - intended write policy and host surfaces;
 - artifact or adapter revision separately from the normative standard revision.
@@ -141,14 +141,14 @@ A project-specific dependency declaration should identify each required source b
 5. Validate all required skill supporting references and import paths are available; R3 showed selected-skill installs can omit shared references.
 6. Classify existing host skill/rule/plugin installations and detect duplicates before writing adapters.
 7. Generate requested local workspace and **minimum** host-specific managed adapter files.
-8. Invoke \`doctor\`/verification: installed revisions, file ownership, source accessibility, skill discovery smoke test and a deterministic validator (if available).
+8. Invoke `doctor`/verification: installed revisions, file ownership, source accessibility, skill discovery smoke test and a deterministic validator (if available).
 9. Record installation state only after success. On error, roll back managed changes and preserve user-owned PBIP files.
 
 **Security-sensitive failures:** wrong GitHub owner/repo, failed private auth, unexpected Git SHA, wrong source classification, symlink/path escape, untrusted executable install script, duplicate conflicting adapter, unverified managed-file overwrite. These block further setup; there is no "best effort by guessing" fallback.
 
 ### Local vs CI credentials
 
-**DOCUMENTED:** GitHub's \`actions/checkout\` notes the usual workflow \`github.token\` is scoped to the **current repository**; checking out a different **private** repository requires additional credentials with access (a properly scoped GitHub App installation token or fine-grained PAT, for example). See [actions/checkout README, multiple private repos](https://github.com/actions/checkout#checkout-multiple-repos-private). Do not assume a public Wayfinder repo's CI token can read private standards.
+**DOCUMENTED:** GitHub's `actions/checkout` notes the usual workflow `github.token` is scoped to the **current repository**; checking out a different **private** repository requires additional credentials with access (a properly scoped GitHub App installation token or fine-grained PAT, for example). See [actions/checkout README, multiple private repos](https://github.com/actions/checkout#checkout-multiple-repos-private). Do not assume a public Wayfinder repo's CI token can read private standards.
 
 **RECOMMENDATION:** prefer scoped, short-lived machine/CI auth where possible; never print secrets; mask output; restrict source paths; keep independent release/supply-chain controls. A CI job in a public project that reads private standards must not publish their bodies into artifacts, PR diffs or verbose logs. Do not equate access to a reusable private *action* with general arbitrary private-repo checkout: GitHub's action/workflow sharing has its own controls and information-leak warning ([GitHub private Actions sharing](https://docs.github.com/en/actions/how-tos/reuse-automations/share-across-private-repositories)).
 
@@ -181,7 +181,7 @@ A saved workspace may use relative paths:
 }
 ~~~
 
-**DOCUMENTED:** [VS Code multi-root workspaces](https://code.visualstudio.com/docs/editing/workspaces/multi-root-workspaces) use \`.code-workspace\` with named folders/relative paths. **DOCUMENTED:** Cursor makes each folder available to the local agent, but Cloud Agents do not support multi-root. [Cursor Search FAQ](https://cursor.com/docs/agent/tools/search).
+**DOCUMENTED:** [VS Code multi-root workspaces](https://code.visualstudio.com/docs/editing/workspaces/multi-root-workspaces) use `.code-workspace` with named folders/relative paths. **DOCUMENTED:** Cursor makes each folder available to the local agent, but Cloud Agents do not support multi-root. [Cursor Search FAQ](https://cursor.com/docs/agent/tools/search).
 
 The workspace is an **editor view**. It cannot prove dependencies are pinned, hosts have permissions, the AI loaded standards or the model passed validation.
 
@@ -204,7 +204,7 @@ The workspace is an **editor view**. It cannot prove dependencies are pinned, ho
 
 ### Path, idempotence and collisions
 
-Define a stable **logical ID** for each generated capability, not just a matching filename. Two sources producing the same skill identity or "Always" Rule should be flagged before writing. A second identical setup run should yield **no changes**; a different desired revision produces a **previewable plan**. If a local managed file differs from its recorded hash, refuse automatic replacement or provide a reviewed three-way merge; normal \`--force\` should never mean "delete everything that is there."
+Define a stable **logical ID** for each generated capability, not just a matching filename. Two sources producing the same skill identity or "Always" Rule should be flagged before writing. A second identical setup run should yield **no changes**; a different desired revision produces a **previewable plan**. If a local managed file differs from its recorded hash, refuse automatic replacement or provide a reviewed three-way merge; normal `--force` should never mean "delete everything that is there."
 
 An adapter's generated documentation may **point to** private standards and provide a resolver command, but should not embed their full content. On a different host, that pointer must first pass access and version checks.
 
@@ -228,17 +228,17 @@ There are **distinct versions**, and conflating them creates false auditability:
 | Canonical standards | Git revision/release of standards repo | Measure naming policy |
 | Domain contract | Its independent approved revision | Variable Reward / eligibility meaning |
 | Implementation library | Git revision or package/asset ID/release | Reusable DAX function |
-| Host adapter/Skill | Canonical skill revision + generated adapter version | Cursor \`.mdc\` routing to standard |
+| Host adapter/Skill | Canonical skill revision + generated adapter version | Cursor `.mdc` routing to standard |
 | Installer/bootstrap tool | Its own signed/verified release | CLI behaviour |
 | PBIP project | Project Git commit | Actual model/report state |
 | Last validated evidence | Model/standards/domain/library revisions + test version | Exact conformance result |
 
 **RECOMMENDATION — update policy:**
-- Development \`editable\` mode may deliberately track working branches, but any **conformance result** must record actual SHA and uncommitted-file/dirtiness status.
-- Consumer \`managed\`, Cloud and CI default to **immutable approved pins**; no floating default-branch input for reproducible checks.
-- \`update --check\` should list available candidate revisions without changing effective inputs.
-- \`update --plan\` should produce a diff of dependency pins, generated adapter changes, removed files and required new permissions.
-- \`update --apply\` should be an explicit approved transaction, ideally with a PR for the *project lockfile*, followed by resolution/validation.
+- Development `editable` mode may deliberately track working branches, but any **conformance result** must record actual SHA and uncommitted-file/dirtiness status.
+- Consumer `managed`, Cloud and CI default to **immutable approved pins**; no floating default-branch input for reproducible checks.
+- `update --check` should list available candidate revisions without changing effective inputs.
+- `update --plan` should produce a diff of dependency pins, generated adapter changes, removed files and required new permissions.
+- `update --apply` should be an explicit approved transaction, ideally with a PR for the *project lockfile*, followed by resolution/validation.
 - No silent auto-update of canonical normative standards simply because the installer or plugin updates.
 - Use distinct **source content digest**, **install-state hash** and **tested validation revision**. A package version string is insufficient evidence of which normative policy was actually loaded.
 - Reverting lockfile + restoring managed-file snapshot should restore the previous valid local composition when upstream SHA is still accessible; otherwise report an unresolved availability problem rather than fake success.
@@ -258,7 +258,7 @@ wayfinder update --apply
 wayfinder uninstall --managed-only
 ~~~
 
-These are **proposed command names**, not commands the user can run today. \`doctor\` must make its own results machine-readable and must not require an AI model call to check hashes, paths or credentials.
+These are **proposed command names**, not commands the user can run today. `doctor` must make its own results machine-readable and must not require an AI model call to check hashes, paths or credentials.
 
 ## 7. Failure handling and rollback
 
@@ -344,11 +344,11 @@ Deliver a **single reproducible manual runbook** and small PBIP test fixture:
 
 A small Python command-line utility, no always-running server and no required native plugin:
 
-- \`doctor\`: check prerequisites, repo access, Git refs, project paths, conflicting installs and existing user-owned instructions.
-- \`init/plan\`: read an approved manifest; fetch/resolve specified SHAs; calculate candidate changes; detect path, classification and duplicate conflicts.
-- \`apply\`: safe, idempotent and transactionally tracked generation of an optional relative-path \`.code-workspace\`, minimal host routing assets and local install state.
-- \`verify\`: compare installed SHA/hash to required SHA, verify references/permissions; run a small non-AI measure-metadata conformance fixture.
-- \`uninstall\`: remove only unchanged managed projections and leave user work intact.
+- `doctor`: check prerequisites, repo access, Git refs, project paths, conflicting installs and existing user-owned instructions.
+- `init/plan`: read an approved manifest; fetch/resolve specified SHAs; calculate candidate changes; detect path, classification and duplicate conflicts.
+- `apply`: safe, idempotent and transactionally tracked generation of an optional relative-path `.code-workspace`, minimal host routing assets and local install state.
+- `verify`: compare installed SHA/hash to required SHA, verify references/permissions; run a small non-AI measure-metadata conformance fixture.
+- `uninstall`: remove only unchanged managed projections and leave user work intact.
 
 **Gate 1:** repeated apply is a no-op; wrong private permissions fail closed; locally modified managed files are preserved; induced failure rolls back; Windows path/encoding/checkout tests pass; source/target Git status shows no unexpected writes. Only after this gate may "local bootstrap supported" be claimed.
 
@@ -380,7 +380,7 @@ Suggested acceptance criteria:
 1. Accept an existing PBIP repo and an immutable standards/library/Wayfinder SHA set.
 2. Verify access to the private standards repo and required semantic-model README/measure-standard path.
 3. Generate one relative-path workspace and identify the PBIP **write root**; no changes to the source repos.
-4. Produce a machine-readable \`doctor\` report and installed-state manifest with content digests.
+4. Produce a machine-readable `doctor` report and installed-state manifest with content digests.
 5. Refuse wrong SHA, missing auth, duplicate installation and path escape; never fall back to HEAD.
 6. Demonstrate rerun idempotence, rollback of an injected failure and preserving manually edited files.
 7. Supply one deterministic test against a small fixture and a privacy review of any public output.
@@ -418,9 +418,9 @@ This prototype is **not started** by R5; it is a candidate for R8/implementation
 - Whether product repositories will be private/public and who can access their CI logs/artifacts.
 - The minimum portable model-inspection capability for PBIP/TMDL and accepted deterministic validation toolset.
 - Actual collision behaviour among Microsoft-maintained skills, Wayfinder skills and a user's existing agent customisations.
-- Whether a local \`.code-workspace\` can provide the right developer ergonomics without disabling a critical Cursor worktree workflow.
+- Whether a local `.code-workspace` can provide the right developer ergonomics without disabling a critical Cursor worktree workflow.
 
-**Research conclusion:** Wayfinder should treat bootstrap as a **small, reversible source-and-adapter provisioning utility**, not as the normative content author, plugin marketplace or an alternative model runtime. Begin with sibling checkouts and a local Cursor multi-root pilot; advance to a pinned, Python-based \`doctor/plan/apply/verify\` utility after validation. Support managed and editable modes explicitly, and use a separate, tested single-root path for cloud/CI. The final decision remains R8's.
+**Research conclusion:** Wayfinder should treat bootstrap as a **small, reversible source-and-adapter provisioning utility**, not as the normative content author, plugin marketplace or an alternative model runtime. Begin with sibling checkouts and a local Cursor multi-root pilot; advance to a pinned, Python-based `doctor/plan/apply/verify` utility after validation. Support managed and editable modes explicitly, and use a separate, tested single-root path for cloud/CI. The final decision remains R8's.
 
 ## 12. Evidence register
 
@@ -438,7 +438,7 @@ This prototype is **not started** by R5; it is a candidate for R8/implementation
 - [Cursor Search FAQ](https://cursor.com/docs/agent/tools/search): multi-root local support and Cloud Agent limitation; file read/model context privacy distinction.
 - [Cursor Plugins](https://cursor.com/docs/plugins): installable native distribution surface, not a cross-repository lock.
 - [Cursor Rules](https://cursor.com/docs/rules) and [Skills](https://cursor.com/docs/skills): instructions vs progressively loaded capability.
-- [VS Code multi-root](https://code.visualstudio.com/docs/editing/workspaces/multi-root-workspaces): relative-path \`.code-workspace\` format.
+- [VS Code multi-root](https://code.visualstudio.com/docs/editing/workspaces/multi-root-workspaces): relative-path `.code-workspace` format.
 - [GitHub actions/checkout](https://github.com/actions/checkout#checkout-multiple-repos-private): private second repository requires specifically authorised token; native workflow token is scoped to triggering repository.
 - [GitHub sharing private actions/workflows](https://docs.github.com/en/actions/how-tos/reuse-automations/share-across-private-repositories): warning that logs can expose information to outside collaborators.
 - [GitHub Spec Kit integrations](https://github.com/github/spec-kit/blob/main/docs/reference/integrations.md): integration install, report/status, hash-aware upgrades, file preservation, rollback.
