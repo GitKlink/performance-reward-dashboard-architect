@@ -1,13 +1,13 @@
 # Research R6 — Standards and reusable-library packaging
 
 **Research ticket:** R6  
-**Evidence snapshot:** 2026-09-16  
-**Status:** Research recommendation; not yet a normative implementation standard  
+**Evidence snapshot:** 2026-09-16; **Power BI domain-fit review:** 2026-10-22  
+**Status:** Research recommendation; not yet a normative implementation standard. October review narrows JS/npm claims to applicable runtime components; see the mandatory §20 correction.  
 **Question:** How should standards and reusable libraries be packaged and consumed?
 
 ## 1. Executive summary
 
-The recommended architecture is **registry-first, content-aware, and ESM-first**:
+The ORIGINAL candidate architecture was **registry-first, content-aware, and ESM-first**; **for Wayfinder's actual DAX/M/Python/Deneb-first library, this is not the universal recommendation**. The domain-specific correction in §20 supersedes the executable-package and public-registry generalisation below:
 
 > **Canonical standards remain canonical content; reusable executable assets become conventional packages; Cursor receives only a thin discovery/routing layer.**
 
@@ -18,27 +18,31 @@ The baseline packaging model should distinguish four artifact classes:
 | Artifact class | Recommended packaging | Runtime contract |
 |---|---|---|
 | Engineering standards | Versioned content package containing Markdown, schemas, manifests, and examples | No runtime required; optional tiny resolver API |
-| Reusable implementations | Conventional JS/TS package plus raw DAX, Power Query M, Python, Deneb, or related assets | ESM + TypeScript declarations by default |
+| Reusable implementations | **Native DAX, M, Python, and Deneb source assets** with indexed metadata; JS/TS package only for independently reusable JS/TS components | Native artifact + tests/compatibility metadata; ESM + .d.ts only for JS/TS modules (see §20) |
 | Shared contracts | Separate package only where schemas/types are independently consumed | Types/schema only as required |
 | Cursor integration | Thin Plugin/Skill/bootstrap/router layer | Discovers installed canonical packages; does not duplicate them |
 
 For executable packages, use explicit `"type": "module"`, a deliberately narrow `"exports"` map, generated TypeScript declarations, a `"files"` allow-list, minimal runtime dependencies, and pure modules wherever practical. Node positions `"exports"` as the modern package public-surface mechanism and allows it to prevent arbitrary undeclared deep imports. TypeScript recommends shipping declarations with typed packages.
 
+> **October 2026 scope override:** do not interpret the JS/TS build, npm registry or bundler material in §§5–11 as general requirements for DAX measures/UDFs, M functions, Python or Deneb. They apply only if a consumer-facing JS/TS executable package is justified. Our existing implementation library is not a JS/TS application package.
+
 ### Recommended format baseline
 
-- **ESM:** yes; default executable format.
-- **TypeScript declarations:** yes; required for typed public APIs.
+- **ESM:** yes **for JS/TS packages only**; not the default format for DAX/M/Python/Deneb.
+- **TypeScript declarations:** yes **for typed JS/TS APIs**; irrelevant to native DAX/M/Python/Deneb artifacts.
 - **CommonJS:** only when an audited consumer still requires `require()`.
 - **UMD/IIFE:** not part of the baseline; add only for a demonstrated classic-browser script use case.
 - **Raw assets:** yes where consumers need native DAX/M/JSON/Markdown/schema content rather than JavaScript wrappers.
 
 ### Recommended distribution baseline
 
-- **npm:** canonical public package channel.
+- **npm:** a candidate registry **for public JS/TS packages only**, not the canonical distribution path for native Power BI assets or private engineering standards.
 - **GitHub Packages:** use for genuinely private/internal packages where access should follow GitHub permissions.
 - **CDN:** optional derivative delivery from a published npm version; never a separate authority/version stream.
 - **Git URLs:** preview/escape hatch only; not the stable release interface.
 - **Submodules/subtrees:** source composition only; not normal released-library consumption.
+
+> **Actual repository fit (2026-10-22):** [GitKlink/dax-m-query-library](https://github.com/GitKlink/dax-m-query-library) currently contains native-asset families at `library/dax`, `library/m`, `library/python`, `library/deneb` and no published JavaScript package surface. [GitKlink/power-bi-fabric-standards](https://github.com/GitKlink/power-bi-fabric-standards) is private and stores authoritative Markdown standards. A mandatory public npm mirror would add needless wrapping and potential confidentiality exposure.
 
 ### Recommended repository model
 
@@ -791,9 +795,9 @@ Potential additions:
 
 ## 18. Recommended architecture decision for later ADR/design work
 
-R6 is research, not the final target-architecture ADR. The evidence supports carrying the following recommendation forward:
+R6 is research, not the final target-architecture ADR. **Revised after repository/domain-fit audit on 22 October 2026:**
 
-> **Publish standards as content-first versioned packages; publish executable reusable libraries as ESM plus TypeScript declarations and native raw assets where required; use npm as the canonical public registry and GitHub Packages only for private access-control needs; preserve cross-repository authority boundaries; use workspace monorepos only within shared authorities; test packed artifacts across repositories; release independently with SemVer and explicit release intent; and keep Cursor integration as a thin progressively loaded discovery layer rather than another copy of the standards.**
+> **Keep canonical standards content-first in their private Git authority. Keep DAX, M, Python and Deneb implementations in their native formats with discoverable stable asset IDs, required dependencies and independently tested examples. Consume approved immutable source revisions initially; decide whether and when release bundles, Python packages, JS/TS packages, or an agent plugin are valuable separately, by asset type. ESM + TypeScript declarations and npm distribution are suitable for an actual JS/TS module API only, not a mandatory baseline for these analytical assets.**
 
 Before declaring a stable `1.0` package contract, explicitly decide:
 
@@ -848,3 +852,71 @@ R6 is intended to consume, not supersede, the earlier Cursor architecture resear
 - `research/cursor-architecture/04-cross-repo-composition.md`
 
 Those artifacts remain the source of settled findings about Cursor primitives, reference-repository patterns, authority boundaries, and cross-repository composition. R6 narrows its contribution to packaging, distribution, versioning, discoverability, and consumption contracts.
+
+
+## 20. Domain-fit correction — native Power BI/Fabric assets (2026-10-22)
+
+**Status:** research correction that **supersedes** generic JS/npm packaging claims elsewhere in §§1, 4–11, 17–18 wherever those claims are presented as the default for all implementation assets. The original JS package evaluation remains useful for a future JS/TS tool or browser-facing companion application; it does not govern the current DAX/M/Python/Deneb library.
+
+### 20.1 Why the correction is necessary
+
+The **real implementation repository** is [GitKlink/dax-m-query-library](https://github.com/GitKlink/dax-m-query-library), with explicit first-class families at \`library/dax\`, \`library/m\`, \`library/python\` and \`library/deneb\`. Its README says reusable assets are native patterns, functions, scripts, templates, visuals and examples. It currently has no general Node/ESM package tree or export map to constrain. Wrapping each DAX measure or M function into ESM would impose build and runtime concerns unrelated to Power BI's model/query execution semantics.
+
+The **real standards repository**, [GitKlink/power-bi-fabric-standards](https://github.com/GitKlink/power-bi-fabric-standards), is currently **private**. Normative markdown lives there, with no public npm distribution decision. A package registry does not inherently guarantee private source access, model discovery, applicability or safe AI retrieval.
+
+First-party technology confirms the native surfaces:
+
+- [Microsoft PBIP documentation](https://learn.microsoft.com/en-us/power-bi/developer/projects/projects-overview): PBIP projects use text-based reports and semantic-model files.
+- [Microsoft semantic-model project structure](https://learn.microsoft.com/en-us/power-bi/developer/projects/projects-dataset/): native TMDL, model definitions and DAX/TMDL scripts.
+- [Microsoft DAX UDF guidance](https://learn.microsoft.com/en-us/dax/best-practices/dax-user-defined-functions): DAX functions are model objects, generally available as of June 2026, subject to compatibility level and specific limitations. A DAX UDF is **not** an ESM export.
+- [Microsoft Power Query custom functions](https://learn.microsoft.com/en-us/power-query/custom-function): native M function reuse.
+- [Vega-Lite spec](https://vega.github.io/vega-lite/docs/spec.html): JSON declarative visual specifications (relevant to Deneb templates).
+
+These references justify asset-type-specific packaging; they do **not** demonstrate an off-the-shelf package registry that can install arbitrary DAX/M/Deneb assets into a semantic model.
+
+### 20.2 Corrected packaging matrix
+
+| Artifact | Canonical home / source format | Initial consumption | Possible later distribution | Validation contract |
+|---|---|---|---|---|
+| Semantic-model/DAX/M engineering standards | Private standards repo; Markdown, supporting structured metadata | Read *pinned approved Git revision* using a thin router/skill | Versioned standards bundle/index if a proven need | Provenance, scope, normative status, version, conformance tests |
+| DAX measures and calculation patterns | \`library/dax\`; native DAX/TMDL examples/scripts | Explicit asset ID + versioned source read + adapt to project model | Signed/catalogued native snippet or TMDL asset package | Syntax/model compatibility, dependencies, output invariants, golden examples |
+| DAX UDFs | \`library/dax\`; native DAX model function definitions | Approved native source + target model compatibility gate | Native UDF template bundle | Compatibility level, dependency resolution, TMDL/model load and tests |
+| Power Query M functions/patterns | \`library/m\`; native M | Approved text/function with parameters, connectors, privacy/test metadata | Native M template/catalogue | M parsing, refresh/privacy compatibility, representative input/output tests |
+| Python helpers | \`library/python\`; Python source/modules | Git source at pinned SHA with recorded Python dependency versions | Normal \`pyproject.toml\`/wheel package **if** imports/release consumers justify | Python interpreter/dependency matrix and unit tests |
+| Deneb / Vega / Vega-Lite | \`library/deneb\`; JSON specs/templates | Pinned JSON template + declared data role/schema assumptions | Native JSON/asset bundle | Vega/Vega-Lite schema, data shape and render/visual checks |
+| JS/TS adapter, UI or tool | Separate true JS/TS module(s), **if created** | Source or versioned JS package | ESM, typed exports, npm as appropriate | Package exports, build, runtime and dependency tests |
+| Wayfinder Skill/adapter | Canonical procedural SKILL.md and host adapter | Host-compatible, progressively loaded from pinned source | Agent Plugin/host packaging if installation value demonstrated | Host discovery + exact authoritative source/version read + validation evidence |
+
+**Research conclusion:** native artifacts require a **catalogue/manifest and compatibility contract**, not necessarily a JavaScript package. A stable logical \`asset_id\` / \`asset_version\`, description, language/format, entrypoint, owner, dependencies, model compatibility, required parameters, examples, licence and validation references is a better *candidate* common layer; the schema is not yet approved.
+
+### 20.3 Native-first progressive discovery, not mandatory conversion
+
+Prototype retrieval should follow:
+
+1. The PBIP project declares or resolves **approved immutable source revisions** for standards and library.
+2. A small router/Skill identifies task, affected semantic area and required domains; it reads only applicable canonical files.
+3. An asset index returns matching reusable DAX/M/Python/Deneb records, preserving their **original native source format**.
+4. Wayfinder/host tools inspect the actual model/project, resolve real dependencies and produce a target-local plan, not a blind copy.
+5. Execute host-independent validators where possible; compare measure outputs/reconciliations when business meaning or DAX changes are involved.
+6. Log resolved SHAs, asset IDs, domain/standards authority, unsupported assumptions and results.
+
+Avoid hardcoded absolute paths and context-heavy duplication. An index is **generated or reviewed metadata pointing to canonical source**, not a competing standards manual.
+
+### 20.4 Version and security implications
+
+- Initial source pin: exact Git SHA is both implementable and sufficient for reproducible R5 pilot tests. Tags, semantic releases and normative SemVer may be added after governance decides review and adoption rules.
+- **Native asset revisions are not automatically coupled:** standards release, DAX snippet revision, UDF compatibility, M function and Python package may all have different lifecycles.
+- **Private Git must remain private:** do not automatically push normative content into a public npm registry. A private package registry is an *option*, not an access-control replacement.
+- If the language-specific native format has no central executable package manager, an indexed Git source with immutable pins may be preferable to a package solely for the appearance of uniformity.
+- Public \`dax-m-query-library\` examples must remain synthetic, especially for employee/pay/reward concepts.
+- npm OIDC/provenance, ESM exports, Changesets, publint and packed-tarball tests from the original paper remain **valid scoped advice for JS/TS packages**. They are not release gates for the current native implementation library.
+- No filesystem, Cursor or PBIP pilot was executed as part of this correction; R8 must preserve the experimental gates from R4/R5/R7.
+
+### 20.5 Explicit reconciliation with R4, R5, R7 and the R8 decision
+
+- **R4:** sibling Git clones + local multi-root workspace is a development candidate, not a production dependency manager.
+- **R5:** thin Python \`doctor / plan / apply / verify\` candidate resolves private source and approved commit IDs; a Node/npm installation is **not** a phase-1 prerequisite.
+- **R7:** shared procedural SKILL.md and AGENTS.md may be routed by host adapters; native standards content stays outside those prompts.
+- **R8:** decide a minimal interoperable asset-catalogue schema, Pin/Manifest v0, installer owner and validation evidence. Test a native DAX/M or semantic-model use case before considering package-registry distribution.
+
+**For R8:** treat the content/ownership/discovery principles of R6 as strong evidence and treat the original mandatory npm/ESM proposal as a **rejected universal default**, while retaining it as an optional JS/TS-specific pattern.
