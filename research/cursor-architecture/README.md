@@ -12,7 +12,7 @@ Research artifacts are **evidence and analysis, not normative standards**. Archi
 | R2 — Harness vs agent vs skill vs plugin architecture | #12 | 2 | `02-harness-agent-skill-plugin.md` | Planned |
 | R3 — Reference implementation benchmark | #11 | 1 | `03-reference-repo-benchmark.md` | Planned |
 | R4 — Cross-repository composition | #13 | 2 | `04-cross-repo-composition.md` | Draft; PR review |
-| R5 — Installation and bootstrap architecture | #15 | 3 | `05-installation-bootstrap.md` | Planned |
+| R5 — Installation and bootstrap architecture | #15 | 3 | `05-installation-bootstrap.md` | Draft; PR review |
 | R6 — Standards and reusable library packaging | #16 | 3 | `06-standards-library-packaging.md` | Planned |
 | R7 — Cross-agent portability | #14 | 2 | `07-cross-agent-portability.md` | Draft; PR review |
 | R8 — Target architecture synthesis | #17 | 4 | `08-target-architecture.md` | Planned |
