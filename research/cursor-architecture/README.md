@@ -13,7 +13,7 @@ Research artifacts are **evidence and analysis, not normative standards**. Archi
 | R3 — Reference implementation benchmark | #11 | 1 | `03-reference-repo-benchmark.md` | Planned |
 | R4 — Cross-repository composition | #13 | 2 | `04-cross-repo-composition.md` | Planned |
 | R5 — Installation and bootstrap architecture | #15 | 3 | `05-installation-bootstrap.md` | Planned |
-| R6 — Standards and reusable library packaging | #16 | 3 | `06-standards-library-packaging.md` | Planned |
+| R6 — Standards and reusable library packaging | #16 | 3 | `06-standards-library-packaging.md` | Draft; PR review (native asset correction added) |
 | R7 — Cross-agent portability | #14 | 2 | `07-cross-agent-portability.md` | Planned |
 | R8 — Target architecture synthesis | #17 | 4 | `08-target-architecture.md` | Planned |
 
