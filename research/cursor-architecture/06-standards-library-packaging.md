@@ -860,7 +860,7 @@ Those artifacts remain the source of settled findings about Cursor primitives, r
 
 ### 20.1 Why the correction is necessary
 
-The **real implementation repository** is [GitKlink/dax-m-query-library](https://github.com/GitKlink/dax-m-query-library), with explicit first-class families at \`library/dax\`, \`library/m\`, \`library/python\` and \`library/deneb\`. Its README says reusable assets are native patterns, functions, scripts, templates, visuals and examples. It currently has no general Node/ESM package tree or export map to constrain. Wrapping each DAX measure or M function into ESM would impose build and runtime concerns unrelated to Power BI's model/query execution semantics.
+The **real implementation repository** is [GitKlink/dax-m-query-library](https://github.com/GitKlink/dax-m-query-library), with explicit first-class families at `library/dax`, `library/m`, `library/python` and `library/deneb`. Its README says reusable assets are native patterns, functions, scripts, templates, visuals and examples. It currently has no general Node/ESM package tree or export map to constrain. Wrapping each DAX measure or M function into ESM would impose build and runtime concerns unrelated to Power BI's model/query execution semantics.
 
 The **real standards repository**, [GitKlink/power-bi-fabric-standards](https://github.com/GitKlink/power-bi-fabric-standards), is currently **private**. Normative markdown lives there, with no public npm distribution decision. A package registry does not inherently guarantee private source access, model discovery, applicability or safe AI retrieval.
 
@@ -879,15 +879,15 @@ These references justify asset-type-specific packaging; they do **not** demonstr
 | Artifact | Canonical home / source format | Initial consumption | Possible later distribution | Validation contract |
 |---|---|---|---|---|
 | Semantic-model/DAX/M engineering standards | Private standards repo; Markdown, supporting structured metadata | Read *pinned approved Git revision* using a thin router/skill | Versioned standards bundle/index if a proven need | Provenance, scope, normative status, version, conformance tests |
-| DAX measures and calculation patterns | \`library/dax\`; native DAX/TMDL examples/scripts | Explicit asset ID + versioned source read + adapt to project model | Signed/catalogued native snippet or TMDL asset package | Syntax/model compatibility, dependencies, output invariants, golden examples |
-| DAX UDFs | \`library/dax\`; native DAX model function definitions | Approved native source + target model compatibility gate | Native UDF template bundle | Compatibility level, dependency resolution, TMDL/model load and tests |
-| Power Query M functions/patterns | \`library/m\`; native M | Approved text/function with parameters, connectors, privacy/test metadata | Native M template/catalogue | M parsing, refresh/privacy compatibility, representative input/output tests |
-| Python helpers | \`library/python\`; Python source/modules | Git source at pinned SHA with recorded Python dependency versions | Normal \`pyproject.toml\`/wheel package **if** imports/release consumers justify | Python interpreter/dependency matrix and unit tests |
-| Deneb / Vega / Vega-Lite | \`library/deneb\`; JSON specs/templates | Pinned JSON template + declared data role/schema assumptions | Native JSON/asset bundle | Vega/Vega-Lite schema, data shape and render/visual checks |
+| DAX measures and calculation patterns | `library/dax`; native DAX/TMDL examples/scripts | Explicit asset ID + versioned source read + adapt to project model | Signed/catalogued native snippet or TMDL asset package | Syntax/model compatibility, dependencies, output invariants, golden examples |
+| DAX UDFs | `library/dax`; native DAX model function definitions | Approved native source + target model compatibility gate | Native UDF template bundle | Compatibility level, dependency resolution, TMDL/model load and tests |
+| Power Query M functions/patterns | `library/m`; native M | Approved text/function with parameters, connectors, privacy/test metadata | Native M template/catalogue | M parsing, refresh/privacy compatibility, representative input/output tests |
+| Python helpers | `library/python`; Python source/modules | Git source at pinned SHA with recorded Python dependency versions | Normal `pyproject.toml`/wheel package **if** imports/release consumers justify | Python interpreter/dependency matrix and unit tests |
+| Deneb / Vega / Vega-Lite | `library/deneb`; JSON specs/templates | Pinned JSON template + declared data role/schema assumptions | Native JSON/asset bundle | Vega/Vega-Lite schema, data shape and render/visual checks |
 | JS/TS adapter, UI or tool | Separate true JS/TS module(s), **if created** | Source or versioned JS package | ESM, typed exports, npm as appropriate | Package exports, build, runtime and dependency tests |
 | Wayfinder Skill/adapter | Canonical procedural SKILL.md and host adapter | Host-compatible, progressively loaded from pinned source | Agent Plugin/host packaging if installation value demonstrated | Host discovery + exact authoritative source/version read + validation evidence |
 
-**Research conclusion:** native artifacts require a **catalogue/manifest and compatibility contract**, not necessarily a JavaScript package. A stable logical \`asset_id\` / \`asset_version\`, description, language/format, entrypoint, owner, dependencies, model compatibility, required parameters, examples, licence and validation references is a better *candidate* common layer; the schema is not yet approved.
+**Research conclusion:** native artifacts require a **catalogue/manifest and compatibility contract**, not necessarily a JavaScript package. A stable logical `asset_id` / `asset_version`, description, language/format, entrypoint, owner, dependencies, model compatibility, required parameters, examples, licence and validation references is a better *candidate* common layer; the schema is not yet approved.
 
 ### 20.3 Native-first progressive discovery, not mandatory conversion
 
@@ -908,14 +908,14 @@ Avoid hardcoded absolute paths and context-heavy duplication. An index is **gene
 - **Native asset revisions are not automatically coupled:** standards release, DAX snippet revision, UDF compatibility, M function and Python package may all have different lifecycles.
 - **Private Git must remain private:** do not automatically push normative content into a public npm registry. A private package registry is an *option*, not an access-control replacement.
 - If the language-specific native format has no central executable package manager, an indexed Git source with immutable pins may be preferable to a package solely for the appearance of uniformity.
-- Public \`dax-m-query-library\` examples must remain synthetic, especially for employee/pay/reward concepts.
+- Public `dax-m-query-library` examples must remain synthetic, especially for employee/pay/reward concepts.
 - npm OIDC/provenance, ESM exports, Changesets, publint and packed-tarball tests from the original paper remain **valid scoped advice for JS/TS packages**. They are not release gates for the current native implementation library.
 - No filesystem, Cursor or PBIP pilot was executed as part of this correction; R8 must preserve the experimental gates from R4/R5/R7.
 
 ### 20.5 Explicit reconciliation with R4, R5, R7 and the R8 decision
 
 - **R4:** sibling Git clones + local multi-root workspace is a development candidate, not a production dependency manager.
-- **R5:** thin Python \`doctor / plan / apply / verify\` candidate resolves private source and approved commit IDs; a Node/npm installation is **not** a phase-1 prerequisite.
+- **R5:** thin Python `doctor / plan / apply / verify` candidate resolves private source and approved commit IDs; a Node/npm installation is **not** a phase-1 prerequisite.
 - **R7:** shared procedural SKILL.md and AGENTS.md may be routed by host adapters; native standards content stays outside those prompts.
 - **R8:** decide a minimal interoperable asset-catalogue schema, Pin/Manifest v0, installer owner and validation evidence. Test a native DAX/M or semantic-model use case before considering package-registry distribution.
 
