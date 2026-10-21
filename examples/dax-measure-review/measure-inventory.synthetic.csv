@@ -1,0 +1,5 @@
+Table,Name,Description,FormatString,IsHidden,DisplayFolder,Expression,FormatStringDefinition
+Workforce Measures,Headcount,Count of included employees,"#,##0",False,Workforce,"DISTINCTCOUNT('Employee'[Employee ID])",
+Variable Reward Measures,M_VR Payout%,,,False,Reward\Variable Reward\Outcomes,"SUM('Reward'[Amount])",
+Technical Measures,QA - Missing Target,Count of rows with missing target,"#,##0",True,_Technical,"COUNTROWS('Reward')",
+Fixed Reward Measures,Fixed Reward Average,Average fixed reward for included employees,"$#,##0",False,Fixed Reward,"AVERAGE('Employee'[Amount])",
