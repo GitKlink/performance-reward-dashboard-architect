@@ -89,7 +89,7 @@ USER / ANALYTICAL QUESTION / PBIP PROJECT
      | rules / AGENTS.md / skills
                   |
                   v
-      WAYFINDER ARCHITECT ROUTER
+      POWER BI / FABRIC ARCHITECT ROUTER
      /   Task + write-root discovery
     /    Dependency/version resolution
    /     Skill and domain selection
