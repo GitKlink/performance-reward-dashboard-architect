@@ -67,6 +67,66 @@ remains `dax-measure-standards-review` (not `power-bi-architect`).
 Future Architect skills must be separate sibling folders under
 `skills/power-bi-architect/`.
 
+## Updating a project after changing the local clones
+
+**No automatic syncing.** Once your Architect changes have been reviewed and
+committed in your local Git clone, open the existing Power BI project in Cursor.
+The updater reads the current `docs/power-bi-architect/installation.json`,
+compares your installed assets with the latest committed local source snapshot,
+and presents **add / replace / remove** actions plus source commit revisions.
+
+Copy into Cursor Agent:
+
+```text
+My current Power BI project already has Power BI / Fabric Architect installed.
+Read the LOCAL clones/performance-reward-dashboard-architect/SETUP.md
+and its setup-power-bi-architect/SKILL.md. Inspect the source clones and my
+current project's docs/power-bi-architect/installation.json.
+Run the project update plan; list changed files, old/new source Git SHAs and
+conflicts. Do not change anything until I approve the exact update plan ID.
+Once approved, apply the same plan, then run the installed synthetic reviewer.
+Preserve other provider skills, project rules, AGENTS.md and PBIP/model files.
+```
+
+From the updated local Architect repository root, after identifying actual
+paths, run a read-only plan:
+
+```powershell
+python scripts/update_project.py --project "<TARGET_PROJECT>" --standards-repo "<PINNED_STANDARDS_CLONE>"
+```
+
+Review the output, including its **64-character plan ID**. Only after your
+explicit approval, run:
+
+```powershell
+python scripts/update_project.py --project "<TARGET_PROJECT>" --standards-repo "<PINNED_STANDARDS_CLONE>" --apply --expected-plan-id "<APPROVED_PLAN_ID>"
+```
+
+The updater **rechecks** all source and installed files before writing. If any
+managed file was edited inside the Power BI project, any unknown project-owned
+file would be overwritten, or the plan ID differs from what you approved,
+the update **blocks**. It retains the originally selected `.cursor/skills` or
+`.agents/skills` root and `power-bi-architect/<skill-name>` hierarchy.
+
+Existing project files outside Architect's recorded install assets are never
+modified. Files previously installed by Architect may be removed **only if
+their bytes still match the original installation manifest**, and only when
+the approved plan explicitly lists the removal. Writes are staged, with
+attempted rollback on an ordinary execution failure. As with any multi-file
+update, ensure important projects have version-control or filesystem backups;
+a system crash or disk failure cannot be guaranteed recoverable.
+
+**Version policy:** updates use **committed source changes**, not uncommitted
+working-tree edits. Changes to the Standards repository require a separate
+reviewed update of the Architect's `source-lock.json`, DAX reviewer's
+`BASELINE_SHA` and corresponding verification tests; the installer deliberately
+refuses a different Standards revision until that compatibility update exists.
+The source Standards clone can be separate from your active latest checkout.
+This avoids silently changing approved business and engineering policy.
+
+The installer/updater does not push changes to the project Git repository,
+edit DAX/TMDL/PBIP or update Matt Pocock/Microsoft skills.
+
 ## Approval-based project copy
 
 Prerequisites: local Git, Python 3.10+, and the locally cloned

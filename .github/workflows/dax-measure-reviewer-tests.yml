@@ -7,6 +7,8 @@ on:
       - "tests/test_dax_measure_reviewer.py"
       - "tests/test_setup_instructions.py"
       - "tests/test_project_installer.py"
+      - "tests/test_project_update.py"
+      - "scripts/update_project.py"
       - "scripts/install_into_project.py"
       - ".agents/skills/setup-power-bi-architect/**"
       - "SETUP.md"
@@ -19,6 +21,8 @@ on:
       - "tests/test_dax_measure_reviewer.py"
       - "tests/test_setup_instructions.py"
       - "tests/test_project_installer.py"
+      - "tests/test_project_update.py"
+      - "scripts/update_project.py"
       - "scripts/install_into_project.py"
       - ".agents/skills/setup-power-bi-architect/**"
       - "SETUP.md"
@@ -39,7 +43,7 @@ jobs:
       - name: Unit tests (synthetic; no private model data)
         run: python -m unittest discover -s tests -p 'test_*.py' -v
       - name: Syntax compile
-        run: python -m py_compile .agents/skills/dax-measure-standards-review/scripts/review_measures.py scripts/install_into_project.py
+        run: python -m py_compile .agents/skills/dax-measure-standards-review/scripts/review_measures.py scripts/install_into_project.py scripts/update_project.py
 
       - name: Fetch public canonical standards at reviewed pinned SHA
         uses: actions/checkout@v4
@@ -145,4 +149,78 @@ jobs:
           assert install["skills_provider"] == "power-bi-architect"
           assert result["standards"]["verification"] == "pinned_project_copy"
           print("Existing .cursor/skills layout preserved and reviewer smoke test passed.")
+          PY
+
+      - name: Update existing copied project from a newly committed local Architect clone
+        shell: bash
+        run: |
+          set -eu
+          source_dir="/tmp/power-bi-architect-update-source"
+          project="/tmp/power-bi-architect-update-project"
+          git clone -q "$GITHUB_WORKSPACE" "$source_dir"
+          git -C "$source_dir" remote set-url origin "https://github.com/GitKlink/performance-reward-dashboard-architect.git"
+          git -C "$source_dir" config user.name "Synthetic CI"
+          git -C "$source_dir" config user.email "synthetic@example.invalid"
+          mkdir -p "$project/.cursor/skills/matt-pocock"
+          echo "keep this project skill" > "$project/.cursor/skills/matt-pocock/README.txt"
+          python "$source_dir/scripts/install_into_project.py" \
+            --project "$project" --standards-repo "$GITHUB_WORKSPACE/standards-pinned" --apply
+
+          # Simulate a reviewed, committed local source change. Nothing is pushed.
+          echo "" >> "$source_dir/.agents/skills/dax-measure-standards-review/README.md"
+          echo "<!-- Synthetic CI source update, never pushed -->" >> "$source_dir/.agents/skills/dax-measure-standards-review/README.md"
+          git -C "$source_dir" add .agents/skills/dax-measure-standards-review/README.md
+          git -C "$source_dir" commit -qm "test: synthetic local clone source revision"
+
+          python "$source_dir/scripts/update_project.py" \
+            --project "$project" --standards-repo "$GITHUB_WORKSPACE/standards-pinned" \
+            > /tmp/power-bi-architect-approved-plan.txt
+          plan_id=$(python - <<'PY'
+          import json
+          from pathlib import Path
+          text=Path("/tmp/power-bi-architect-approved-plan.txt").read_text()
+          plan=json.loads(text.split("\nPLAN ONLY")[0])
+          assert plan["count"]["replace"] >= 1
+          assert plan["old_architect_sha"] != plan["new_architect_sha"]
+          assert plan["skills_dir"] == ".cursor/skills"
+          print(plan["plan_id"])
+          PY
+          )
+          if python "$source_dir/scripts/update_project.py" \
+            --project "$project" --standards-repo "$GITHUB_WORKSPACE/standards-pinned" \
+            --apply --expected-plan-id "bad-plan"; then
+              echo "ERROR: updater accepted an unapproved plan"
+              exit 1
+          fi
+          python "$source_dir/scripts/update_project.py" \
+            --project "$project" --standards-repo "$GITHUB_WORKSPACE/standards-pinned" \
+            --apply --expected-plan-id "$plan_id"
+          grep -q 'Synthetic CI source update' \
+            "$project/.cursor/skills/power-bi-architect/dax-measure-standards-review/README.md"
+          test "$(cat "$project/.cursor/skills/matt-pocock/README.txt")" = "keep this project skill"
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          proj=Path("/tmp/power-bi-architect-update-project")
+          m=json.loads((proj/"docs/power-bi-architect/installation.json").read_text())
+          assert m["skills_dir"] == ".cursor/skills"
+          assert m["skills_provider"] == "power-bi-architect"
+          assert m["architect_git_sha"] != "116384977471431f99fa129669c7329269cb69fd"
+          assert "dax-measure-standards-review" in m["capabilities"]
+          PY
+          (
+            cd "$project"
+            python .cursor/skills/power-bi-architect/dax-measure-standards-review/scripts/review_measures.py \
+              --input .cursor/skills/power-bi-architect/dax-measure-standards-review/examples/measure-inventory.synthetic.csv \
+              --standards-root docs/power-bi-architect/standards \
+              --domain variable_reward \
+              --out-dir /tmp/power-bi-architect-updated-smoke
+          )
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          r=json.loads(Path("/tmp/power-bi-architect-updated-smoke/review.json").read_text())
+          assert r["standards"]["verification"] == "pinned_project_copy"
+          assert r["measures"] == 4 and len(r["findings"]) == 6
+          print("Approved update + independent installed review passed.")
           PY
