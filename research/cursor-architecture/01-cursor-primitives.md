@@ -1,8 +1,10 @@
 # R1 — Cursor Native Architecture Primitives
 
+> **Terminology correction (2026-10-22):** The project is the **Power BI / Fabric Architect**. **Wayfinder** is Matt Pocock's planning skill used during research, not the project name. Original issue/PR titles may retain historical wording. The evidence and technical conclusions are unchanged. References to private standards describe the repository's earlier visibility; it became public on 2026-10-22.
+
 **Research ticket:** #10 — Research R1: Cursor native architecture primitives  
 **Evidence snapshot:** 2026-09-16  
-**Status:** Evidence-gathering research only. This report does **not** decide the final Power BI/Fabric Architect architecture.
+**Status:** Evidence-gathering research only. This report does **not** decide the final Power BI/Fabric Power BI / Fabric Architect architecture.
 
 This report uses the following labels:
 
@@ -998,4 +1000,4 @@ R1 establishes a sufficiently differentiated primitive vocabulary for later arch
 - where behaviour is still undocumented/version-sensitive;
 - which primitives are Cursor-specific versus portable/open conventions.
 
-It deliberately does **not** decide the Power BI/Fabric Architect topology. Those decisions belong to subsequent Wayfinder tickets.
+It deliberately does **not** decide the Power BI/Fabric Architect topology. Those decisions belong to subsequent Architect tickets.
