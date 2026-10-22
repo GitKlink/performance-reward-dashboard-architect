@@ -1,0 +1,18 @@
+{
+  "schema_version": "power-bi-fabric-standards-source-lock-v1",
+  "repo": "GitKlink/power-bi-fabric-standards",
+  "git_sha": "2d6eb0c2dd627b7607c0ad28a4ea6866e5427aa9",
+  "files": {
+    "semantic-model/README.md": "238d93921c0f90f7ba9c825c66105ffe9f309449",
+    "semantic-model/business_glossary.md": "29953679aa2752748219575b7983fdff986b7be0",
+    "semantic-model/domains/semantic_measure_standard_equity.md": "c38fdb9d7202d8588892f5035b63525e0195fc11",
+    "semantic-model/domains/semantic_measure_standard_fixed_reward.md": "8d30029c5193636b35bb008fbe8a2726fc27a2df",
+    "semantic-model/domains/semantic_measure_standard_international_assignments.md": "4942c8254a4a297979f04a7fec510a3e754aa644",
+    "semantic-model/domains/semantic_measure_standard_organisation.md": "af58cc029a5a258186c5741610341fb16e984abe",
+    "semantic-model/domains/semantic_measure_standard_performance.md": "a96b30a3349ac28510fab4f0cd978238a68de158",
+    "semantic-model/domains/semantic_measure_standard_variable_reward.md": "3c84887b468c3f9cc7fa9488f189868a1b6bb69f",
+    "semantic-model/domains/semantic_measure_standard_workforce.md": "9e2c270cb2133f853555112b01a0212a5a9ca74a",
+    "semantic-model/semantic_measure_standard.md": "d74dc7ddd79b2a4bc4d7d239c309bb9674fa87c3",
+    "semantic-model/semantic_measure_standard_improvement_backlog.md": "f7cc6980ce0b84d81af1c3d46ef07bb4c4682825"
+  }
+}

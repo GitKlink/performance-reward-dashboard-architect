@@ -1,62 +1,80 @@
-# DAX Measure Standards Reviewer — first usable version
+# DAX Measure Standards Reviewer — project-local installed capability
 
-The read-only Python checker analyses a measure-metadata CSV export. A Cursor-compatible [SKILL.md](SKILL.md) explains how to combine its mechanical findings with the canonical measure standard, glossary, relevant domain representation and human interpretation. **No DAX or semantic-model changes are made.**
+This **read-only Cursor skill** reviews a DAX-measures CSV against a pinned,
+copied snapshot of the canonical engineering standards. The source repository
+is the [Power BI / Fabric Architect](https://github.com/GitKlink/performance-reward-dashboard-architect);
+the actual standards authority is
+[power-bi-fabric-standards](https://github.com/GitKlink/power-bi-fabric-standards).
 
-## Requirements
+## Project-local installation
 
-- Python 3.10+ and Git
-- A locally accessible **public canonical** clone of `GitKlink/power-bi-fabric-standards`
-- Standards checkout pinned to SHA `2d6eb0c2dd627b7607c0ad28a4ea6866e5427aa9` with clean `semantic-model/` folder
-- A CSV containing at least `Name`, ideally from Power BI DAX Query View:
+Use [Architect SETUP.md](../../../SETUP.md) **from a local Architect clone**
+to install into the **Power BI project currently open in Cursor**.
+The installer runs a dry-run first and asks approval to create:
+
+- `<project's existing skills root>/power-bi-architect/dax-measure-standards-review/` (this directory; the root can be `.cursor/skills` or `.agents/skills`).
+- `docs/power-bi-architect/standards/semantic-model/` (copied standards).
+- `docs/power-bi-architect/installation.json` and
+  `docs/power-bi-architect/standards/source-manifest.json` (provenance).
+
+Once installed, you do **not need** the Architect or Standards Git checkout
+open alongside the Power BI project.
+
+## Run a real CSV inventory review
+
+In Power BI Desktop → DAX Query View:
 
 ~~~dax
 EVALUATE
     INFO.VIEW.MEASURES()
 ~~~
 
-Include `Table`, `Description`, `FormatString`, `FormatStringDefinition`, `IsHidden` and `DisplayFolder` when available; missing optional columns make the assessment **incomplete**, not a pass. Expressions may be suppressed by model permissions or live connectivity.
+Save a UTF-8 CSV **privately**, ideally including `Name`, `Table`,
+`Description`, `FormatString`, `FormatStringDefinition`, `IsHidden`,
+`DisplayFolder` and optionally `Expression`. The only required column is
+`Name`; absent optional fields are flagged as **not evaluated**.
 
-## Start here — PowerShell
-
-**Do not overwrite or detach an existing working standards checkout.** If needed, create a separate clone using your authorised GitHub identity:
-
-~~~powershell
-git clone https://github.com/GitKlink/power-bi-fabric-standards.git C:\analytics\power-bi-fabric-standards
-git -C C:\analytics\power-bi-fabric-standards switch --detach 2d6eb0c2dd627b7607c0ad28a4ea6866e5427aa9
-~~~
-
-Keep real measure inventory files in a **private, untracked folder**; do not put them or the generated report in the public Architect repository.
-
-From the **Architect repo root**:
+From the **target Power BI project root** (the example uses `.cursor/skills`; substitute `.agents/skills` when appropriate):
 
 ~~~powershell
-python .agents/skills/dax-measure-standards-review/scripts/review_measures.py --input "C:\private\measure-inventory.csv" --standards-root "C:\analytics\power-bi-fabric-standards" --domain variable_reward --out-dir "C:\private\dax-measure-review"
+python .cursor/skills/power-bi-architect/dax-measure-standards-review/scripts/review_measures.py --input "C:\\private\\measure-inventory.csv" --standards-root "docs/power-bi-architect/standards" --domain variable_reward --out-dir "C:\\private\\dax-measure-review"
 ~~~
 
-Use another domain key from `--help` or omit `--domain` for generic review.
+Reports are `review.md` and `review.json` in your chosen private directory.
+Return 0 is **partial review executed**, not full standards conformance.
+Return 2 blocks on invalid CSV or unverifiable standards.
 
-The reports are `review.md` and `review.json` under the output directory. Return code **0 = review ran**, not full conformance. Return code **2 = blocked** due to invalid input, permissions, checkout mismatch or filesystem problem.
+## Test without Power BI data
 
-In Cursor, open Architect and the standards clone (local multi-root when needed), then ask: **Use dax-measure-standards-review to assess this export and propose a DAX measure naming/metadata refactor without applying it.**
-
-## Local tests
+From the **target project root** (the synthetic fixture is installed with the skill; substitute `.agents/skills` when appropriate):
 
 ~~~powershell
-python -m unittest discover -s tests -p "test_dax_measure_reviewer.py" -v
+python .cursor/skills/power-bi-architect/dax-measure-standards-review/scripts/review_measures.py --input ".cursor/skills/power-bi-architect/dax-measure-standards-review/examples/measure-inventory.synthetic.csv" --standards-root "docs/power-bi-architect/standards" --domain variable_reward --out-dir "C:\\private\\synthetic-review"
 ~~~
 
-Tests use synthetic fixtures/mocks. Real Git repository access, Cursor skill discovery and Power BI model round-trip are **not yet integration tested**. See the exact [mechanical coverage](references/check-coverage.md).
+The reviewer validates copied documents against an approved, immutable
+`references/source-lock.json` containing Git blob IDs for **all 11**
+standards documents, as well as the installation manifest's SHA-256 values.
+The approved Standards commit is `2d6eb0c2dd627b7607c0ad28a4ea6866e5427aa9`.
+This verification does not require the source Git checkout at review time.
+The previous direct Git-clone verification mode remains supported.
 
-## Boundaries
+The copied standards are a **versioned consumer snapshot**, not the canonical
+editing home. Do not edit installed standards to change rules: propose changes
+upstream and use a separately reviewed update.
 
-- No duplicate copy of canonical standards text is committed to Architect.
-- No automatic renames, TMDL edits, DAX expression changes, dependency rewrites or numerical reconciliation.
-- Naming/metadata checks are a **reviewed subset** of one pinned standards revision. A zero-finding result is **not** full standards compliance.
-- Business definitions, root-first concept grouping, eligibility, population, calculation grain, and Change vs Variance require human/domain approval.
-- This v0 accepts CSV inventory only; native PBIP/TMDL ingestion is the next integration step.
+## Limitations
 
-Official sources: [Microsoft INFO.VIEW.MEASURES](https://learn.microsoft.com/en-us/dax/info-view-measures-function-dax), [Cursor Skills](https://cursor.com/docs/skills).
+- CSV metadata only; no PBIP/TMDL model ingestion, compile or numeric reconciliation.
+- No automatic DAX renames, rewrites, model edits or silent updates.
+- Mechanical checks are a **subset**; business semantics and glossary decisions
+  still require expert/human review.
+- Keep salary, employee, incentive, proprietary DAX and actual model exports private.
 
-## Output schema migration (terminology correction)
+See [SKILL.md](SKILL.md) and [rule coverage](references/check-coverage.md).
 
-Before the first real-model pilot, the report's `schema_version` was corrected from the inaccurate original project-branding identifier to `power-bi-fabric-architect-dax-measure-review-v1`. Any early consumer matching the old schema identifier must update its check. Report fields and the checker rules remain otherwise unchanged. This is a **schema identifier change**, not a new validator capability.
+## Output schema
+
+`review.json` uses `power-bi-fabric-architect-dax-measure-review-v1`.
+The previously experimental identifier with the planning skill's name was
+corrected before the real-model pilot.
