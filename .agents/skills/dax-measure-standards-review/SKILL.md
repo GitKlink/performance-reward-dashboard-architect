@@ -7,20 +7,36 @@ description: Review exported Power BI DAX measures against the canonical Semanti
 
 **Purpose:** review a Power BI semantic-model measure inventory and propose changes **without editing DAX, TMDL, model files or standards**. This is the first vertical slice of the Power BI / Fabric Architect, not a full validator.
 
-## Required sources and order
+## Required sources and read order
 
-1. Identify the **actual PBIP/product repository** (write owner for a future authorised change) and the user's requested domain.
-2. Locate the local clone of the **public canonical** Git repository `GitKlink/power-bi-fabric-standards`; do not substitute web search, an HTML explorer or a copied prompt.
-3. Verify its `HEAD` equals the reviewed baseline SHA `2d6eb0c2dd627b7607c0ad28a4ea6866e5427aa9`. The checker blocks any different revision. Do not switch an existing checkout without user approval; use a separate pinned clone if necessary.
-4. Read, in order, directly from that local Git clone:
-   - `semantic-model/README.md`
-   - `semantic-model/semantic_measure_standard.md`
-   - `semantic-model/business_glossary.md`
-   - `semantic-model/domains/semantic_measure_standard_<selected-domain>.md` if relevant.
-5. Do **not** turn `semantic_measure_standard_improvement_backlog.md` into a rule source; it is proposal material.
-6. Separately seek an **approved domain business contract** for eligibility, calculations, grain, time basis and metric meaning. A semantic-model domain file alone does not authorise changes to business semantics; Architect [Issue #6](https://github.com/GitKlink/performance-reward-dashboard-architect/issues/6) is still relevant.
+1. Identify the **current Power BI/PBIP project** and the domain under review.
+2. **Prefer the installed project-local standards snapshot**:
+   `docs/power-bi-architect/standards/`, recorded in
+   `docs/power-bi-architect/installation.json`.
+   The snapshot and this skill are copied from approved Git repositories and
+   pinned to Standards SHA `2d6eb0c2dd627b7607c0ad28a4ea6866e5427aa9`.
+   The checker validates **all 11 source Git blobs** against the immutable source
+   lock shipped with this installed skill. Do not silently read a different
+   checkout or accept edited standards.
+3. Read, in order, under `docs/power-bi-architect/standards/semantic-model/`:
+   - `README.md`
+   - `semantic_measure_standard.md`
+   - `business_glossary.md`
+   - selected `domains/semantic_measure_standard_<domain>.md` if applicable.
+   - `semantic_measure_standard_improvement_backlog.md` **last** and
+     **as proposals only**, never approved requirements.
+4. **Backward-compatible fallback:** When working directly in the Architect
+   source repository rather than an installed project, the checker can also
+   accept a separate clean Git clone of `GitKlink/power-bi-fabric-standards`
+   at the same pinned revision. That source mode is **not required** in an
+   installed Power BI project.
+5. Separately seek approved Performance & Reward business contracts for
+   calculation, population, time basis and grain. Naming standards do not
+   authorise a semantic change. See Architect
+   [Issue #6](https://github.com/GitKlink/performance-reward-dashboard-architect/issues/6).
 
-If the source is unavailable or mismatched, **stop and report the precise missing source/revision** rather than claiming compliance.
+If the snapshot or its source lock fails integrity checking, **stop**.
+Do not claim standards conformance or remove source verification.
 
 ## Prepare a real inventory (read-only)
 
@@ -39,15 +55,21 @@ An existing export with equivalent columns is acceptable; inspect its header and
 
 ## Run the deterministic checker
 
-From the **Architect repository root**, with Python 3.10+ and Git available:
+From the **target Power BI project root**, with Python 3.10+ (and
+`docs/power-bi-architect/standards/` installed), run:
 
 ~~~powershell
-python .agents/skills/dax-measure-standards-review/scripts/review_measures.py --input "C:\private\measure-inventory.csv" --standards-root "C:\analytics\power-bi-fabric-standards" --domain variable_reward --out-dir "C:\private\dax-measure-review"
+python .agents/skills/dax-measure-standards-review/scripts/review_measures.py --input "C:\\private\\measure-inventory.csv" --standards-root "docs/power-bi-architect/standards" --domain variable_reward --out-dir "C:\\private\\dax-measure-review"
 ~~~
 
-Use a different domain from `--help` when appropriate, or omit `--domain` for generic measures. The checker **reads** the input CSV and Git-pinned standards metadata, then writes only `review.json` and `review.md` in the explicitly selected local output directory. It does not connect to Power BI or write model files.
+The checker **reads** the CSV and immutable copied standards, and writes only
+`review.json` and `review.md` to the explicit output directory. It does not
+require an open Architect/Standards clone after installation, connect to
+Power BI or modify DAX/model files.
 
-A return code of **0** means the partial review ran, **not** that the model is conformant. Return code **2** blocks review on invalid CSV, missing/mismatched private standards or filesystem errors.
+Choose another domain from `--help` or omit it for generic measures.
+Exit **0** means only a partial review ran; **2** blocks on invalid input,
+missing/tampered source, wrong revision or filesystem errors.
 
 ## Review and propose
 
@@ -61,10 +83,10 @@ A return code of **0** means the partial review ran, **not** that the model is c
 
 ## Safety and privacy
 
-- Do not write in the standards clone, DAX/M library or unrelated workspace roots.
-- Do not store the export or resulting report in the public Architect repository. Keep them in a private workspace and review permissions.
+- Do not write in the copied canonical standards, source repositories or unrelated workspace roots.
+- Do not store real CSV exports or generated reports in public repositories. Use private local folders.
 - Do not report employee, pay, rating or incentive data. This skill reviews model metadata, not underlying workforce rows.
-- If local standards diverge from the pinned baseline, do not bypass the checker by editing the SHA. Propose a reviewed profile update with tests.
+- If copied standards differ from the pinned approved source, do not bypass the Git blob lock. Propose a reviewed snapshot update with tests.
 - Do not claim a blank expression means the measure is blank: `INFO.VIEW.MEASURES()` may suppress expressions depending on permissions.
 
 ## Reference
