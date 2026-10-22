@@ -128,7 +128,7 @@ DAX Query View:
 EVALUATE INFO.VIEW.MEASURES()
 ```
 
-Keep its CSV and the resulting reports **private**. The reviewer does not
+Keep its CSV and the resulting reports **private**, outside public repositories. The reviewer does not
 rename DAX, modify PBIP/TMDL, compile expressions, or certify all standards.
 
 Only the DAX reviewer capability is packaged today. The reusable DAX/M Library,
