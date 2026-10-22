@@ -16,7 +16,7 @@ spec.loader.exec_module(installer)
 class ProjectLocalInstallTests(unittest.TestCase):
     def fixture(self, project):
         return {
-            Path(".agents/skills/dax-measure-standards-review/SKILL.md"): b"some skills\n",
+            Path(".agents/skills/power-bi-architect/dax-measure-standards-review/SKILL.md"): b"some skills\n",
             Path("docs/power-bi-architect/README.md"): b"local docs\n",
             Path("docs/power-bi-architect/installation.json"): b'{"schema_version":"test"}\n',
         }, {"architect_git_sha": "a" * 40, "standards_git_sha": "b" * 40,
@@ -34,19 +34,22 @@ class ProjectLocalInstallTests(unittest.TestCase):
             with patch.object(installer, "build_files", return_value=contents):
                 text = installer.install(project, root / "standards")
                 self.assertIn("PLAN ONLY", text)
+                self.assertIn(".agents/skills/power-bi-architect/dax-measure-standards-review", text)
                 self.assertFalse((project / "docs").exists())
                 applied = installer.install(project, root / "standards", apply=True)
                 self.assertIn("INSTALLED 3 files", applied)
                 self.assertIn("ALREADY INSTALLED", installer.install(project, root / "standards", apply=True))
             self.assertEqual((project / "AGENTS.md").read_text(encoding="utf-8"), "preserve")
             self.assertEqual((project / ".agents/skills/existing-skill/SKILL.md").read_text(encoding="utf-8"), "keep")
+            self.assertTrue((project / ".agents/skills/power-bi-architect/dax-measure-standards-review/SKILL.md").is_file())
+            self.assertFalse((project / ".agents/skills/dax-measure-standards-review").exists())
 
     def test_existing_modified_installed_file_blocks_without_replacement(self):
         with tempfile.TemporaryDirectory() as base:
             root = Path(base)
             project = root / "pbip"
             project.mkdir()
-            path = project / ".agents/skills/dax-measure-standards-review/SKILL.md"
+            path = project / ".agents/skills/power-bi-architect/dax-measure-standards-review/SKILL.md"
             path.parent.mkdir(parents=True)
             path.write_text("human authored", encoding="utf-8")
             contents = self.fixture(project)
