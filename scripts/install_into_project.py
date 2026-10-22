@@ -90,7 +90,7 @@ def build_files(project: Path, standards_repo: Path) -> tuple[dict[Path, bytes],
     pin = lock["git_sha"]
     architect_sha = git_checkout(ROOT, ARCHITECT_REPO)
     git_checkout(standards_repo, lock["repo"], pin)
-    if git(ROOT, "status", "--porcelain", "--", str(SKILL)):
+    if git(ROOT, "status", "--porcelain", "--untracked-files=no", "--", str(SKILL)):
         raise InstallError("Architect skill source has uncommitted changes.")
     if git(standards_repo, "status", "--porcelain", "--", "semantic-model"):
         raise InstallError("Canonical standards contain uncommitted changes.")
