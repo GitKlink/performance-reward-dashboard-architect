@@ -2,6 +2,14 @@
 
 A Cursor-first, composed analytics-engineering capability for building and reviewing Power BI/Fabric analytical products. The project coordinates engineering policy, Performance & Reward domain meaning, reusable native implementations, and Microsoft-maintained platform skills without copying their canonical sources.
 
+## Setup for your first DAX review
+
+**No custom installer or plugin is required.** Point a local Cursor AI agent at the [AI-readable setup instructions](SETUP.md), then have it follow the [`setup-power-bi-architect` skill](.agents/skills/setup-power-bi-architect/SKILL.md). It inspects existing local repositories, proposes changes for approval, verifies the canonical standards Git pin, runs unit and synthetic CLI tests, and prepares the real Power BI CSV export step.
+
+**Paste into Cursor Agent:** `Read https://github.com/GitKlink/performance-reward-dashboard-architect/blob/main/SETUP.md and follow the linked setup-power-bi-architect skill. Inspect first, propose changes for my approval, and do not edit any semantic model.`
+
+The setup is agent-driven documentation; no local Cursor discovery, installation, PBIP model review or private data test is claimed until actually performed on a user's machine.
+
 ## First implementation: DAX Measure Standards Reviewer (MVP)
 
 **Status: first reviewer merged / local pilot pending**, not a complete Architect implementation or a certified DAX conformance tool.
@@ -11,11 +19,11 @@ A Cursor-first, composed analytics-engineering capability for building and revie
 - [Coverage and limitations](.agents/skills/dax-measure-standards-review/references/check-coverage.md)
 - [Synthetic example inventory](examples/dax-measure-review/measure-inventory.synthetic.csv)
 
-This first read-only workflow checks a **CSV measure inventory** (exported with `EVALUATE INFO.VIEW.MEASURES()`) for a limited set of naming/metadata findings, then produces Markdown/JSON reports for a human-reviewed refactor proposal. It does **not** edit the model, compile DAX, understand all business metrics, or prove full standards conformance. Real model and private Git access tests remain to be completed.
+This first read-only workflow checks a **CSV measure inventory** (exported with `EVALUATE INFO.VIEW.MEASURES()`) for a limited set of naming/metadata findings, then produces Markdown/JSON reports for a human-reviewed refactor proposal. It does **not** edit the model, compile DAX, understand all business metrics, or prove full standards conformance. Real-model, local skill-discovery and pinned Git-checkout integration tests remain to be completed.
 
 ## Repository authorities
 
-- **[Engineering Standards](https://github.com/GitKlink/power-bi-fabric-standards)** — public canonical Power BI/Fabric engineering-policy repository. Access is permission-controlled.
+- **[Engineering Standards](https://github.com/GitKlink/power-bi-fabric-standards)** — public canonical Power BI/Fabric engineering-policy repository. Reviewers pin a checked commit.
 - **[DAX/M Query Library](https://github.com/GitKlink/dax-m-query-library)** — reusable native DAX, Power Query M, Python and Deneb implementations, distinct from normative standards.
 - **Architect (this repo)** — integration, orchestration, skills, proposed architecture, future validators.
 - **Domain authority** — Performance & Reward business definitions, eligibility, grain, interpretation and reconciliation. Business/content boundary issue [#6](https://github.com/GitKlink/performance-reward-dashboard-architect/issues/6) remains distinct from generic semantic formatting.
