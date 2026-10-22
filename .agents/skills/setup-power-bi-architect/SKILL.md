@@ -25,7 +25,7 @@ rather than assuming a drive or home location.
 - Locate a local `GitKlink/power-bi-fabric-standards` checkout at approved SHA
   `2d6eb0c2dd627b7607c0ad28a4ea6866e5427aa9`. If the user's checkout is
   newer, propose a separate pinned clone; **never** detach/reset their existing one.
-- Identify existing `.agents/skills/`, `docs/`, `AGENTS.md`, `.cursor/` and any
+- Identify existing `.agents/skills/`, `.cursor/skills/`, `docs/`, `AGENTS.md`, `.cursor/` and any
   `docs/power-bi-architect/installation.json`; preserve all existing contents.
 - Confirm Git and Python 3.10+ are available. Do not assume Power BI tools or a
   Python environment is already installed inside the target project.
@@ -81,7 +81,7 @@ which source Architect and Standards Git revisions produced its copy.
 - Close other source roots or open **only the target project** in local Cursor,
   and confirm `dax-measure-standards-review` appears in Cursor Skills. If that
   cannot be inspected, state **not verified**.
-- Run the synthetic checker from the **target project root**:
+- Run the synthetic checker from the **target project root**. The example\n  uses `.agents/skills`; substitute `.cursor/skills` when the installer selected it:
 
 ```sh
 python .agents/skills/dax-measure-standards-review/scripts/review_measures.py --input ".agents/skills/dax-measure-standards-review/examples/measure-inventory.synthetic.csv" --standards-root "docs/power-bi-architect/standards" --domain variable_reward --out-dir "<NEW_PRIVATE_REPORT_DIR>"
