@@ -1,115 +1,136 @@
 # Install Power BI / Fabric Architect into the current Power BI project
 
-This file is **instructions for a local Cursor Agent**, not an executable installer.
-Open your **Power BI / PBIP project** as the current Cursor project first.
-The AI reads this file from your local Architect clone, then proposes and executes a
-**project-local copy** of the approved capabilities and standards. It does not need
-the Architect and Standards repositories open in Cursor after installation.
+This file instructs **local Cursor Agent** to install *copies* of approved
+Architect skills and canonical standards into the Power BI project that is open
+in Cursor. It is not an executable script and does not install a global plugin.
 
-## Copy into Cursor Agent
+## Paste into Cursor Agent
 
 ```text
-My currently open Cursor workspace is the TARGET Power BI project.
-Find my local clones/performance-reward-dashboard-architect/SETUP.md
-and follow its local setup-power-bi-architect/SKILL.md.
-Inspect the project and upstream clones. Show the proposed project-local files
-and exact dry-run plan. Ask for my approval before writing any files.
-Install the reviewer as a child folder inside this project's EXISTING skill directory\n(.agents/skills/ or .cursor/skills/),
-and copy the pinned standards into its docs/power-bi-architect/standards/ folder.
-Verify the installed reviewer can run using only those installed project files.
-Do not overwrite existing files or modify a Power BI model.
+My open Cursor workspace contains the target Power BI project.
+Read the LOCAL clones/performance-reward-dashboard-architect/SETUP.md
+and its .agents/skills/setup-power-bi-architect/SKILL.md.
+Resolve the true clone paths rather than assuming their location.
+Inspect my existing project folders. Put Architect skills under the project's
+EXISTING skills folder in a power-bi-architect provider subfolder, with each
+skill beneath it. Copy approved pinned standards into the project docs folder.
+Show me the exact dry-run plan and ask my approval before writing anything.
+Preserve matt-pocock, skills-for-fabric, all other skills, rules, and PBIP files.
+Verify the installed DAX reviewer using only its copied local files.
+Never edit a Power BI model or publish real measure inventory data.
 ```
 
-Paths to the local `clones` folder vary by machine: **discover the actual path**.
-If the current Cursor workspace is a parent multi-root workspace, identify the **specific
-Power BI project** and confirm the target rather than installing into `clones`
-or the Architect repository. If the Architect is not yet cloned, propose cloning
-`https://github.com/GitKlink/performance-reward-dashboard-architect` first.
+If your Architect clone is missing, the AI may propose cloning
+`https://github.com/GitKlink/performance-reward-dashboard-architect`
+and then follow these instructions **locally**. If the workspace contains
+several projects, verify the actual target before installing.
 
-**Procedure:** [`.agents/skills/setup-power-bi-architect/SKILL.md`](.agents/skills/setup-power-bi-architect/SKILL.md).
-Read the local file fully before proceeding.
+**Procedure:** [`setup-power-bi-architect/SKILL.md`](.agents/skills/setup-power-bi-architect/SKILL.md).
 
-## Expected project result
+## What the current installer creates
+
+For a project already using `.cursor/skills`, such as EOY-REWARD-DASHBOARD:
 
 ```text
-<YOUR-OPEN-POWER-BI-PROJECT>/
-├── .agents/
+EOY-REWARD-DASHBOARD/
+├── .cursor/
+│   ├── rules/                                    # unchanged
 │   └── skills/
-│       ├── <your existing skills>/              # untouched
-│       └── dax-measure-standards-review/         # copied from Architect
-│           ├── SKILL.md
-│           ├── README.md
-│           ├── scripts/review_measures.py
-│           ├── references/
-│           └── examples/measure-inventory.synthetic.csv
+│       ├── matt-pocock/                          # unchanged
+│       ├── skills-for-fabric/                    # unchanged
+│       └── power-bi-architect/                   # source/provider folder
+│           └── dax-measure-standards-review/     # specific skill
+│               ├── SKILL.md
+│               ├── README.md
+│               ├── scripts/review_measures.py
+│               ├── references/
+│               └── examples/measure-inventory.synthetic.csv
 ├── docs/
 │   └── power-bi-architect/
 │       ├── README.md
-│       ├── installation.json                     # source SHA + file hashes
+│       ├── installation.json                     # provenance and copied-file hashes
 │       └── standards/
-│           ├── source-manifest.json              # pinned standards file hashes
-│           └── semantic-model/                   # copied canonical documents
-└── <your existing PBIP/model/report files>      # untouched
+│           ├── source-manifest.json              # pinned standards hashes
+│           └── semantic-model/                   # all 11 copied standards files
+├── AGENTS.md                                     # unchanged
+└── <existing Power BI files>                     # unchanged
 ```
 
-The copied standards include the core, glossary, improvement backlog and **all seven
-current domain documents**, keeping their original relative paths. The authoritative
-standards repository remains
-[GitKlink/power-bi-fabric-standards](https://github.com/GitKlink/power-bi-fabric-standards);
-the project copy is an **installed, versioned snapshot**, not a second authoring home.
+For a project already using `.agents/skills`, the same
+`power-bi-architect/dax-measure-standards-review/` hierarchy goes underneath
+`.agents/skills/`. If both skill roots exist, **ask** which should receive
+the new provider. If neither exists, the current default is `.agents/skills/`.
+Do not move other providers or merge their files into ours.
 
-## Installation contract
+Cursor walks its skills roots recursively, so its documented skill identity
+remains `dax-measure-standards-review` (not `power-bi-architect`).
+Future Architect skills must be separate sibling folders under
+`skills/power-bi-architect/`.
 
-- Use the **local Architect** checkout as installer source; do **not** fetch
-  random GitHub content and paste it into project instructions.
-- Use the **local Standards** repository at reviewed Git commit
-  `2d6eb0c2dd627b7607c0ad28a4ea6866e5427aa9` as standards source.
-  A newer existing clone must be left intact; propose a separate pinned clone.
-- Run the deterministic installer's **dry-run first**, show its output, then
-  obtain approval before `--apply`.
-- The installer **detects the project's existing skills root**: `.agents/skills`\n  or `.cursor/skills`; if both exist, Cursor must ask which one to use and\n  pass `--skills-dir`. If neither exists, `.agents/skills` is the default.\n- Copies are **new, additive files only**; existing project skills, docs,
-  `AGENTS.md`, `.cursor/rules`, PBIP/TMDL, and model assets are preserved.
-  Rerunning on an identical installation is a no-op. A changed or partial
-  installation blocks instead of silently overwriting anything.
-- The installer has no remote dependency beyond initially obtaining the
-  two upstream clones with Git. No separate plugin or global CLI is installed.
-- The DAX reviewer validates **all copied standards files against immutable
-  Git blob hashes** pinned with the installed skill, plus the local manifest.
-  No independent standards Git checkout is needed **after installation**.
-- No confidential Power BI/DAX inventory or analysis report is committed
-  to a public repository. Keep reports in a private folder.
+## Approval-based project copy
 
-Run these commands from the **local Architect checkout** after Cursor identifies
-the real `<TARGET_PROJECT>` and `<PINNED_STANDARDS_CLONE>`:
+Prerequisites: local Git, Python 3.10+, and the locally cloned
+[Architect repository](https://github.com/GitKlink/performance-reward-dashboard-architect).
+Canonical standards come from the local
+[Standards repository](https://github.com/GitKlink/power-bi-fabric-standards)
+at immutable commit `2d6eb0c2dd627b7607c0ad28a4ea6866e5427aa9`.
+If the user's Standards clone is newer, leave it untouched and propose
+a **second pinned clone**.
+
+From the local **Architect repository root**, run the read-only installation
+plan and show it to the user:
 
 ```powershell
 python scripts/install_into_project.py --project "<TARGET_PROJECT>" --standards-repo "<PINNED_STANDARDS_CLONE>"
-# Review the displayed plan; ask for user approval before running:
+```
+
+Only **after the user approves**, apply the same plan:
+
+```powershell
 python scripts/install_into_project.py --project "<TARGET_PROJECT>" --standards-repo "<PINNED_STANDARDS_CLONE>" --apply
 ```
 
-## Verify the copied reviewer
+The installer detects the existing skills root; if both are present, add
+`--skills-dir .cursor/skills` or `--skills-dir .agents/skills` with user
+approval. It creates only new files; existing skill folders, project instructions,
+standards or model files are never overwritten. Identical reruns are no-ops.
+Changed or incomplete previous installs **block** rather than silently update.
 
-Run from the **target Power BI project root**, using the harmless copied fixture
-and a **new private report directory outside public repositories**:
+The standards copy is a read-only **consumer snapshot**. Core, glossary,
+improvement backlog and all seven domain files retain their original folder
+layout. The authoritative source stays in the Standards Git repository.
+The DAX reviewer checks immutable source Git-blob IDs from its bundled
+`references/source-lock.json` against every copied standard, as well as
+the SHA-256 values recorded in the installation manifest. **No Git checkout
+needs to remain open after installation.**
+
+## Verify the installed capability
+
+Run the following from the **target Power BI project root**, with a new
+private reports folder. The example assumes an existing `.cursor/skills`
+root; substitute `.agents/skills` if that was selected:
 
 ```powershell
-python .agents/skills/dax-measure-standards-review/scripts/review_measures.py --input ".agents/skills/dax-measure-standards-review/examples/measure-inventory.synthetic.csv" --standards-root "docs/power-bi-architect/standards" --domain variable_reward --out-dir "<PRIVATE_REPORTS_FOLDER>"
+python .cursor/skills/power-bi-architect/dax-measure-standards-review/scripts/review_measures.py --input ".cursor/skills/power-bi-architect/dax-measure-standards-review/examples/measure-inventory.synthetic.csv" --standards-root "docs/power-bi-architect/standards" --domain variable_reward --out-dir "<PRIVATE_REPORTS_FOLDER>"
 ```
 
-Confirm `review.json`, `review.md`, `status=partial_review_only`,
-`schema_version=power-bi-fabric-architect-dax-measure-review-v1` and
-`standards.verification=pinned_project_copy`. Check that Cursor's skills view
-sees `dax-measure-standards-review` **when only the target project is open**.
+Check `review.json` and `review.md` were created with
+`status=partial_review_only`,
+`schema_version=power-bi-fabric-architect-dax-measure-review-v1`, and
+`standards.verification=pinned_project_copy`. Cursor should discover the skill
+with **only the Power BI project open**; if this cannot be checked, mark it
+*unverified*, not installed successfully by assumption.
 
-After the synthetic test, Power BI Desktop's DAX Query View can export real measures:
+When ready for a **separate real-model pilot**, use Power BI Desktop's
+DAX Query View:
 
 ```dax
 EVALUATE INFO.VIEW.MEASURES()
 ```
 
-Keep that CSV and any generated reports private. **Do not change the model**;
-this capability only suggests human-reviewed measure improvements.
+Keep its CSV and the resulting reports **private**. The reviewer does not
+rename DAX, modify PBIP/TMDL, compile expressions, or certify all standards.
 
-**Not yet installed by this procedure:** other Architect capabilities, the full
-DAX/M Library, Microsoft Fabric skills, a plugin marketplace or a global CLI.
+Only the DAX reviewer capability is packaged today. The reusable DAX/M Library,
+Microsoft Fabric upstream skills, other Architect skills and automatic update
+management are not part of this installation.
