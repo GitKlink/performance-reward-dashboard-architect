@@ -29,6 +29,7 @@ SKILL_FILES = (
 )
 ARCHITECT_REPO = "GitKlink/performance-reward-dashboard-architect"
 INSTALL_SCHEMA = "power-bi-fabric-architect-install-v1"
+PROVIDER_DIR = "power-bi-architect"  # Namespace every installed Architect skill by its source.
 
 
 class InstallError(Exception):
@@ -112,7 +113,7 @@ def build_files(project: Path, standards_repo: Path,
     if git(standards_repo, "status", "--porcelain", "--", "semantic-model"):
         raise InstallError("Canonical standards contain uncommitted changes.")
 
-    destination_skill = select_skills_dir(project, skills_dir) / "dax-measure-standards-review"
+    destination_skill = select_skills_dir(project, skills_dir) / PROVIDER_DIR / "dax-measure-standards-review"
     payload = {}
     for name in SKILL_FILES:
         rel = SKILL / name
@@ -178,6 +179,7 @@ def build_files(project: Path, standards_repo: Path,
         "standards_git_sha": pin,
         "capabilities": ["dax-measure-standards-review"],
         "skills_dir": select_skills_dir(project, skills_dir).as_posix(),
+        "skills_provider": PROVIDER_DIR,
         "installed_assets_sha256": records,
     }
     payload[DOC / "installation.json"] = (
@@ -219,7 +221,7 @@ def install(project: Path, standards_repo: Path, *, apply: bool = False,
 
     if not apply:
         return ("PLAN ONLY: create " + str(len(payload)) + " files inside " + str(project) +
-                "; skill=" + record["skills_dir"] + "/dax-measure-standards-review; "
+                "; skill=" + record["skills_dir"] + "/" + PROVIDER_DIR + "/dax-measure-standards-review; "
                 "standards=docs/power-bi-architect/standards; architect_sha=" +
                 record["architect_git_sha"] + "; standards_sha=" + record["standards_git_sha"] +
                 ". No files changed. Re-run with --apply only after approving the plan.")
