@@ -116,3 +116,28 @@ jobs:
           fi
           test ! -e /tmp/power-bi-architect-tamper-smoke/review.json
           echo "Tamper rejection passed."
+          cursor_project="/tmp/power-bi-architect-cursor-skills-project"
+          mkdir -p "$cursor_project/.cursor/skills/existing-skill"
+          echo "keep" > "$cursor_project/.cursor/skills/existing-skill/SKILL.md"
+          python scripts/install_into_project.py --project "$cursor_project" --standards-repo standards-pinned --apply
+          test -f "$cursor_project/.cursor/skills/dax-measure-standards-review/SKILL.md"
+          test ! -e "$cursor_project/.agents/skills/dax-measure-standards-review/SKILL.md"
+          test "$(cat "$cursor_project/.cursor/skills/existing-skill/SKILL.md")" = "keep"
+          (
+            cd "$cursor_project"
+            python .cursor/skills/dax-measure-standards-review/scripts/review_measures.py \
+              --input .cursor/skills/dax-measure-standards-review/examples/measure-inventory.synthetic.csv \
+              --standards-root docs/power-bi-architect/standards \
+              --domain variable_reward \
+              --out-dir /tmp/power-bi-architect-cursor-skills-smoke
+          )
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          project = Path("/tmp/power-bi-architect-cursor-skills-project")
+          install = json.loads((project/"docs/power-bi-architect/installation.json").read_text())
+          result = json.loads(Path("/tmp/power-bi-architect-cursor-skills-smoke/review.json").read_text())
+          assert install["skills_dir"] == ".cursor/skills"
+          assert result["standards"]["verification"] == "pinned_project_copy"
+          print("Existing .cursor/skills layout preserved and reviewer smoke test passed.")
+          PY
