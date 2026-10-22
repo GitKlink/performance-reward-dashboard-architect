@@ -37,8 +37,6 @@ def safe_relative(key: str, root: Path, skills_root: str) -> Path:
     path = root / rel
     if not path.is_relative_to(root):
         raise InstallError("Managed path escapes the Power BI project: " + key)
-    for d in (root, *list(path.relative_to(root).parents)[:-1]):
-        pass  # parents are checked below, without traversing symlinks
     part = root
     for component in rel.parts:
         part = part / component
@@ -90,7 +88,7 @@ def validate_target(project: Path, paths: list[Path], old_skills_root: str):
     for rel in paths:
         safe_relative(rel.as_posix(), project, old_skills_root)
         target = project / rel
-        for parent in (target, *list(target.parents)[:-1]):
+        for parent in (target, *target.parents):
             if parent == project:
                 break
             if parent.is_symlink():
