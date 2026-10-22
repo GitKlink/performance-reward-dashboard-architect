@@ -6,7 +6,7 @@ A Cursor-first, composed analytics-engineering capability for building and revie
 
 **No custom installer or plugin is required.** Point a local Cursor AI agent at the [AI-readable setup instructions](SETUP.md), then have it follow the [`setup-power-bi-architect` skill](.agents/skills/setup-power-bi-architect/SKILL.md). It inspects existing local repositories, proposes changes for approval, verifies the canonical standards Git pin, runs unit and synthetic CLI tests, and prepares the real Power BI CSV export step.
 
-**Paste into Cursor Agent:** `Read https://github.com/GitKlink/performance-reward-dashboard-architect/blob/main/SETUP.md and follow the linked setup-power-bi-architect skill. Inspect first, propose changes for my approval, and do not edit any semantic model.`
+**Paste into Cursor Agent with your local `clones` folder open:** `Read the LOCAL file performance-reward-dashboard-architect/SETUP.md in this workspace. Follow the LOCAL .agents/skills/setup-power-bi-architect/SKILL.md, inspect before making changes, ask for approval, and do not edit any semantic model.` If you opened the Architect repository itself, use `SETUP.md` as the path instead. GitHub is only the fallback for obtaining a missing local clone.
 
 The setup is agent-driven documentation; no local Cursor discovery, installation, PBIP model review or private data test is claimed until actually performed on a user's machine.
 
