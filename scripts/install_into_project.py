@@ -75,7 +75,24 @@ def checked_file(root: Path, rel: Path) -> bytes:
     return p.read_bytes()
 
 
-def build_files(project: Path, standards_repo: Path) -> tuple[dict[Path, bytes], dict]:
+def select_skills_dir(project: Path, requested: str | None = None) -> Path:
+    """Use the existing project's skill convention rather than create a parallel set."""
+    options = (Path(".agents/skills"), Path(".cursor/skills"))
+    if requested is not None:
+        chosen = Path(requested)
+        if chosen not in options:
+            raise InstallError("Skill target must be .agents/skills or .cursor/skills.")
+        return chosen
+    existing = [p for p in options if (project / p).is_dir()]
+    if len(existing) > 1:
+        raise InstallError("Both .agents/skills and .cursor/skills exist: choose one with --skills-dir.")
+    if existing:
+        return existing[0]
+    return options[0]  # Cursor supports project-local .agents/skills.
+
+
+def build_files(project: Path, standards_repo: Path,
+                skills_dir: str | None = None) -> tuple[dict[Path, bytes], dict]:
     if not project.is_dir():
         raise InstallError("The target project directory must already exist.")
     for forbidden in (ROOT, standards_repo):
@@ -95,13 +112,14 @@ def build_files(project: Path, standards_repo: Path) -> tuple[dict[Path, bytes],
     if git(standards_repo, "status", "--porcelain", "--", "semantic-model"):
         raise InstallError("Canonical standards contain uncommitted changes.")
 
+    destination_skill = select_skills_dir(project, skills_dir) / "dax-measure-standards-review"
     payload = {}
     for name in SKILL_FILES:
         rel = SKILL / name
         raw = checked_file(ROOT, rel)
         if git(ROOT, "hash-object", "--", str(rel)) != git(ROOT, "rev-parse", "HEAD:" + rel.as_posix()):
             raise InstallError("Architect skill source differs from committed bytes: " + str(rel))
-        payload[rel] = raw
+        payload[destination_skill / name] = raw
 
     # Ship a harmless test input with the skill so it can be verified again
     # when the Architect source repository is no longer part of the workspace.
@@ -111,7 +129,7 @@ def build_files(project: Path, standards_repo: Path) -> tuple[dict[Path, bytes],
         ROOT, "rev-parse", "HEAD:" + fixture_source.as_posix()
     ):
         raise InstallError("Synthetic fixture differs from committed Architect source.")
-    payload[SKILL / "examples/measure-inventory.synthetic.csv"] = fixture
+    payload[destination_skill / "examples/measure-inventory.synthetic.csv"] = fixture
 
     std_sha256 = {}
     for path, expected_blob in sorted(lock["files"].items()):
@@ -159,6 +177,7 @@ def build_files(project: Path, standards_repo: Path) -> tuple[dict[Path, bytes],
         "standards_repo": lock["repo"],
         "standards_git_sha": pin,
         "capabilities": ["dax-measure-standards-review"],
+        "skills_dir": select_skills_dir(project, skills_dir).as_posix(),
         "installed_assets_sha256": records,
     }
     payload[DOC / "installation.json"] = (
@@ -167,9 +186,10 @@ def build_files(project: Path, standards_repo: Path) -> tuple[dict[Path, bytes],
     return payload, install_record
 
 
-def install(project: Path, standards_repo: Path, *, apply: bool = False) -> str:
+def install(project: Path, standards_repo: Path, *, apply: bool = False,
+            skills_dir: str | None = None) -> str:
     project, standards_repo = project.resolve(), standards_repo.resolve()
-    payload, record = build_files(project, standards_repo)
+    payload, record = build_files(project, standards_repo, skills_dir)
     existing = [(path, project / path) for path in payload if (project / path).exists() or
                 (project / path).is_symlink()]
     if existing:
@@ -199,7 +219,7 @@ def install(project: Path, standards_repo: Path, *, apply: bool = False) -> str:
 
     if not apply:
         return ("PLAN ONLY: create " + str(len(payload)) + " files inside " + str(project) +
-                "; skill=.agents/skills/dax-measure-standards-review; "
+                "; skill=" + record["skills_dir"] + "/dax-measure-standards-review; "
                 "standards=docs/power-bi-architect/standards; architect_sha=" +
                 record["architect_git_sha"] + "; standards_sha=" + record["standards_git_sha"] +
                 ". No files changed. Re-run with --apply only after approving the plan.")
@@ -239,11 +259,13 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--project", required=True, type=Path, help="Existing target Power BI project root")
     ap.add_argument("--standards-repo", required=True, type=Path,
                     help="Local canonical Standards Git checkout at the reviewer pinned revision")
+    ap.add_argument("--skills-dir", choices=(".agents/skills", ".cursor/skills"),
+                    help="Choose only when both supported skills directories already exist")
     ap.add_argument("--apply", action="store_true",
                     help="Create project-local files after reviewing a default dry-run plan")
     args = ap.parse_args(argv)
     try:
-        print(install(args.project, args.standards_repo, apply=args.apply))
+        print(install(args.project, args.standards_repo, apply=args.apply, skills_dir=args.skills_dir))
     except (InstallError, OSError, ValueError, json.JSONDecodeError, KeyError) as exc:
         print("INSTALL BLOCKED: " + str(exc), file=sys.stderr)
         return 2
