@@ -25,6 +25,37 @@ No global CLI, plugin marketplace, Microsoft Fabric skill bundle or automatic
 updater is installed. Source documents stay authoritative upstream; the
 installed copies are pinned snapshots with integrity/provenance manifests.
 
+## Updating a project after upstream changes
+
+Each Power BI project gets a **pinned, self-contained copy**, not a live link
+to the Architect or Standards clones. After making and **committing** an
+approved change to a local Architect clone, explicitly update any installed
+project with the [project updater](scripts/update_project.py).
+
+Run from the **local Architect clone**:
+
+```powershell
+python scripts/update_project.py --project "<TARGET_POWER_BI_PROJECT>" --standards-repo "<APPROVED_PINNED_STANDARDS_CHECKOUT>"
+```
+
+Inspect the dry-run's proposed `add` / `replace` / `remove` actions,
+old and new source revisions, and plan ID. **Only after user approval**:
+
+```powershell
+python scripts/update_project.py --project "<TARGET_POWER_BI_PROJECT>" --standards-repo "<APPROVED_PINNED_STANDARDS_CHECKOUT>" --apply --expected-plan-id "<PLAN_ID_FROM_DRY_RUN>"
+```
+
+The updater verifies the previous installed file hashes, refuses modified
+project-managed files or clashes with unrelated assets, preserves the existing
+`.cursor/skills/power-bi-architect/` (or `.agents/skills/`) provider layout,
+and records the new source revision. On an ordinary execution error it attempts
+rollback. There is **no automatic propagation** to other projects. Update each
+project intentionally; have its normal Git commit/backup available.
+
+Advancing the **Standards** repository requires a separately reviewed matching
+source-lock and reviewer baseline update in Architect. The updater will not
+accept an unreviewed newer Standards commit. See the [full update instructions](SETUP.md#updating-a-project-after-changing-the-local-clones).
+
 ## First implementation: DAX Measure Standards Reviewer (MVP)
 
 **Status: first reviewer merged / local pilot pending**, not a complete Architect implementation or a certified DAX conformance tool.
