@@ -1,0 +1,30 @@
+name: DAX measure reviewer tests
+
+on:
+  pull_request:
+    paths:
+      - ".agents/skills/dax-measure-standards-review/**"
+      - "tests/test_dax_measure_reviewer.py"
+      - ".github/workflows/dax-measure-reviewer-tests.yml"
+  push:
+    branches: [main]
+    paths:
+      - ".agents/skills/dax-measure-standards-review/**"
+      - "tests/test_dax_measure_reviewer.py"
+      - ".github/workflows/dax-measure-reviewer-tests.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Unit tests (synthetic only; no private standards access)
+        run: python -m unittest discover -s tests -p 'test_dax_measure_reviewer.py' -v
+      - name: Syntax compile
+        run: python -m py_compile .agents/skills/dax-measure-standards-review/scripts/review_measures.py
