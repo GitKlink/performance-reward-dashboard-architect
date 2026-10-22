@@ -2,11 +2,29 @@
 
 **Entry point for Cursor Agent (local).** This is an *instruction-driven* setup, modelled on the approach of Matt Pocock's `setup-matt-pocock-skills`. You do **not** need to install a new CLI or run a remote script.
 
-## Copy into Cursor Agent
+## Copy into Cursor Agent (local clones folder)
 
-> Read [SETUP.md](https://github.com/GitKlink/performance-reward-dashboard-architect/blob/main/SETUP.md) and the linked [setup-power-bi-architect/SKILL.md](.agents/skills/setup-power-bi-architect/SKILL.md). Set up the **Power BI / Fabric Architect** for its first **read-only DAX Measure Standards Review**. First inspect my local environment, show me exactly what you would create/change, and get my approval before changing it. Reuse repositories already available, protect existing files, verify the pinned canonical standards revision, run the synthetic tests, and give me the Power BI CSV export step. Do not change a semantic model or publish my measure inventory.
+**Start from your local clone, not the GitHub page.** Open the directory containing your cloned repositories (for example, a folder named `clones`) in **local Cursor**. Locate the actual Architect checkout at `<LOCAL_CLONES_FOLDER>/performance-reward-dashboard-architect/`.
 
-**Canonical agent procedure:** [`.agents/skills/setup-power-bi-architect/SKILL.md`](.agents/skills/setup-power-bi-architect/SKILL.md). **Read that file in full before taking action.** If your AI agent cannot read GitHub links, clone or open this repository locally, then point it at the local `SETUP.md` and `SKILL.md`.
+Paste this prompt into Cursor Agent when the **clones folder** is open:
+
+```text
+Read the LOCAL file performance-reward-dashboard-architect/SETUP.md
+from my open clones folder and follow the LOCAL instructions in
+performance-reward-dashboard-architect/.agents/skills/setup-power-bi-architect/SKILL.md.
+
+Set up the Power BI / Fabric Architect for a read-only DAX Measure Standards Review.
+Inspect the local repositories first. Show proposed changes and obtain my approval
+before applying them. Reuse existing clones, verify the pinned standards revision,
+confirm skill discovery, and run synthetic tests. Do not modify Power BI models or
+publish my measure inventory.
+```
+
+If you opened the **Architect repository itself** as the Cursor workspace root instead of its parent `clones` folder, the paths above are `SETUP.md` and `.agents/skills/setup-power-bi-architect/SKILL.md`.
+
+Cursor can also reference the file as `@SETUP.md` when the Architect repository is the open workspace and the file mention resolves correctly. If your clones live somewhere else, point the agent at the **actual local absolute path**; do not assume a particular drive or home directory.
+
+**Canonical agent procedure:** [`.agents/skills/setup-power-bi-architect/SKILL.md`](.agents/skills/setup-power-bi-architect/SKILL.md). Read it fully from the same local checkout before making changes. If the Architect repository is **not cloned yet**, only then use the [public GitHub source](https://github.com/GitKlink/performance-reward-dashboard-architect) to obtain it, open the local clone in Cursor, and continue from these local instructions.
 
 ## What the AI should do
 
