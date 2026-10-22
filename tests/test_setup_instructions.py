@@ -48,6 +48,10 @@ class SetupContractTests(unittest.TestCase):
     def test_review_export_and_private_output_instructions(self):
         setup = SETUP.read_text(encoding="utf-8")
         self.assertIn("EVALUATE INFO.VIEW.MEASURES()", setup)
+        self.assertIn("performance-reward-dashboard-architect/SETUP.md", setup)
+        self.assertIn("LOCAL file", setup)
+        self.assertIn("If the Architect repository is **not cloned yet**", setup)
+        self.assertIn("Read the LOCAL file", (ROOT / "README.md").read_text(encoding="utf-8"))
         self.assertIn("outside public repositories", setup)
         self.assertIn("DAX/M Library", setup)
 
