@@ -59,7 +59,7 @@ def git(root: Path, *args: str) -> str:
 
 def git_blob_sha(data: bytes) -> str:
     """Compute Git's object SHA-1 for bytes without requiring a Git repository."""
-    return hashlib.sha1(b"blob " + str(len(data)).encode("ascii") + b"\\0" + data).hexdigest()
+    return hashlib.sha1(b"blob " + str(len(data)).encode("ascii") + b"\0" + data).hexdigest()
 
 
 def verify_installed_snapshot(root: Path, domain: str | None) -> dict:
