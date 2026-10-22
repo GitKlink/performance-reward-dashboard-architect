@@ -10,6 +10,8 @@ implementation_issue: 21
 
 # ADR-0001 — Canonical Power BI / Fabric engineering standards home
 
+> **Terminology clarification (2026-10-22):** This is an Architect architecture decision; **Wayfinder** is the name of Matt Pocock's planning skill, not this product. Repository visibility changed from private to public on 2026-10-22, after this ADR was accepted. The accepted source-of-truth decision is unchanged.
+
 ## Context
 
 The Power BI / Fabric Architect is a Power BI/Fabric-focused end-to-end analytical-product architect. Its work spans source extraction, historical/analytical transformations, Power Query, semantic modelling, DAX, reports and validation. Its engineering standards must not be silently duplicated across the architect, reusable library and project repositories.
