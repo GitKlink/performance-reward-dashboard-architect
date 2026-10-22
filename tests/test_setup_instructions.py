@@ -56,6 +56,17 @@ class SetupContractTests(unittest.TestCase):
             if fragment != "evalidate":
                 self.assertIn(fragment, setup)
 
+    def test_provider_nested_folder_contract(self):
+        setup = SETUP.read_text(encoding="utf-8")
+        installer = INSTALLER.read_text(encoding="utf-8")
+        setup_skill = SETUP_SKILL.read_text(encoding="utf-8")
+        self.assertIn("power-bi-architect/dax-measure-standards-review/", setup)
+        self.assertIn('PROVIDER_DIR = "power-bi-architect"', installer)
+        self.assertIn('select_skills_dir(project, skills_dir) / PROVIDER_DIR / "dax-measure-standards-review"', installer)
+        self.assertIn("power-bi-architect/dax-measure-standards-review/", setup_skill)
+        self.assertIn(".cursor/skills/power-bi-architect/dax-measure-standards-review", setup)
+        self.assertNotIn(".cursor/skills/dax-measure-standards-review/SKILL.md", setup)
+
     def test_readonly_source_and_private_report(self):
         s = SETUP.read_text(encoding="utf-8")
         self.assertIn("EVALUATE INFO.VIEW.MEASURES()", s)
