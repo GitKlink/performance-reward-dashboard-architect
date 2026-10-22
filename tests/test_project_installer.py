@@ -19,7 +19,8 @@ class ProjectLocalInstallTests(unittest.TestCase):
             Path(".agents/skills/dax-measure-standards-review/SKILL.md"): b"some skills\n",
             Path("docs/power-bi-architect/README.md"): b"local docs\n",
             Path("docs/power-bi-architect/installation.json"): b'{"schema_version":"test"}\n',
-        }, {"architect_git_sha": "a" * 40, "standards_git_sha": "b" * 40}
+        }, {"architect_git_sha": "a" * 40, "standards_git_sha": "b" * 40,
+            "skills_dir": ".agents/skills"}
 
     def test_plan_does_not_write_and_apply_adds_to_existing_project(self):
         with tempfile.TemporaryDirectory() as base:
