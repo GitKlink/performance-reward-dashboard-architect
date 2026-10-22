@@ -5,7 +5,7 @@ description: Review exported Power BI DAX measures against the canonical Semanti
 
 # DAX Measure Standards Review — v0
 
-**Purpose:** review a Power BI semantic-model measure inventory and propose changes **without editing DAX, TMDL, model files or standards**. This is the first vertical slice of the Architect architect, not a full validator.
+**Purpose:** review a Power BI semantic-model measure inventory and propose changes **without editing DAX, TMDL, model files or standards**. This is the first vertical slice of the Power BI / Fabric Architect, not a full validator.
 
 ## Required sources and order
 
