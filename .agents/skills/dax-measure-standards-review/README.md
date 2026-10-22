@@ -5,7 +5,7 @@ The read-only Python checker analyses a measure-metadata CSV export. A Cursor-co
 ## Requirements
 
 - Python 3.10+ and Git
-- A locally accessible **private** clone of `GitKlink/power-bi-fabric-standards`
+- A locally accessible **public canonical** clone of `GitKlink/power-bi-fabric-standards`
 - Standards checkout pinned to SHA `2d6eb0c2dd627b7607c0ad28a4ea6866e5427aa9` with clean `semantic-model/` folder
 - A CSV containing at least `Name`, ideally from Power BI DAX Query View:
 
