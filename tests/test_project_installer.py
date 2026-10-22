@@ -84,6 +84,28 @@ class ProjectLocalInstallTests(unittest.TestCase):
                 with self.assertRaisesRegex(installer.InstallError, "symlink"):
                     installer.install(project, root / "standards", apply=True)
 
+
+    def test_uses_existing_cursor_skills_folder(self):
+        with tempfile.TemporaryDirectory() as base:
+            project = Path(base)
+            (project / ".cursor/skills/unrelated").mkdir(parents=True)
+            self.assertEqual(installer.select_skills_dir(project), Path(".cursor/skills"))
+            self.assertEqual(installer.select_skills_dir(project, ".agents/skills"), Path(".agents/skills"))
+
+    def test_both_skills_folders_require_explicit_choice(self):
+        with tempfile.TemporaryDirectory() as base:
+            project = Path(base)
+            (project / ".cursor/skills").mkdir(parents=True)
+            (project / ".agents/skills").mkdir(parents=True)
+            with self.assertRaisesRegex(installer.InstallError, "choose one"):
+                installer.select_skills_dir(project)
+            self.assertEqual(installer.select_skills_dir(project, ".cursor/skills"),
+                             Path(".cursor/skills"))
+
+    def test_defaults_to_agents_skills_when_none_exist(self):
+        with tempfile.TemporaryDirectory() as base:
+            self.assertEqual(installer.select_skills_dir(Path(base)), Path(".agents/skills"))
+
     def test_git_blob_is_deterministic(self):
         self.assertEqual(
             installer.blob_sha(b"test\n"),
