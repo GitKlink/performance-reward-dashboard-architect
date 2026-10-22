@@ -123,9 +123,52 @@ List exact installed folders, source SHAs and any blockers. Do not claim B/C
 unless you observed the corresponding results. Never overwrite existing skills,
 standards, reports, project instructions or Power BI files.
 
-## Updating
+## Updating an existing project-local installation
 
-The current installer is **additive and fail-closed**; it does not implement
-an automatic updater. Keep the installed manifest, compare versions against
-the upstream Git sources and plan a separately approved migration if versions
-change. Do not replace modified project-owned files or relax source locks.
+If `docs/power-bi-architect/installation.json` already exists, **do not
+run the first-time installer**. Follow the project-local update procedure:
+
+1. Inspect the *actual currently open Power BI project*, its installation
+   manifest and its local modifications. Preserve `matt-pocock`,
+   `skills-for-fabric`, other provider skills and all project-owned files.
+2. Confirm the local Architect source changes are **committed**, with clean
+   tracked skill files, and locate the compatible pinned Standards checkout.
+   The source lock must remain consistent with the reviewer's `BASELINE_SHA`.
+   Standards revisions may advance only through a separately reviewed
+   source-lock and checker update.
+3. **Plan without writing** from the Architect source root:
+
+   ```sh
+   python scripts/update_project.py --project "<TARGET_PROJECT>" --standards-repo "<PINNED_STANDARDS_CLONE>"
+   ```
+
+4. Summarise each `add`, `replace` or `remove`, both source SHAs,
+   manifest change, and the complete **64-character plan ID**. Clearly
+   identify removals. If the command blocks because the user edited an
+   installed file or a project-owned path conflicts, do **not** delete or
+   overwrite it automatically. Stop and request a reviewed resolution.
+5. **Ask for user approval**. Do not treat a previous project's approval
+   as approval for this plan, even if the same source revisions are used.
+6. After explicit approval, apply **only that exact plan**:
+
+   ```sh
+   python scripts/update_project.py --project "<TARGET_PROJECT>" --standards-repo "<PINNED_STANDARDS_CLONE>" --apply --expected-plan-id "<APPROVED_PLAN_ID>"
+   ```
+
+   The command recomputes the plan and blocks if files or source revisions
+   changed. It refuses relocation of the existing skill root and never
+   modifies unrelated skills, rules, project instructions or model assets.
+   Source-based removals only apply to unchanged, previously managed files.
+7. Verify the installed `docs/power-bi-architect/installation.json` now
+   records the new Architect/Standards SHA. Reopen **only the project** in
+   Cursor; run the installed synthetic DAX review command from section 4.
+   Confirm `review.json` was produced from
+   `standards.verification=pinned_project_copy`. The installed skills must
+   still work independently of the source clones.
+8. Report the update result, managed file changes, local Cursor discovery
+   and actual Power BI inventory results as *separate* validations.
+
+Updates are **opt-in per Power BI project**, not automatic. Do not invent
+an auto-updater or claim that the current installer updates every project
+which once received a skill. The source repositories remain authoritative.
+
