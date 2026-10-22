@@ -57,10 +57,61 @@ def git(root: Path, *args: str) -> str:
     return result.stdout.strip()
 
 
+def git_blob_sha(data: bytes) -> str:
+    """Compute Git's object SHA-1 for bytes without requiring a Git repository."""
+    return hashlib.sha1(b"blob " + str(len(data)).encode("ascii") + b"\\0" + data).hexdigest()
+
+
+def verify_installed_snapshot(root: Path, domain: str | None) -> dict:
+    """Verify a project-local copy against the approved Git blob lock in this skill.
+
+    The installation manifest is provenance, not the trust anchor. The source lock
+    pinned inside the reviewed skill separately fixes each source Git blob.
+    """
+    try:
+        manifest = json.loads((root / "source-manifest.json").read_text(encoding="utf-8"))
+        lock = json.loads((
+            Path(__file__).resolve().parent.parent / "references/source-lock.json"
+        ).read_text(encoding="utf-8"))
+    except (OSError, ValueError, json.JSONDecodeError) as exc:
+        raise ReviewError("Installed standards provenance manifest/lock is unreadable.") from exc
+    if (manifest.get("schema_version") != "power-bi-fabric-standards-snapshot-v1" or
+            lock.get("schema_version") != "power-bi-fabric-standards-source-lock-v1" or
+            manifest.get("repo") != SOURCE_REPO or lock.get("repo") != SOURCE_REPO or
+            manifest.get("git_sha") != BASELINE_SHA or lock.get("git_sha") != BASELINE_SHA):
+        raise ReviewError("Installed standards provenance is incompatible with the reviewer pin.")
+    expected = lock.get("files")
+    hashes = manifest.get("files_sha256")
+    if not isinstance(expected, dict) or not isinstance(hashes, dict) or set(expected) != set(hashes):
+        raise ReviewError("Installed standards manifest lists an unexpected set of documents.")
+    for rel, expected_blob in expected.items():
+        p = Path(rel)
+        if p.is_absolute() or ".." in p.parts or not p.parts or p.parts[0] != "semantic-model":
+            raise ReviewError("Unsafe path in source lock.")
+        candidate = root / p
+        if not candidate.is_file() or candidate.is_symlink():
+            raise ReviewError("Installed canonical standard missing or symlinked: " + rel)
+        raw = candidate.read_bytes()
+        if (git_blob_sha(raw) != expected_blob or
+                hashlib.sha256(raw).hexdigest() != hashes[rel]):
+            raise ReviewError("Installed standard differs from pinned canonical source: " + rel)
+
+    selected = list(SOURCE_FILES)
+    if domain:
+        selected.append("semantic-model/domains/" + DOMAIN_FILES[domain])
+    return {
+        "repo": SOURCE_REPO, "git_sha": BASELINE_SHA,
+        "verification": "pinned_project_copy",
+        "files_sha256": {rel: hashes[rel] for rel in selected},
+    }
+
+
 def verify_source(root: Path, domain: str | None) -> dict:
     root = root.resolve()
     if not root.is_dir():
         raise ReviewError("Standards directory does not exist. Clone the canonical standards repository.")
+    if (root / "source-manifest.json").is_file():
+        return verify_installed_snapshot(root, domain)
     if Path(git(root, "rev-parse", "--show-toplevel")).resolve() != root:
         raise ReviewError("Provide the standards repository root, not a nested folder.")
     actual = git(root, "rev-parse", "HEAD")
@@ -286,7 +337,7 @@ def run(args: argparse.Namespace) -> dict:
 def main(argv=None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--input", type=Path, required=True, help="UTF-8 CSV measure inventory")
-    parser.add_argument("--standards-root", type=Path, required=True, help="Canonical standards Git clone")
+    parser.add_argument("--standards-root", type=Path, required=True, help="Pinned standards Git clone or installed docs/power-bi-architect/standards snapshot")
     parser.add_argument("--domain", choices=sorted(DOMAIN_FILES))
     parser.add_argument("--out-dir", type=Path, required=True, help="Private/local report directory")
     args = parser.parse_args(argv)
