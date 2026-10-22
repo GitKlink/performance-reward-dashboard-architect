@@ -14,7 +14,7 @@ Find my local clones/performance-reward-dashboard-architect/SETUP.md
 and follow its local setup-power-bi-architect/SKILL.md.
 Inspect the project and upstream clones. Show the proposed project-local files
 and exact dry-run plan. Ask for my approval before writing any files.
-Install the reviewer into this project's existing .agents/skills/ folder,
+Install the reviewer as a child folder inside this project's EXISTING skill directory\n(.agents/skills/ or .cursor/skills/),
 and copy the pinned standards into its docs/power-bi-architect/standards/ folder.
 Verify the installed reviewer can run using only those installed project files.
 Do not overwrite existing files or modify a Power BI model.
@@ -67,7 +67,7 @@ the project copy is an **installed, versioned snapshot**, not a second authoring
   A newer existing clone must be left intact; propose a separate pinned clone.
 - Run the deterministic installer's **dry-run first**, show its output, then
   obtain approval before `--apply`.
-- Copies are **new, additive files only**; existing project skills, docs,
+- The installer **detects the project's existing skills root**: `.agents/skills`\n  or `.cursor/skills`; if both exist, Cursor must ask which one to use and\n  pass `--skills-dir`. If neither exists, `.agents/skills` is the default.\n- Copies are **new, additive files only**; existing project skills, docs,
   `AGENTS.md`, `.cursor/rules`, PBIP/TMDL, and model assets are preserved.
   Rerunning on an identical installation is a no-op. A changed or partial
   installation blocks instead of silently overwriting anything.
