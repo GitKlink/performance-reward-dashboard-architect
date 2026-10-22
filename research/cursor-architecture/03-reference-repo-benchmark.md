@@ -6,7 +6,7 @@
 > **Research date:** 2026-09-16 (Pacific/Auckland)  
 > **Durable target:** `research/cursor-architecture/03-reference-repo-benchmark.md`  
 > **Status:** Research complete and persisted to the repository.  
-> **Decision status:** Evidence benchmark only. This document does **not** select the final Power BI / Fabric Power BI / Fabric Architect architecture; R8 remains the synthesis/decision point.
+> **Decision status:** Evidence benchmark only. This document does **not** select the final Power BI / Fabric Architect architecture; R8 remains the synthesis/decision point.
 
 ## 1. Research scope
 
