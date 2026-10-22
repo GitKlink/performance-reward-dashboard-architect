@@ -6,6 +6,8 @@ on:
       - ".agents/skills/dax-measure-standards-review/**"
       - "tests/test_dax_measure_reviewer.py"
       - "tests/test_setup_instructions.py"
+      - "tests/test_project_installer.py"
+      - "scripts/install_into_project.py"
       - ".agents/skills/setup-power-bi-architect/**"
       - "SETUP.md"
       - "README.md"
@@ -16,6 +18,8 @@ on:
       - ".agents/skills/dax-measure-standards-review/**"
       - "tests/test_dax_measure_reviewer.py"
       - "tests/test_setup_instructions.py"
+      - "tests/test_project_installer.py"
+      - "scripts/install_into_project.py"
       - ".agents/skills/setup-power-bi-architect/**"
       - "SETUP.md"
       - "README.md"
@@ -35,7 +39,7 @@ jobs:
       - name: Unit tests (synthetic; no private model data)
         run: python -m unittest discover -s tests -p 'test_*.py' -v
       - name: Syntax compile
-        run: python -m py_compile .agents/skills/dax-measure-standards-review/scripts/review_measures.py
+        run: python -m py_compile .agents/skills/dax-measure-standards-review/scripts/review_measures.py scripts/install_into_project.py
 
       - name: Fetch public canonical standards at reviewed pinned SHA
         uses: actions/checkout@v4
@@ -63,3 +67,52 @@ jobs:
           assert Path("/tmp/power-bi-architect-review-smoke/review.md").is_file()
           print("Synthetic pinned-standards smoke test passed. No real model data was used.")
           PY
+
+      - name: Project-local install, idempotence and independent review smoke test
+        shell: bash
+        run: |
+          set -eu
+          project="/tmp/power-bi-architect-test-project"
+          mkdir -p "$project/.agents/skills/existing-skill"
+          echo "existing" > "$project/.agents/skills/existing-skill/SKILL.md"
+          python scripts/install_into_project.py --project "$project" --standards-repo standards-pinned
+          test ! -e "$project/docs/power-bi-architect/installation.json"
+          python scripts/install_into_project.py --project "$project" --standards-repo standards-pinned --apply
+          test "$(cat "$project/.agents/skills/existing-skill/SKILL.md")" = "existing"
+          (
+            cd "$project"
+            python .agents/skills/dax-measure-standards-review/scripts/review_measures.py \
+              --input .agents/skills/dax-measure-standards-review/examples/measure-inventory.synthetic.csv \
+              --standards-root docs/power-bi-architect/standards \
+              --domain variable_reward \
+              --out-dir /tmp/power-bi-architect-installed-smoke
+          )
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          project = Path("/tmp/power-bi-architect-test-project")
+          result = json.loads(Path("/tmp/power-bi-architect-installed-smoke/review.json").read_text())
+          install = json.loads((project/"docs/power-bi-architect/installation.json").read_text())
+          assert result["standards"]["verification"] == "pinned_project_copy"
+          assert result["standards"]["git_sha"] == "2d6eb0c2dd627b7607c0ad28a4ea6866e5427aa9"
+          assert result["schema_version"] == "power-bi-fabric-architect-dax-measure-review-v1"
+          assert result["measures"] == 4 and len(result["findings"]) == 6
+          assert install["capabilities"] == ["dax-measure-standards-review"]
+          assert len(install["installed_assets_sha256"]) >= 18
+          print("Project-local install and independent reviewer smoke test passed.")
+          PY
+          python scripts/install_into_project.py --project "$project" --standards-repo standards-pinned --apply | grep 'ALREADY INSTALLED'
+          echo "tamper" >> "$project/docs/power-bi-architect/standards/semantic-model/business_glossary.md"
+          if (
+              cd "$project"
+              python .agents/skills/dax-measure-standards-review/scripts/review_measures.py \
+                --input .agents/skills/dax-measure-standards-review/examples/measure-inventory.synthetic.csv \
+                --standards-root docs/power-bi-architect/standards \
+                --domain variable_reward \
+                --out-dir /tmp/power-bi-architect-tamper-smoke
+          ); then
+            echo "ERROR: tampered standard was accepted"
+            exit 1
+          fi
+          test ! -e /tmp/power-bi-architect-tamper-smoke/review.json
+          echo "Tamper rejection passed."
