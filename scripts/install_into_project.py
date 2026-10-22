@@ -103,6 +103,16 @@ def build_files(project: Path, standards_repo: Path) -> tuple[dict[Path, bytes],
             raise InstallError("Architect skill source differs from committed bytes: " + str(rel))
         payload[rel] = raw
 
+    # Ship a harmless test input with the skill so it can be verified again
+    # when the Architect source repository is no longer part of the workspace.
+    fixture_source = Path("examples/dax-measure-review/measure-inventory.synthetic.csv")
+    fixture = checked_file(ROOT, fixture_source)
+    if git(ROOT, "hash-object", "--", fixture_source.as_posix()) != git(
+        ROOT, "rev-parse", "HEAD:" + fixture_source.as_posix()
+    ):
+        raise InstallError("Synthetic fixture differs from committed Architect source.")
+    payload[SKILL / "examples/measure-inventory.synthetic.csv"] = fixture
+
     std_sha256 = {}
     for path, expected_blob in sorted(lock["files"].items()):
         rel = Path(path)
