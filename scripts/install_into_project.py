@@ -155,7 +155,7 @@ def build_files(project: Path, standards_repo: Path,
         "# Power BI / Fabric Architect: installed project assets\n\n"
         "This is a **project-local installed snapshot**; the source repositories "
         "remain authoritative. Do not edit the copied standards.\n\n"
-        "- Skill: `.agents/skills/dax-measure-standards-review/SKILL.md`\n"
+        "- Skill: `" + (destination_skill / "SKILL.md").as_posix() + "`\n"
         "- Source provenance: `docs/power-bi-architect/installation.json`\n"
         "- Standards manifest: `standards/source-manifest.json`\n"
         "- Standards read order: `standards/semantic-model/README.md`, "
