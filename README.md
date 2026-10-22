@@ -5,8 +5,8 @@ A Cursor-first, composed analytics-engineering capability for building and revie
 ## Install into an existing Power BI project
 
 The Architect is **installed as version-pinned copies inside your current project**:
-the DAX reviewer goes in the project's existing
-`.agents/skills/dax-measure-standards-review/` folder; copied canonical
+the DAX reviewer goes under whichever project skill root already exists,
+`.agents/skills/` or `.cursor/skills/`, in the `dax-measure-standards-review/` subfolder. Copied canonical
 documents go under `docs/power-bi-architect/standards/semantic-model/`.
 The source repositories do **not** need to remain open in Cursor afterwards.
 
