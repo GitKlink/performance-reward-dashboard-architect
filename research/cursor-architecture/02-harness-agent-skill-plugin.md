@@ -3,7 +3,7 @@
 > **Terminology correction (2026-10-22):** The project is the **Power BI / Fabric Architect**. **Wayfinder** is Matt Pocock's planning skill used during research, not the project name. Original issue/PR titles may retain historical wording. The evidence and technical conclusions are unchanged. References to private standards describe the repository's earlier visibility; it became public on 2026-10-22.
 
 **Research ticket:** GitHub issue #12 — *Research R2: Harness vs agent vs skill vs plugin architecture*  
-**Programme:** Power BI / Fabric Power BI / Fabric Architect architecture — Power BI / Fabric analytical-product architect ecosystem  
+**Programme:** Power BI / Fabric Architect architecture — Power BI / Fabric analytical-product architect ecosystem  
 **Evidence snapshot:** 16 September 2026  
 **Durable target:** `research/cursor-architecture/02-harness-agent-skill-plugin.md`  
 **Status:** Architectural research and classification. **Not the final target-architecture decision.**
