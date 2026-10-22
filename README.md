@@ -2,13 +2,28 @@
 
 A Cursor-first, composed analytics-engineering capability for building and reviewing Power BI/Fabric analytical products. The project coordinates engineering policy, Performance & Reward domain meaning, reusable native implementations, and Microsoft-maintained platform skills without copying their canonical sources.
 
-## Setup for your first DAX review
+## Install into an existing Power BI project
 
-**No custom installer or plugin is required.** Point a local Cursor AI agent at the [AI-readable setup instructions](SETUP.md), then have it follow the [`setup-power-bi-architect` skill](.agents/skills/setup-power-bi-architect/SKILL.md). It inspects existing local repositories, proposes changes for approval, verifies the canonical standards Git pin, runs unit and synthetic CLI tests, and prepares the real Power BI CSV export step.
+The Architect is **installed as version-pinned copies inside your current project**:
+the DAX reviewer goes in the project's existing
+`.agents/skills/dax-measure-standards-review/` folder; copied canonical
+documents go under `docs/power-bi-architect/standards/semantic-model/`.
+The source repositories do **not** need to remain open in Cursor afterwards.
 
-**Paste into Cursor Agent:** `Read https://github.com/GitKlink/performance-reward-dashboard-architect/blob/main/SETUP.md and follow the linked setup-power-bi-architect skill. Inspect first, propose changes for my approval, and do not edit any semantic model.`
+**[AI-readable setup instructions](SETUP.md)** explain the safe
+**inspect → dry-run → user approval → project-local copy → verify** flow.
+The [`setup-power-bi-architect` skill](.agents/skills/setup-power-bi-architect/SKILL.md)
+and deterministic [project installer](scripts/install_into_project.py) implement it.
 
-The setup is agent-driven documentation; no local Cursor discovery, installation, PBIP model review or private data test is claimed until actually performed on a user's machine.
+Paste into **Cursor Agent**, with the actual Power BI project open:
+`Read the LOCAL clones/performance-reward-dashboard-architect/SETUP.md, inspect my current Power BI project, propose a project-local installation, and ask my approval before copying any skills or standards.`
+Cursor must discover the real `clones` directory rather than assume a
+drive/path. Existing skills, docs, AGENTS.md and model files remain untouched.
+
+The first packaged capability is the read-only DAX measure reviewer.
+No global CLI, plugin marketplace, Microsoft Fabric skill bundle or automatic
+updater is installed. Source documents stay authoritative upstream; the
+installed copies are pinned snapshots with integrity/provenance manifests.
 
 ## First implementation: DAX Measure Standards Reviewer (MVP)
 
@@ -19,7 +34,7 @@ The setup is agent-driven documentation; no local Cursor discovery, installation
 - [Coverage and limitations](.agents/skills/dax-measure-standards-review/references/check-coverage.md)
 - [Synthetic example inventory](examples/dax-measure-review/measure-inventory.synthetic.csv)
 
-This first read-only workflow checks a **CSV measure inventory** (exported with `EVALUATE INFO.VIEW.MEASURES()`) for a limited set of naming/metadata findings, then produces Markdown/JSON reports for a human-reviewed refactor proposal. It does **not** edit the model, compile DAX, understand all business metrics, or prove full standards conformance. Real-model, local skill-discovery and pinned Git-checkout integration tests remain to be completed.
+This first read-only workflow checks a **CSV measure inventory** (exported with `EVALUATE INFO.VIEW.MEASURES()`) for a limited set of naming/metadata findings, then produces Markdown/JSON reports for a human-reviewed refactor proposal. It does **not** edit the model, compile DAX, understand all business metrics, or prove full standards conformance. Local Cursor discovery and real-model integration still require a user pilot; source checkout and installed-copy synthetic verification are CI-tested.
 
 ## Repository authorities
 
