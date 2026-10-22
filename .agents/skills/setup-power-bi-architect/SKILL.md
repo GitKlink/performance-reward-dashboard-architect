@@ -27,6 +27,7 @@ rather than assuming a drive or home location.
   newer, propose a separate pinned clone; **never** detach/reset their existing one.
 - Identify existing `.agents/skills/`, `.cursor/skills/`, `docs/`, `AGENTS.md`, `.cursor/` and any
   `docs/power-bi-architect/installation.json`; preserve all existing contents.
+- Verify the project expects skills grouped by **provider folder**, then by skill name. Never place a DAX reviewer directly under the root skills directory.
 - Confirm Git and Python 3.10+ are available. Do not assume Power BI tools or a
   Python environment is already installed inside the target project.
 - Check for directory and file collisions; verify target is not Architect/Standards.
@@ -43,14 +44,14 @@ python scripts/install_into_project.py --project "<OPEN_POWER_BI_PROJECT_ABSOLUT
 
 Show the user exactly what the installer will create, why, and whether their
 project has pre-existing files. The installer adds only:
-- `.agents/skills/dax-measure-standards-review/` including SKILL.md, the Python
+- `<existing-skills-root>/power-bi-architect/dax-measure-standards-review/` including SKILL.md, the Python
   checker, references, source lock and small synthetic example;
 - `docs/power-bi-architect/standards/semantic-model/` with copied core standards,
   glossary, domain extensions and non-normative backlog;
 - provenance manifests and a short `docs/power-bi-architect/README.md`.
 
-The user should be able to continue using unrelated skills in the existing
-`.agents/skills/` folder. No new `AGENTS.md` or `.cursor/rules` are needed.
+The user must be able to continue using unrelated skills under the existing
+`.agents/skills/` or `.cursor/skills/` root. Keep any `matt-pocock`, `skills-for-fabric` and other provider folders untouched.\nThe `power-bi-architect` parent is a provider label, not a skill itself;\nsubsequent Architect capabilities receive sibling folders beneath it. No new `AGENTS.md` or `.cursor/rules` are needed.
 
 **Get approval before creating clones, files or project configuration.** Do not
 silently install globally, update the Architect clone or modify any PBIP model.
@@ -81,10 +82,11 @@ which source Architect and Standards Git revisions produced its copy.
 - Close other source roots or open **only the target project** in local Cursor,
   and confirm `dax-measure-standards-review` appears in Cursor Skills. If that
   cannot be inspected, state **not verified**.
-- Run the synthetic checker from the **target project root**. The example\n  uses `.agents/skills`; substitute `.cursor/skills` when the installer selected it:
+- Run the synthetic checker from the **target project root**. The example
+  uses `.cursor/skills` as in EOY-REWARD-DASHBOARD; substitute `.agents/skills` if that is the project's existing root:
 
 ```sh
-python .agents/skills/dax-measure-standards-review/scripts/review_measures.py --input ".agents/skills/dax-measure-standards-review/examples/measure-inventory.synthetic.csv" --standards-root "docs/power-bi-architect/standards" --domain variable_reward --out-dir "<NEW_PRIVATE_REPORT_DIR>"
+python .cursor/skills/power-bi-architect/dax-measure-standards-review/scripts/review_measures.py --input ".cursor/skills/power-bi-architect/dax-measure-standards-review/examples/measure-inventory.synthetic.csv" --standards-root "docs/power-bi-architect/standards" --domain variable_reward --out-dir "<NEW_PRIVATE_REPORT_DIR>"
 ```
 
 - Inspect `review.json` and `review.md`: `schema_version` equals
