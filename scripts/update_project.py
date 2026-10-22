@@ -181,13 +181,15 @@ def apply_plan(project: Path, plan: dict, payload: dict[Path, bytes], old_bytes:
                 staged[rel] = Path(stream.name)
         # Complete each atomic per-file replace. Manifest is ALWAYS the last write.
         for rel in sorted(set(writes) - {MANIFEST}):
-            os.replace(staged.pop(rel), project / rel)
+            os.replace(staged[rel], project / rel)
+            del staged[rel]
             changed.append(rel)
         for rel in removals:
             (project / rel).unlink()
             changed.append(rel)
         if MANIFEST in staged:
-            os.replace(staged.pop(MANIFEST), project / MANIFEST)
+            os.replace(staged[MANIFEST], project / MANIFEST)
+            del staged[MANIFEST]
             changed.append(MANIFEST)
     except Exception:
         # Restore only bytes known to have been owned by us before starting;
