@@ -12,7 +12,7 @@ Use [Architect SETUP.md](../../../SETUP.md) **from a local Architect clone**
 to install into the **Power BI project currently open in Cursor**.
 The installer runs a dry-run first and asks approval to create:
 
-- `.agents/skills/dax-measure-standards-review/` (this directory).
+- `<project's existing skills root>/power-bi-architect/dax-measure-standards-review/` (this directory; the root can be `.cursor/skills` or `.agents/skills`).
 - `docs/power-bi-architect/standards/semantic-model/` (copied standards).
 - `docs/power-bi-architect/installation.json` and
   `docs/power-bi-architect/standards/source-manifest.json` (provenance).
@@ -34,10 +34,10 @@ Save a UTF-8 CSV **privately**, ideally including `Name`, `Table`,
 `DisplayFolder` and optionally `Expression`. The only required column is
 `Name`; absent optional fields are flagged as **not evaluated**.
 
-From the **target Power BI project root**:
+From the **target Power BI project root** (the example uses `.cursor/skills`; substitute `.agents/skills` when appropriate):
 
 ~~~powershell
-python .agents/skills/dax-measure-standards-review/scripts/review_measures.py --input "C:\\private\\measure-inventory.csv" --standards-root "docs/power-bi-architect/standards" --domain variable_reward --out-dir "C:\\private\\dax-measure-review"
+python .cursor/skills/power-bi-architect/dax-measure-standards-review/scripts/review_measures.py --input "C:\\private\\measure-inventory.csv" --standards-root "docs/power-bi-architect/standards" --domain variable_reward --out-dir "C:\\private\\dax-measure-review"
 ~~~
 
 Reports are `review.md` and `review.json` in your chosen private directory.
@@ -46,10 +46,10 @@ Return 2 blocks on invalid CSV or unverifiable standards.
 
 ## Test without Power BI data
 
-From the **target project root** (the synthetic fixture is installed with the skill):
+From the **target project root** (the synthetic fixture is installed with the skill; substitute `.agents/skills` when appropriate):
 
 ~~~powershell
-python .agents/skills/dax-measure-standards-review/scripts/review_measures.py --input ".agents/skills/dax-measure-standards-review/examples/measure-inventory.synthetic.csv" --standards-root "docs/power-bi-architect/standards" --domain variable_reward --out-dir "C:\\private\\synthetic-review"
+python .cursor/skills/power-bi-architect/dax-measure-standards-review/scripts/review_measures.py --input ".cursor/skills/power-bi-architect/dax-measure-standards-review/examples/measure-inventory.synthetic.csv" --standards-root "docs/power-bi-architect/standards" --domain variable_reward --out-dir "C:\\private\\synthetic-review"
 ~~~
 
 The reviewer validates copied documents against an approved, immutable
