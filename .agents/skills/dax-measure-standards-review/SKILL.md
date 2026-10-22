@@ -13,6 +13,7 @@ description: Review exported Power BI DAX measures against the canonical Semanti
 2. **Prefer the installed project-local standards snapshot**:
    `docs/power-bi-architect/standards/`, recorded in
    `docs/power-bi-architect/installation.json`.
+   The installed skill lives under the provider folder `power-bi-architect`, followed by `dax-measure-standards-review`.
    The snapshot and this skill are copied from approved Git repositories and
    pinned to Standards SHA `2d6eb0c2dd627b7607c0ad28a4ea6866e5427aa9`.
    The checker validates **all 11 source Git blobs** against the immutable source
@@ -55,11 +56,11 @@ An existing export with equivalent columns is acceptable; inspect its header and
 
 ## Run the deterministic checker
 
-From the **target Power BI project root**, with Python 3.10+ (and
+From the **target Power BI project root**, with Python 3.10+ (example uses `.cursor/skills`; substitute `.agents/skills` if selected), and
 `docs/power-bi-architect/standards/` installed), run:
 
 ~~~powershell
-python .agents/skills/dax-measure-standards-review/scripts/review_measures.py --input "C:\\private\\measure-inventory.csv" --standards-root "docs/power-bi-architect/standards" --domain variable_reward --out-dir "C:\\private\\dax-measure-review"
+python .cursor/skills/power-bi-architect/dax-measure-standards-review/scripts/review_measures.py --input "C:\\private\\measure-inventory.csv" --standards-root "docs/power-bi-architect/standards" --domain variable_reward --out-dir "C:\\private\\dax-measure-review"
 ~~~
 
 The checker **reads** the CSV and immutable copied standards, and writes only
