@@ -1,118 +1,129 @@
 ---
 name: setup-power-bi-architect
-description: Set up a local Cursor workspace to use the Power BI / Fabric Architect's read-only DAX Measure Standards Reviewer with a pinned canonical standards checkout. Run once before first use. Inspect, propose, confirm, apply and verify.
+description: Install version-pinned copies of approved Power BI / Fabric Architect skills and canonical standards into the currently open Power BI project. Inspect, plan, approve, install and verify.
 disable-model-invocation: true
 ---
 
-# Setup Power BI / Fabric Architect
+# Install Power BI / Fabric Architect into this project
 
-This is a **prompt-driven setup skill**, not an installation executable. It uses the coding agent's ordinary local file/Git/terminal tools. Model the flow on Matt Pocock's `setup-matt-pocock-skills`: **explore → propose → confirm → make minimal changes → verify**.
+This is the **user-invoked setup procedure**, not a custom global CLI.
+Unlike the first environment-only pilot, this installs a **self-contained
+project-local copy** so the Power BI project can be reopened independently.
+Only the first capability, `dax-measure-standards-review`, is supported today.
 
-Only install the **first usable DAX measure-review vertical slice**, not a hypothetical full agent ecosystem or a plugin marketplace. Do not rename this product Wayfinder. Do **not** edit Power BI/PBIP/DAX/TMDL files.
+**Read `../../../SETUP.md` from the LOCAL Architect clone in full** before acting,
+then read `../dax-measure-standards-review/SKILL.md`.
+The Architect clone may be in a folder called `clones`, but find its true path
+rather than assuming a drive or home location.
 
-## 0. Source, scope and prerequisites
+## 1. Explore without writing anything
 
-Read these files from the **Architect repository** before making changes:
-1. [`SETUP.md`](../../../SETUP.md) (root relative to this skill).
-2. [DAX reviewer instructions](../dax-measure-standards-review/SKILL.md).
-3. [DAX reviewer quick start](../dax-measure-standards-review/README.md).
-4. [Rule coverage and omissions](../dax-measure-standards-review/references/check-coverage.md).
+- Determine **which currently open folder is the target Power BI project**.
+  If Cursor has opened a parent `clones` folder or several roots, confirm the
+  specific PBIP/project directory, not a source repository.
+- Locate the local Architect checkout containing `scripts/install_into_project.py`.
+- Locate a local `GitKlink/power-bi-fabric-standards` checkout at approved SHA
+  `2d6eb0c2dd627b7607c0ad28a4ea6866e5427aa9`. If the user's checkout is
+  newer, propose a separate pinned clone; **never** detach/reset their existing one.
+- Identify existing `.agents/skills/`, `docs/`, `AGENTS.md`, `.cursor/` and any
+  `docs/power-bi-architect/installation.json`; preserve all existing contents.
+- Confirm Git and Python 3.10+ are available. Do not assume Power BI tools or a
+  Python environment is already installed inside the target project.
+- Check for directory and file collisions; verify target is not Architect/Standards.
+- Never upload proprietary CSV, DAX formulas, PBIP files or report outputs to GitHub.
 
-The two required repositories:
-- **Architect**: `GitKlink/performance-reward-dashboard-architect`, owns this setup skill, read-only checker and architecture workflows.
-- **Standards**: `GitKlink/power-bi-fabric-standards`, the public **canonical engineering-policy authority**.
-- **DAX/M Library**: optional and **not required** for this first DAX review.
+## 2. Plan and request approval
 
-Pinned compatible Standards revision: `2d6eb0c2dd627b7607c0ad28a4ea6866e5427aa9`. This is the revision enforced by `dax-measure-standards-review/scripts/review_measures.py`. Never silently replace the pin with `main`.
+From the **local Architect repository root**, use the deterministic installer
+in **dry-run** mode:
 
-In scope: **local Cursor Agent** with Git and Python 3.10+; use a synthetic fixture before any real private measure inventory. Do not claim remote Cursor Cloud Agent/multi-root/CI support was established. Cursor should discover the reviewer from the Architect repository's `.agents/skills/`.
-
-## 1. Explore existing environment (no writes)
-
-- Identify the workspace/project folder and whether the user wants **first synthetic review only** (default) or integration into a real Power BI/PBIP project (optional).
-- Check the host: local Cursor Agent vs remote/cloud; stop or give supported alternatives if remote/cloud cannot access required local files.
-- Inspect available `git`, `python` (`py -3` on Windows if relevant), permissions and usable local storage.
-- Find an existing Architect clone, Standards clone and optional PBIP project. Inspect each repository's **remote origin**, `HEAD`, working tree cleanliness and `git status`. Do not change branches, stash, reset, clean, force-pull or remove directories.
-- Check whether skill `dax-measure-standards-review` is already installed/discovered or conflicts with another same-named skill. Cursor supports project skills under `.agents/skills/<name>/SKILL.md` and `.cursor/skills/<name>/SKILL.md`; don't create duplicate copies.
-- Check for a **read-only, private report destination** outside the source repositories. If the chosen path exists, inspect it and avoid overwriting `review.md` or `review.json`.
-
-## 2. Propose a minimal setup plan (human confirmation gate)
-
-Present a concise plan with:
-1. Host, Python/Git results, and what already exists.
-2. Exact chosen folder for the Architect checkout, and Standards clone at the **pinned** revision.
-3. Whether any Git clone, new directory or workspace file is proposed.
-4. How Cursor will discover the skill (preferred: open Architect as a local workspace root, including the optional PBIP folder as a second root). **Do not copy the reviewer skill or create a global installation by default.**
-5. Expected test commands and private report output path.
-6. Any unresolved permissions or model data sensitivity.
-
-**Pause for approval** before writes, including Git clones, generated workspace files, or changes to existing project instructions. Do not ask questions already answered by local inspection. If a good checkout exists, reuse it. If not, propose a **new, distinct local path**, never overwrite the existing folder.
-
-## 3. Apply *only* approved setup changes
-
-- Clone missing repositories from the public GitHub sources **after approval**. Never execute a remote script via `curl | bash` or equivalent.
-- If an **existing** Standards checkout is at a different SHA, **do not detach or reset it**. Create a *separate* pinned checkout, preferably a fresh clone with its own distinct folder. If the existing checkout is exactly at the pin with clean `semantic-model/`, reuse it.
-- For a **newly cloned and clean** Standards checkout only, run `git switch --detach 2d6eb0c2dd627b7607c0ad28a4ea6866e5427aa9` and verify `git rev-parse HEAD`. If the historical commit is unavailable, **stop** and report why; don't bypass the checker.
-- Verify the origin is `GitKlink/power-bi-fabric-standards` and the required committed standard documents exist. The checker performs strict source validation at review time.
-- Open the Architect folder in local Cursor, or create a user-approved local multi-root `.code-workspace` file **outside public repositories** if a PBIP project is included. Do not assume that merely linking to GitHub grants local filesystem access. Cursor's Skills view is the authority on actual skill discovery.
-- No automatic project-local skill copy, user-global installation, `AGENTS.md` overwrite, `MCP` setup, plugin installation or installer CLI is needed for this pilot.
-- The real input inventory remains in an explicitly private folder. Never upload it to a public repo, issue, PR or log; don't copy confidential DAX into synthetic test fixtures.
-
-## 4. Verify the synthetic slice (safe, no PBIP edits)
-
-Use local commands appropriate for Windows, macOS or Linux. The agent should resolve paths from its actual inspected environment; examples below assume shell working directory at the **Architect repo root** and three real paths selected in step 2.
-
-1. Assert Architect working tree and Python/Git availability. Confirm pinned Standards path is a valid clone with the required commit and expected remote.
-2. Run standard-library unit tests:
-
-   ```sh
-   python -m unittest discover -s tests -p 'test_dax_measure_reviewer.py' -v
-   ```
-
-3. Compile the checker:
-
-   ```sh
-   python -m py_compile .agents/skills/dax-measure-standards-review/scripts/review_measures.py
-   ```
-
-4. Run a real **read-only checker execution** against synthetic metadata using the resolved paths (substitute shell quoting and absolute locations):
-
-   ```sh
-   python .agents/skills/dax-measure-standards-review/scripts/review_measures.py --input "examples/dax-measure-review/measure-inventory.synthetic.csv" --standards-root "<PINNED_STANDARDS_ABSOLUTE_PATH>" --domain variable_reward --out-dir "<NEW_EMPTY_PRIVATE_OUTPUT_FOLDER_OUTSIDE_REPOS>"
-   ```
-
-5. Inspect `review.md` and `review.json`. Verify `schema_version == "power-bi-fabric-architect-dax-measure-review-v1"`, `status == "partial_review_only"`, the standards Git SHA equals the pinned commit, and the **synthetic deliberately nonstandard** `M_VR Payout%` row produces findings. Do not claim that the synthetic fixture's business semantics were verified.
-6. Check in Cursor's **Customize → Skills** (or equivalent available settings) that `dax-measure-standards-review` is discoverable. If discovery cannot be inspected directly, report it as **not verified** and give the user the manual check.
-7. If anything fails, report the actual failure and the smallest safe repair suggestion. Do not claim successful installation based solely on a file existing.
-
-Distinguish three independent gates:
-- **A: unit tests** passed (source-code correctness on synthetic/mocks).
-- **B: local source/skill + synthetic CLI smoke test** passed.
-- **C: actual Power BI semantic-model measure inventory** reviewed (requires a separate real export).
-
-## 5. Hand off to the first real model pilot
-
-Only after gates A/B, guide the user through Power BI Desktop **DAX Query View**:
-
-```dax
-EVALUATE
-    INFO.VIEW.MEASURES()
+```sh
+python scripts/install_into_project.py --project "<OPEN_POWER_BI_PROJECT_ABSOLUTE_PATH>" --standards-repo "<PINNED_STANDARDS_REPO_ABSOLUTE_PATH>"
 ```
 
-Export the result as UTF-8 CSV to a **private** location. Retain `Name`, `Table`, `Description`, `FormatString`, `FormatStringDefinition`, `IsHidden` and `DisplayFolder` when available. The checker requires only `Name`, but other missing fields must be reported **not evaluated**, not treated as zero violations.
+Show the user exactly what the installer will create, why, and whether their
+project has pre-existing files. The installer adds only:
+- `.agents/skills/dax-measure-standards-review/` including SKILL.md, the Python
+  checker, references, source lock and small synthetic example;
+- `docs/power-bi-architect/standards/semantic-model/` with copied core standards,
+  glossary, domain extensions and non-normative backlog;
+- provenance manifests and a short `docs/power-bi-architect/README.md`.
 
-Execute the same CLI against that CSV with a **new private output folder** and relevant `--domain` (e.g. `variable_reward`). Have the reviewer skill read the authoritative documents and produce a **review proposal**, not a rename or model change. A return code of 0 means only that the partial review ran; it does not certify conformance.
+The user should be able to continue using unrelated skills in the existing
+`.agents/skills/` folder. No new `AGENTS.md` or `.cursor/rules` are needed.
 
-For human review, present **old name, proposed name, explanation, canonical rule, folder/description suggestions, semantics/denominator questions, dependency concerns and approval status**. Do not apply anything to the model.
+**Get approval before creating clones, files or project configuration.** Do not
+silently install globally, update the Architect clone or modify any PBIP model.
 
-## 6. End-of-run handoff
+## 3. Apply only the approved project-local copy
 
-Summarise:
-- What existed, what was added with the user's approval, and where it is located.
-- Exact Architect SHA, Standards SHA and source Git remotes (no authentication tokens).
-- Test outcomes for A/B/C separately and report paths, without copying confidential contents into chat when prohibited.
-- Any unverified capabilities or blockers, and the next user action (Power BI export or open Cursor Skills).
+After approval, run the **same command** with `--apply`:
 
-Do not present "setup complete" until B has been genuinely verified. Never imply that a documentation-only PR established local installation or PBIP model testing.
+```sh
+python scripts/install_into_project.py --project "<OPEN_POWER_BI_PROJECT_ABSOLUTE_PATH>" --standards-repo "<PINNED_STANDARDS_REPO_ABSOLUTE_PATH>" --apply
+```
 
-**Update rules:** no silent upstream updates, no automatic rewrite of a product repository, no version drift. Future reviewer baseline changes require reviewed tests and a new source pin.
+The installer fails on overwritten, changed or partial managed files. Never
+work around a conflict by deleting project-owned files. On identical re-run
+it reports `ALREADY INSTALLED` without changing bytes.
+
+**Do not copy the setup skill itself by default.** The user's project receives
+the functional DAX-review capability. Installation/update instructions remain
+in the source Architect repository. The project gets a manifest recording
+which source Architect and Standards Git revisions produced its copy.
+
+## 4. Verify independent project usability
+
+- Inspect the installed files and `docs/power-bi-architect/installation.json`
+  for the correct source revisions and installed asset SHA-256 checksums.
+- Verify the standards lock + installed `source-manifest.json`; no Git checkout
+  must be needed to **run** the installed reviewer.
+- Close other source roots or open **only the target project** in local Cursor,
+  and confirm `dax-measure-standards-review` appears in Cursor Skills. If that
+  cannot be inspected, state **not verified**.
+- Run the synthetic checker from the **target project root**:
+
+```sh
+python .agents/skills/dax-measure-standards-review/scripts/review_measures.py --input ".agents/skills/dax-measure-standards-review/examples/measure-inventory.synthetic.csv" --standards-root "docs/power-bi-architect/standards" --domain variable_reward --out-dir "<NEW_PRIVATE_REPORT_DIR>"
+```
+
+- Inspect `review.json` and `review.md`: `schema_version` equals
+  `power-bi-fabric-architect-dax-measure-review-v1`;
+  `status` equals `partial_review_only`;
+  `standards.verification` equals `pinned_project_copy`;
+  Git SHA is `2d6eb0c2dd627b7607c0ad28a4ea6866e5427aa9`;
+  fixture measure `M_VR Payout%` must produce a naming finding.
+- **Unit tests**: if the source Architect checkout is available, run
+  `python -m unittest discover -s tests -p 'test_*.py' -v`
+  from the source repo. The unit suite is separate from the installed smoke test.
+- A successful run is **partial metadata validation**, not full DAX conformance
+  or compilation, nor proof that a user's real Power BI model was checked.
+
+## 5. Hand off to a real DAX measure inventory
+
+Give user the Desktop DAX Query View export command:
+
+```dax
+EVALUATE INFO.VIEW.MEASURES()
+```
+
+Keep exported measure metadata **private** (it may contain proprietary DAX).
+Run the installed Python checker against the private CSV with a fresh report
+directory and selected domain. Read the local copied standards and propose
+human-approved DAX refactor suggestions, **do not apply anything to the model**.
+
+Report three gates separately:
+- **A**: source Python unit tests (if available).
+- **B**: local copied skill installed, discoverable and synthetic CLI verified.
+- **C**: real Power BI inventory reviewed (not part of automatic installation).
+
+List exact installed folders, source SHAs and any blockers. Do not claim B/C
+unless you observed the corresponding results. Never overwrite existing skills,
+standards, reports, project instructions or Power BI files.
+
+## Updating
+
+The current installer is **additive and fail-closed**; it does not implement
+an automatic updater. Keep the installed manifest, compare versions against
+the upstream Git sources and plan a separately approved migration if versions
+change. Do not replace modified project-owned files or relax source locks.
