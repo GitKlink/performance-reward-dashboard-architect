@@ -4,7 +4,7 @@
 
 **Research ticket:** #10 — Research R1: Cursor native architecture primitives  
 **Evidence snapshot:** 2026-09-16  
-**Status:** Evidence-gathering research only. This report does **not** decide the final Power BI/Fabric Power BI / Fabric Architect architecture.
+**Status:** Evidence-gathering research only. This report does **not** decide the final Power BI / Fabric Architect architecture.
 
 This report uses the following labels:
 
