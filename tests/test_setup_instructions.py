@@ -38,7 +38,7 @@ class SetupContractTests(unittest.TestCase):
     def test_approval_safety_and_distinct_validation_gates(self):
         skill = SETUP_SKILL.read_text(encoding="utf-8").lower()
         for fragment in (
-            "explore", "propose", "approval", "no model", "standards",
+            "explore", "propose", "approval", "do not apply anything to the model", "standards",
             "private", "python -m unittest", "py_compile",
             "schema_version", "partial_review_only", "local cursor",
             "not verified",
