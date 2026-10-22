@@ -60,7 +60,7 @@ def git(root: Path, *args: str) -> str:
 def verify_source(root: Path, domain: str | None) -> dict:
     root = root.resolve()
     if not root.is_dir():
-        raise ReviewError("Standards directory does not exist. Clone the private repository.")
+        raise ReviewError("Standards directory does not exist. Clone the canonical standards repository.")
     if Path(git(root, "rev-parse", "--show-toplevel")).resolve() != root:
         raise ReviewError("Provide the standards repository root, not a nested folder.")
     actual = git(root, "rev-parse", "HEAD")
@@ -269,7 +269,7 @@ def run(args: argparse.Namespace) -> dict:
     rows, missing = read_csv(source)
     result = review(rows, missing)
     result.update({
-        "schema_version": "wayfinder-dax-measure-review-v0",
+        "schema_version": "power-bi-fabric-architect-dax-measure-review-v1",
         "status": "partial_review_only",
         "created_utc": datetime.now(timezone.utc).isoformat(),
         "domain": args.domain, "input_filename": source.name,
@@ -286,7 +286,7 @@ def run(args: argparse.Namespace) -> dict:
 def main(argv=None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--input", type=Path, required=True, help="UTF-8 CSV measure inventory")
-    parser.add_argument("--standards-root", type=Path, required=True, help="Private standards Git clone")
+    parser.add_argument("--standards-root", type=Path, required=True, help="Canonical standards Git clone")
     parser.add_argument("--domain", choices=sorted(DOMAIN_FILES))
     parser.add_argument("--out-dir", type=Path, required=True, help="Private/local report directory")
     args = parser.parse_args(argv)

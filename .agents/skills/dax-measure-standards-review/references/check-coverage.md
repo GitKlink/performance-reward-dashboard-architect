@@ -1,6 +1,6 @@
 # DAX measure reviewer — mechanical rule coverage (v0)
 
-**Canonical authority:** PRIVATE `GitKlink/power-bi-fabric-standards`, revision `2d6eb0c2dd627b7607c0ad28a4ea6866e5427aa9`. Core file `semantic-model/semantic_measure_standard.md`; its README, business glossary, and optional domain extension are reference inputs. The script verifies their committed bytes in a clean, pinned local Git clone. **No private source text is distributed with Wayfinder.**
+**Canonical authority:** PUBLIC `GitKlink/power-bi-fabric-standards`, revision `2d6eb0c2dd627b7607c0ad28a4ea6866e5427aa9`. Core file `semantic-model/semantic_measure_standard.md`; its README, business glossary, and optional domain extension are reference inputs. The script verifies their committed bytes in a clean, pinned local Git clone. **No duplicate canonical standards content is distributed with the Architect.**
 
 The validator implements a **fixed reviewed subset** of the pinned standard. A newer standard requires a separate review/profile update; merely changing the SHA constant is not an acceptable governance process.
 
@@ -29,3 +29,5 @@ The validator implements a **fixed reviewed subset** of the pinned standard. A n
 **Export:** Microsoft documents `EVALUATE INFO.VIEW.MEASURES()` and the `Name`, `Table`, `Expression`, `Description`, `FormatString`, `FormatStringDefinition`, `IsHidden`, `DisplayFolder` fields. Expression visibility may depend on write permissions and non-live connection. Source: https://learn.microsoft.com/en-us/dax/info-view-measures-function-dax
 
 **Gates before an apply script:** domain owner confirmation, no name collisions, dependency-aware rename plan, approved diff, actual PBIP/TMDL validation, numerical/regression checks where relevant. No apply facility is included in v0.
+
+**Schema identifier correction:** `review.json` now declares `schema_version=power-bi-fabric-architect-dax-measure-review-v1`. The initial experimental v0 identifier was mislabeled with the planning skill's name; early consumers should update their schema check. Field names, rule IDs and read-only behaviour remain unchanged.

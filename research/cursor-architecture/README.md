@@ -1,6 +1,8 @@
 # Cursor Architecture Research Programme
 
-This directory stores durable research evidence for Wayfinder's Power BI / Fabric Architect ecosystem. Canonical engineering-standard ownership was already settled by [ADR-0001](../../docs/decisions/0001-canonical-standards-home.md) and closed [Issue #5](https://github.com/GitKlink/performance-reward-dashboard-architect/issues/5). This programme now supports review of the **implementation architecture**, not reopening the standards-home decision.
+> **Terminology note:** **Power BI / Fabric Architect** is the project. **Wayfinder** is Matt Pocock's planning skill used during early research. Older linked issue and PR titles may retain historical wording.
+
+This directory stores durable research evidence for the Power BI / Fabric Architect ecosystem. Canonical engineering-standard ownership was already settled by [ADR-0001](../../docs/decisions/0001-canonical-standards-home.md) and closed [Issue #5](https://github.com/GitKlink/performance-reward-dashboard-architect/issues/5). This programme now supports review of the **implementation architecture**, not reopening the standards-home decision.
 
 Research artifacts are **evidence and analysis, not normative standards**. Architecture decisions and standards should cite or consume this research rather than treating the research files themselves as binding policy.
 

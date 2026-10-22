@@ -1,10 +1,10 @@
-# Wayfinder — Power BI / Fabric Analytical Architect
+# Power BI / Fabric Architect
 
 A Cursor-first, composed analytics-engineering capability for building and reviewing Power BI/Fabric analytical products. The project coordinates engineering policy, Performance & Reward domain meaning, reusable native implementations, and Microsoft-maintained platform skills without copying their canonical sources.
 
 ## First implementation: DAX Measure Standards Reviewer (MVP)
 
-**Status: review PR / early pilot**, not a complete Wayfinder agent or a certified DAX conformance tool.
+**Status: first reviewer merged / local pilot pending**, not a complete Architect implementation or a certified DAX conformance tool.
 
 - [Skill and usage guide](.agents/skills/dax-measure-standards-review/README.md)
 - [Agent Skill instructions](.agents/skills/dax-measure-standards-review/SKILL.md)
@@ -15,9 +15,9 @@ This first read-only workflow checks a **CSV measure inventory** (exported with 
 
 ## Repository authorities
 
-- **[Engineering Standards](https://github.com/GitKlink/power-bi-fabric-standards)** — private canonical Power BI/Fabric engineering-policy repository. Access is permission-controlled.
+- **[Engineering Standards](https://github.com/GitKlink/power-bi-fabric-standards)** — public canonical Power BI/Fabric engineering-policy repository. Access is permission-controlled.
 - **[DAX/M Query Library](https://github.com/GitKlink/dax-m-query-library)** — reusable native DAX, Power Query M, Python and Deneb implementations, distinct from normative standards.
-- **Wayfinder (this repo)** — integration, orchestration, skills, proposed architecture, future validators.
+- **Architect (this repo)** — integration, orchestration, skills, proposed architecture, future validators.
 - **Domain authority** — Performance & Reward business definitions, eligibility, grain, interpretation and reconciliation. Business/content boundary issue [#6](https://github.com/GitKlink/performance-reward-dashboard-architect/issues/6) remains distinct from generic semantic formatting.
 
 ## Architecture research
@@ -27,3 +27,7 @@ This first read-only workflow checks a **CSV measure inventory** (exported with 
 - [ADR-0001 — canonical standards home](docs/decisions/0001-canonical-standards-home.md)
 
 Research and architecture proposals are not themselves enforcement or deployed agents. Development follows small, validated Power BI slices rather than building an installer/plugin ecosystem first.
+
+## Naming and historical research
+
+This project is the **Power BI / Fabric Architect** (repository: `performance-reward-dashboard-architect`). **Wayfinder** refers only to Matt Pocock's planning skill used in the architecture research. It is not the name of this product, installer, agent or report schema. The `research/cursor-architecture/` files include a dated terminology correction to preserve the original research trail.

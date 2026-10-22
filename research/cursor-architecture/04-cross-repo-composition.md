@@ -1,21 +1,23 @@
 # R4 — Cross-Repository Composition for Cursor
 
-**Ticket:** [Wayfinder #13](https://github.com/GitKlink/performance-reward-dashboard-architect/issues/13)  
+> **Terminology correction (2026-10-22):** The project is the **Power BI / Fabric Architect**. **Wayfinder** is Matt Pocock's planning skill used during research, not the project name. Original issue/PR titles may retain historical wording. The evidence and technical conclusions are unchanged. References to private standards describe the repository's earlier visibility; it became public on 2026-10-22.
+
+**Ticket:** [Architect #13](https://github.com/GitKlink/performance-reward-dashboard-architect/issues/13)  
 **Evidence reviewed:** 19 October 2026  
 **Status:** RESEARCH / RECOMMENDATION — not an approved target-architecture ADR  
 **Prerequisites:** [R1 Cursor primitives](01-cursor-primitives.md), [R3 reference-repo benchmark](03-reference-repo-benchmark.md); [R2](02-harness-agent-skill-plugin.md) consulted for classification.
 
 ## 1. Problem definition
 
-Wayfinder must coordinate four independently governed concerns without making a specific business project, the orchestrator or a reusable code library into an accidental second standards authority:
+Architect must coordinate four independently governed concerns without making a specific business project, the orchestrator or a reusable code library into an accidental second standards authority:
 
-1. **Architect/Wayfinder:** workflow selection, orchestration, integration with Microsoft-maintained Power BI/Fabric capabilities.
+1. **Architect/Architect:** workflow selection, orchestration, integration with Microsoft-maintained Power BI/Fabric capabilities.
 2. **Engineering standards:** canonical rules for semantic models, DAX, Power Query/M, reporting UX and source-to-dashboard analytical engineering.
 3. **Reusable implementation library:** DAX, M, Python and Deneb executable assets/patterns/tests.
 4. **Analytical project:** a PBIP/PBIX-supporting project repository where the actual model, reports and project decisions are changed.
-5. **Domain knowledge:** Performance & Reward initially; it defines what the concepts mean rather than generic engineering conventions. It may be co-located with Wayfinder initially; physical packaging is not settled here.
+5. **Domain knowledge:** Performance & Reward initially; it defines what the concepts mean rather than generic engineering conventions. It may be co-located with Architect initially; physical packaging is not settled here.
 
-The **physical standards home is no longer an open question**: [Wayfinder ADR-0001](../../docs/decisions/0001-canonical-standards-home.md) and the completed migration place the canonical standards in the **private** repository [GitKlink/power-bi-fabric-standards](https://github.com/GitKlink/power-bi-fabric-standards). Its semantic-model folder contains 11 original, parity-checked Markdown files. The implementation library remains [GitKlink/dax-m-query-library](https://github.com/GitKlink/dax-m-query-library). This changes the original wording of #13 but not its remaining composition question.
+The **physical standards home is no longer an open question**: [Architect ADR-0001](../../docs/decisions/0001-canonical-standards-home.md) and the completed migration place the canonical standards in the **private** repository [GitKlink/power-bi-fabric-standards](https://github.com/GitKlink/power-bi-fabric-standards). Its semantic-model folder contains 11 original, parity-checked Markdown files. The implementation library remains [GitKlink/dax-m-query-library](https://github.com/GitKlink/dax-m-query-library). This changes the original wording of #13 but not its remaining composition question.
 
 **Question:** How can a Cursor user/agent discover and consume the correct files and reusable assets, edit the correct repository, and repeat the result later, locally or in automation, without dependency drift or governance duplication?
 
@@ -39,7 +41,7 @@ The main pre-existing inputs are [R1](01-cursor-primitives.md) and [R3](03-refer
 - One owner for each authoritative concept; no independent hand-maintained copied standards.
 - Private standards repository must be accessible to the person, process or agent that reads it; URL visibility does not confer permission.
 - Production edits/PRs must stay in the repository that owns the resulting asset.
-- Do not accidentally publish private material into the public Wayfinder or reusable-library repositories.
+- Do not accidentally publish private material into the public Architect or reusable-library repositories.
 
 ## 3. Evidence that materially changes the comparison
 
@@ -109,7 +111,7 @@ Illustrative, **not an installation product**:
 {
   "folders": [
     { "name": "PBIP Product", "path": "../example-pbip-project" },
-    { "name": "Wayfinder", "path": "../performance-reward-dashboard-architect" },
+    { "name": "Architect", "path": "../performance-reward-dashboard-architect" },
     { "name": "Engineering Standards", "path": "../power-bi-fabric-standards" },
     { "name": "Implementation Library", "path": "../dax-m-query-library" }
   ]
@@ -128,7 +130,7 @@ Submodules fit an **explicit version-pinned embedded dependency** when the consu
 
 - **Good:** exact dependent SHA encoded in the superproject commit.
 - **Weak:** extra initialisation step; a repo checkout without submodules is incomplete; updating a submodule is a **separate intentional version bump**, not automatic HEAD tracking; nested modifications and detached HEAD are frequent operator mistakes.
-- **Important:** do not blindly add a **private** standards repo to a **public** Wayfinder or PBIP repo; URLs, CI availability and read permissions are separate risks. GitHub Actions permissions for private cross-repo access require deliberate configuration and should not be assumed from repository ownership.
+- **Important:** do not blindly add a **private** standards repo to a **public** Architect or PBIP repo; URLs, CI availability and read permissions are separate risks. GitHub Actions permissions for private cross-repo access require deliberate configuration and should not be assumed from repository ownership.
 - **Current judgment:** do **not** use as the universal default. Reconsider if the single-root Cursor Cloud/CI path proves more reliable with pinned submodules than other materialisation options.
 
 ### D — Subtree/vendor
@@ -150,11 +152,11 @@ Per R1/R3, a Cursor plugin may distribute small Rules/Skills/Commands/agents/hoo
 
 - **Good:** ergonomic project/user installation when policies and packages are versioned.
 - **Weak:** installation scope, private distribution, host portability, policy authority and dependency access remain independent concerns.
-- **Current judgment:** viable distribution *candidate* for a thin Wayfinder capability layer, **not** the canonical standards store. R6 analyzes packaging in detail and R8 decides whether plugin distribution is warranted.
+- **Current judgment:** viable distribution *candidate* for a thin Architect capability layer, **not** the canonical standards store. R6 analyzes packaging in detail and R8 decides whether plugin distribution is warranted.
 
 ### G — Manifest/lockfile and provisioner
 
-A checked-in **declarative contract** in the PBIP product declares the semantic-model standards, Wayfinder and library dependencies by immutable Git commit, release or digest; a provisioner resolves them into workspace roots or local read-only dependency directories and checks permissions.
+A checked-in **declarative contract** in the PBIP product declares the semantic-model standards, Architect and library dependencies by immutable Git commit, release or digest; a provisioner resolves them into workspace roots or local read-only dependency directories and checks permissions.
 
 **Illustrative schema, not an adopted format:**
 
@@ -172,7 +174,7 @@ A checked-in **declarative contract** in the PBIP product declares the semantic-
       "writePolicy": "read-only"
     },
     {
-      "id": "wayfinder",
+      "id": "power-bi-architect",
       "repository": "GitKlink/performance-reward-dashboard-architect",
       "revision": "<approved-full-commit-sha>",
       "role": "orchestration"
@@ -189,7 +191,7 @@ A checked-in **declarative contract** in the PBIP product declares the semantic-
 
 Missing/unauthorized revision **fails closed**; it does not silently fall back to the public web or a stale cached copy. Explicitly distinguish the **source revision required by the project** from the **local revision currently present**. This would give CI, local tooling and future agent hosts a shared dependency contract while the actual installation mechanism can differ.
 
-- **Current judgment:** strongest **portable design direction**, not built or validated. R5 must decide schema/CLI, lock update, authentication and rollback; R8 must decide whether it belongs in Wayfinder core, a companion bootstrap tool or a plugin.
+- **Current judgment:** strongest **portable design direction**, not built or validated. R5 must decide schema/CLI, lock update, authentication and rollback; R8 must decide whether it belongs in Architect core, a companion bootstrap tool or a plugin.
 
 ## 5. Cursor discoverability and context implications
 
@@ -274,7 +276,7 @@ A thin installable capability or starter template can improve ergonomics later. 
 
 **Provisional recommendation:** use **B for local development**, investigate **G for portable/CI composition**, and keep **F as a later distribution option**. Do not default to submodules or vendored standards without a concrete single-root/CI constraint that justifies their cost.
 
-## 9. Implications for Wayfinder and the PBI Architect
+## 9. Implications for Architect and the PBI Architect
 
 The architect should become a **consumer/orchestrator**, not a repo that must contain every dependency:
 
@@ -283,7 +285,7 @@ The architect should become a **consumer/orchestrator**, not a repo that must co
                      |
                      | declared and verified dependencies
                      v
-       [Wayfinder composition / routing]
+       [Architect composition / routing]
             /          |          \
            v           v           v
  [Standards repo] [Domain authority] [DAX/M Library]
@@ -361,7 +363,7 @@ These are **planned tests**, not tests executed during R4. Run them in the insta
 - [R1 — Cursor native primitives](01-cursor-primitives.md): activation, scoped Rules, Skills, Plugins, context cost.
 - [R3 — six-repository benchmark](03-reference-repo-benchmark.md): official Cursor plugin patterns, Microsoft skills, skill distribution, bootstrap examples, cross-host considerations.
 - [R2 — architecture classification](02-harness-agent-skill-plugin.md): architecture role versus distribution/runtime role.
-- [Wayfinder ADR-0001](../../docs/decisions/0001-canonical-standards-home.md): physical normative standards authority, already approved.
+- [Architect ADR-0001](../../docs/decisions/0001-canonical-standards-home.md): physical normative standards authority, already approved.
 - [Standards migration record](https://github.com/GitKlink/power-bi-fabric-standards/blob/main/docs/migration/2026-10-16-semantic-model.md): preservation parity, private access required.
 
 **Current primary documentation (checked 19 October 2026):**

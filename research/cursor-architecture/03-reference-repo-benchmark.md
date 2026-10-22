@@ -1,5 +1,7 @@
 # R3 — Reference Implementation Benchmark
 
+> **Terminology correction (2026-10-22):** The project is the **Power BI / Fabric Architect**. **Wayfinder** is Matt Pocock's planning skill used during research, not the project name. Original issue/PR titles may retain historical wording. The evidence and technical conclusions are unchanged. References to private standards describe the repository's earlier visibility; it became public on 2026-10-22.
+
 > **Research ticket:** R3 — GitHub issue #11, `GitKlink/performance-reward-dashboard-architect`  
 > **Research date:** 2026-09-16 (Pacific/Auckland)  
 > **Durable target:** `research/cursor-architecture/03-reference-repo-benchmark.md`  
@@ -35,7 +37,7 @@ The evidence vocabulary is:
 - **FACT** — documented behaviour in the repository or its maintained documentation.
 - **OBSERVATION** — a pattern directly visible in the inspected repository state.
 - **INFERENCE** — an architectural implication derived from facts/observations.
-- **RECOMMENDATION** — a provisional lesson for Wayfinder; not a final decision.
+- **RECOMMENDATION** — a provisional lesson for Architect; not a final decision.
 
 The benchmark snapshots were:
 
@@ -79,7 +81,7 @@ Especially useful examples are:
 
 ### `microsoft/skills-for-fabric`
 
-**Why selected.** Closest functional analogue to Wayfinder: Fabric, semantic-model and Power BI knowledge packaged for agents.  
+**Why selected.** Closest functional analogue to Architect: Fabric, semantic-model and Power BI knowledge packaged for agents.  
 **Primary architectural value.** Demonstrates platform-specialist skill decomposition, large on-demand reference sets, cross-skill routing, MCP/tool fallback, Power BI planning/design/authoring separation, and cross-agent distribution.  
 **Relevant assets.** `skills/**/SKILL.md`, large `references/` trees, shared `common` materials, Fabric agents, `AGENTS.md`, `CLAUDE.md`, `.cursorrules`, plugin marketplace metadata, MCP declarations, APM install instructions, package/release metadata.
 
@@ -121,7 +123,7 @@ The meaningful disagreements are equally important:
 - **Where orchestration lives.** Cursor Orchestrate puts a mini-harness inside a skill/plugin; Spec Kit externalises the harness into a CLI and generated project lifecycle; Microsoft uses an explicit orchestrating agent for cross-workload work; Matt often uses a skill to spawn subagents.
 - **How portability is achieved.** Matt refuses a native platform package when the platform's manifest would require duplicate content; Addy maintains many thin adapters around shared skills; Spec Kit generates target-specific integration assets; Microsoft carries several root instruction forms plus package/install tooling.
 
-**INFERENCE —** Wayfinder should not start by asking “plugin or agent or skill?” The better question is “which responsibilities need persistent context, discoverable knowledge, explicit workflow, isolated reasoning, deterministic execution, external capability, packaging, or project-owned state?” R2/R8 can then map those responsibilities to primitives.
+**INFERENCE —** Architect should not start by asking “plugin or agent or skill?” The better question is “which responsibilities need persistent context, discoverable knowledge, explicit workflow, isolated reasoning, deterministic execution, external capability, packaging, or project-owned state?” R2/R8 can then map those responsibilities to primitives.
 
 ## 5. Rules
 
@@ -150,7 +152,7 @@ The detailed workflow lives elsewhere:
 
 Cursor rule frontmatter supports an `alwaysApply` concept, and the production examples use it for narrow conventions. Skills/commands then provide scoped behaviour. Root `AGENTS.md`/`CLAUDE.md` files are also persistent at repository scope, so their size has the same context-economics concern even when the host syntax differs.
 
-**RECOMMENDATION —** For future Wayfinder engineering standards, test a layered model rather than a monolithic rules file:
+**RECOMMENDATION —** For future Architect engineering standards, test a layered model rather than a monolithic rules file:
 
 `small persistent rules/router → canonical standard index → relevant standard chapter/reference → validator/tool`
 
@@ -211,7 +213,7 @@ The corpus supports a **combination**, not one location:
 - Keep **organisation-wide canonical standards** outside a particular skill when multiple skills/repos must share the same authority; the skill should point to the canonical source rather than fork it.
 - Put **mechanically enforceable standards** in validators/scripts/CI/hooks as well as documenting them.
 
-**RECOMMENDATION —** Do not make a future DAX or semantic-model skill the canonical owner of all Wayfinder engineering standards merely because it can load them. Let the skill consume and route to authoritative standards.
+**RECOMMENDATION —** Do not make a future DAX or semantic-model skill the canonical owner of all Architect engineering standards merely because it can load them. Let the skill consume and route to authoritative standards.
 
 ## 7. Commands and workflows
 
@@ -226,7 +228,7 @@ There is, however, no absolute “command versus skill” boundary. Cursor produ
 - **Command / explicit-only skill:** user chooses a named workflow, often with side effects, approvals, state transitions or persistent artifacts.
 - **Auto-discoverable skill:** model can safely select a bounded reusable capability when the task matches.
 
-**RECOMMENDATION —** Candidate Wayfinder workflows such as “architect a new analytical product”, “validate project conformance” or “prepare an approved report implementation brief” should be evaluated for explicit invocation if they are expensive, stateful or require approval gates. Narrow DAX/Power Query guidance is more naturally discoverable.
+**RECOMMENDATION —** Candidate Architect workflows such as “architect a new analytical product”, “validate project conformance” or “prepare an approved report implementation brief” should be evaluated for explicit invocation if they are expensive, stateful or require approval gates. Narrow DAX/Power Query guidance is more naturally discoverable.
 
 ## 8. Agents and subagents
 
@@ -258,7 +260,7 @@ There is little evidence for unconstrained recursive agent-to-agent delegation. 
 
 Isolation prevents one specialist's reasoning from consuming or biasing another specialist's context. The cost is that state must be packaged into prompts/handoffs; sibling agents cannot assume shared working memory; aggregation has to resolve conflicts and duplicates. Cursor Orchestrate therefore uses explicit handoff schemas and persistent JSON state rather than relying on conversational memory.
 
-### Implications for proposed Wayfinder specialists
+### Implications for proposed Architect specialists
 
 These are **not final decisions**:
 
@@ -357,7 +359,7 @@ The template validator recognises conventional component directories and also va
 
 Production examples favour **self-contained package logic when it is package-specific**, but reuse external capabilities rather than copying them. Cursor Orchestrate, for example, depends on another `cursor-sdk` capability rather than re-embedding it. Large organisation-wide standards that multiple packages must share are therefore poor candidates to be privately duplicated inside every plugin.
 
-**RECOMMENDATION —** Keep “distribution package” and “canonical knowledge authority” as two separate design decisions. A future Wayfinder Cursor plugin may assemble assets whose canonical sources live elsewhere.
+**RECOMMENDATION —** Keep “distribution package” and “canonical knowledge authority” as two separate design decisions. A future Architect Cursor plugin may assemble assets whose canonical sources live elsewhere.
 
 ## 12. AGENTS.md and persistent instructions
 
@@ -377,7 +379,7 @@ Microsoft's `AGENTS.md` is substantially larger. It carries its hybrid `Agents �
 
 **OBSERVATION —** The Microsoft model optimises portability/availability; the Cursor/Matt/Addy patterns optimise context economy and authority separation.
 
-**RECOMMENDATION —** For Wayfinder, persistent project instructions should preferentially contain:
+**RECOMMENDATION —** For Architect, persistent project instructions should preferentially contain:
 
 - project identity and immutable local facts;
 - a tiny set of truly always-on invariants;
@@ -407,7 +409,7 @@ not:
 
 `load all standards and domain knowledge → hope the model attends to the right section`
 
-**RECOMMENDATION —** Treat ordinary Markdown references as a deliberate tier in Wayfinder, with explicit indexes/routing metadata and installation-safe dependency paths.
+**RECOMMENDATION —** Treat ordinary Markdown references as a deliberate tier in Architect, with explicit indexes/routing metadata and installation-safe dependency paths.
 
 ## 14. Installation and bootstrap
 
@@ -464,7 +466,7 @@ Claude and Codex plugin adapters share the same observed `0.6.9` version around 
 
 Spec Kit distinguishes **CLI version** from **project-managed asset version/state**. `specify self upgrade` updates the CLI; `specify integration upgrade <key>` and extension updates refresh project-managed assets. The integration manifest records created files/hashes; upgrades block on locally modified managed files unless forced; stale managed files can be removed while user artifacts remain untouched.
 
-**INFERENCE —** “Version the plugin” is not enough for Wayfinder if an installer also generates project assets. Package version, generated-asset provenance, external dependency version, project-owned artifact schema and rollback need separate lifecycle rules.
+**INFERENCE —** “Version the plugin” is not enough for Architect if an installer also generates project assets. Package version, generated-asset provenance, external dependency version, project-owned artifact schema and rollback need separate lifecycle rules.
 
 ## 16. Testing and evaluation
 
@@ -494,7 +496,7 @@ Microsoft's Power BI skills embed validation into the work itself. `powerbi-repo
 
 No equivalent repository-wide behavioural skill-eval harness was observed in the Microsoft or Matt snapshots. That is not evidence of poor quality; it is evidence that their QA emphasis is different.
 
-**RECOMMENDATION —** Mature Wayfinder QA should eventually cover four layers:
+**RECOMMENDATION —** Mature Architect QA should eventually cover four layers:
 
 - package/schema/frontmatter validity;
 - capability discovery/routing and overlap;
@@ -571,7 +573,7 @@ A **skill library** provides reusable capabilities that the host/model composes.
 
 **INFERENCE —** “Harness versus skill” is not a packaging dichotomy. A harness can be distributed as a plugin and can expose its entry points as skills/commands. The distinction is how much lifecycle/state the component owns.
 
-For Wayfinder, this benchmark supports carrying two questions into R2/R8 rather than choosing now:
+For Architect, this benchmark supports carrying two questions into R2/R8 rather than choosing now:
 
 - Does architecture/orchestration need durable lifecycle state and generated work artifacts? If yes, harness characteristics become important.
 - Are specialist Fabric/domain capabilities independently reusable? If yes, a skill-library layer remains valuable even if a harness exists above it.
@@ -602,7 +604,7 @@ Production plugins are generally self-contained for plugin-specific material. Wh
 
 **Common pattern:** one canonical source for each normative concept; adapters, indexes and generated copies are acceptable only when their derivation/provenance is controlled.
 
-**RECOMMENDATION —** For Wayfinder, evaluate every proposed duplication with three questions:
+**RECOMMENDATION —** For Architect, evaluate every proposed duplication with three questions:
 
 1. Which copy is authoritative?
 2. How is another copy generated or checked against it?
@@ -641,7 +643,7 @@ Persist only the minimum context required to route correctly. Make each skill na
 
 ### Explicit capability boundaries
 
-Microsoft's Power BI design → authoring handoff is a strong benchmark: design owns a structured design contract; authoring owns PBIR mechanics and validation. Similar contracts can prevent a future Wayfinder orchestrator, domain pack and platform skill from all claiming the same responsibility.
+Microsoft's Power BI design → authoring handoff is a strong benchmark: design owns a structured design contract; authoring owns PBIR mechanics and validation. Similar contracts can prevent a future Architect orchestrator, domain pack and platform skill from all claiming the same responsibility.
 
 ### Agent isolation only where it buys something
 
@@ -671,7 +673,7 @@ They consume context on unrelated tasks and create a second standards authority.
 
 ### Duplicating Microsoft-owned platform mechanics
 
-Forking PBIR schema guidance, semantic-model tool mechanics or Fabric API behaviour into a Wayfinder-specific copy would create a maintenance race with the closest upstream authority.
+Forking PBIR schema guidance, semantic-model tool mechanics or Fabric API behaviour into a Architect-specific copy would create a maintenance race with the closest upstream authority.
 
 ### Making “plugin” the architecture
 
@@ -715,9 +717,9 @@ Performance & Reward domain material is conceptually different from Microsoft pl
 
 ### Microsoft skills
 
-There is substantial overlap with intended Wayfinder platform-specialist functionality: semantic model authoring, DAX guidance, Power BI planning/design/authoring/management, PBIP/TMDL references, Fabric workloads and validation tooling.
+There is substantial overlap with intended Architect platform-specialist functionality: semantic model authoring, DAX guidance, Power BI planning/design/authoring/management, PBIP/TMDL references, Fabric workloads and validation tooling.
 
-**RECOMMENDATION —** Treat Microsoft skills as an upstream capability dependency to integrate/delegate to before duplicating them. Wayfinder should add orchestration, organisation engineering standards, Performance & Reward knowledge, reusable internal implementations and stronger conformance where those are genuinely distinct.
+**RECOMMENDATION —** Treat Microsoft skills as an upstream capability dependency to integrate/delegate to before duplicating them. Architect should add orchestration, organisation engineering standards, Performance & Reward knowledge, reusable internal implementations and stronger conformance where those are genuinely distinct.
 
 ### Reusable DAX / M / Python / Deneb library
 
@@ -810,12 +812,12 @@ The six repositories leave the following questions open or only partially answer
 1. **Cursor runtime loading semantics:** exactly how much skill/rule/plugin metadata and body content is counted in context before versus after capability selection in the current Cursor release. Repository design strongly signals progressive disclosure, but the repos do not fully specify runtime token accounting.
 2. **Cursor managed-update semantics for private/internal plugins:** pinning, rollback and enterprise marketplace behaviour need deeper R5 evidence from current product documentation or testing.
 3. **Cross-plugin dependencies in Cursor:** Orchestrate demonstrates a dependency on another capability, but the repository does not establish a general dependency/version manifest protocol for arbitrary internal plugins.
-4. **Microsoft upstream dependency contract:** how Wayfinder should pin or track `skills-for-fabric` while still receiving platform fixes without unreviewed behaviour drift.
-5. **Shared standards across repositories:** whether canonical Wayfinder standards are referenced remotely, vendored/materialised, packaged as a dependency, or resolved by an installer is intentionally left to R4/R5/R6.
+4. **Microsoft upstream dependency contract:** how Architect should pin or track `skills-for-fabric` while still receiving platform fixes without unreviewed behaviour drift.
+5. **Shared standards across repositories:** whether canonical Architect standards are referenced remotely, vendored/materialised, packaged as a dependency, or resolved by an installer is intentionally left to R4/R5/R6.
 6. **Domain-pack contract:** the exact interface between Performance & Reward domain semantics and platform skills/reusable implementations is not yet defined.
 7. **Validator execution environment:** which Power BI/Fabric checks can run headlessly in CI versus requiring Power BI Desktop, authenticated MCP, Fabric workspace access or human/render review.
-8. **Behavioural eval harness choice:** Addy's model is strong evidence for routing/behavioural evals, but the appropriate agent/model matrix, cost budget and deterministic acceptance thresholds for Wayfinder need separate design.
-9. **Stateful orchestration boundary:** whether Wayfinder needs Spec-Kit-like project lifecycle state, Cursor-Orchestrate-like task state, or only lightweight skill composition is an R2/R8 decision.
+8. **Behavioural eval harness choice:** Addy's model is strong evidence for routing/behavioural evals, but the appropriate agent/model matrix, cost budget and deterministic acceptance thresholds for Architect need separate design.
+9. **Stateful orchestration boundary:** whether Architect needs Spec-Kit-like project lifecycle state, Cursor-Orchestrate-like task state, or only lightweight skill composition is an R2/R8 decision.
 10. **Generated adapter policy:** if multi-agent support requires generated Cursor/Codex/Claude assets, the canonical schema and regeneration/conformance mechanism remain to be designed in R7.
 
 No additional repository was consulted to answer these; doing so would have expanded the mandatory corpus without being necessary for the R3 benchmark itself.

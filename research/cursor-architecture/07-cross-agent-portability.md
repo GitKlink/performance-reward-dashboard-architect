@@ -1,4 +1,6 @@
-# R7 — Cross-Agent Portability for Wayfinder
+# R7 — Cross-Agent Portability for Architect
+
+> **Terminology correction (2026-10-22):** The project is the **Power BI / Fabric Architect**. **Wayfinder** is Matt Pocock's planning skill used during research, not the project name. Original issue/PR titles may retain historical wording. The evidence and technical conclusions are unchanged. References to private standards describe the repository's earlier visibility; it became public on 2026-10-22.
 
 **Issue:** [#14 — R7](https://github.com/GitKlink/performance-reward-dashboard-architect/issues/14)  
 **Research snapshot:** 2026-10-19  
@@ -27,9 +29,9 @@
 
 **Out of scope:** build a full adapter system, install toolchains, certify agents on a live PBIP project, guarantee model output equivalence, port all native Cursor hooks/subagents or choose a final plugin format.
 
-### Existing Wayfinder authority constraints
+### Existing Architect authority constraints
 
-- **Architect/Wayfinder:** workflow routing and orchestration; not the agent runtime.
+- **Architect/Architect:** workflow routing and orchestration; not the agent runtime.
 - **Canonical policy:** private [GitKlink/power-bi-fabric-standards](https://github.com/GitKlink/power-bi-fabric-standards), already established by [ADR-0001](../../docs/decisions/0001-canonical-standards-home.md). There are 11 original semantic-model standard files, preserved byte-for-byte.
 - **Reusable implementation:** [GitKlink/dax-m-query-library](https://github.com/GitKlink/dax-m-query-library) for executable DAX/M/Python/Deneb patterns, not business truth.
 - **Domain pack:** Performance & Reward controls business/KPI meaning, populations, eligibility, dates and contracts. Its physical separation from semantic-model domain extensions remains [#6](https://github.com/GitKlink/performance-reward-dashboard-architect/issues/6).
@@ -131,14 +133,14 @@ This is content portability, not automatic instruction loading. A host requires 
 | Performance & Reward **business meaning** | Domain authority/contract | Domain-selected reference files/contracts | No redefinition in generic engineering rules |
 | Reusable DAX/M/Python/Deneb | **Implementation library** | Versioned asset IDs/functions/templates and tests | Reuse executable assets with attribution/version |
 | Project identity, write root, requested behaviour | **PBIP project** | Small AGENTS.md/project contract | Project-local facts, not global standards |
-| Cross-host procedural SKILL.md | One reviewed canonical skill source in Wayfinder or governed capability package | Resolved/installed into per-host skill path | Generated/materialised **read-only, tagged** projections allowed |
+| Cross-host procedural SKILL.md | One reviewed canonical skill source in Architect or governed capability package | Resolved/installed into per-host skill path | Generated/materialised **read-only, tagged** projections allowed |
 | Host hooks/rules/commands/plugin manifests | Host adapter templates | Generated into host-specific paths if installed | Only adapter owns host syntax; never duplicate core policy |
 | Validation/test fixtures | Correct standards/domain/library owner by test type | Standalone validator + evidence report | Reference pinned test suite/version |
 
 **Provisional source tree (conceptual only, not an instruction to restructure repositories now):**
 
 ~~~text
-Wayfinder (architect authority)
+Architect (architect authority)
   contracts/               # proposed project/dependency and capability descriptors
   capabilities/            # proposed canonical procedural SKILL.md packages
   adapters/
@@ -353,4 +355,4 @@ Tests remain **UNTESTED**; R5/R8 should select an executable smoke-test harness 
 - [MCP spec](https://modelcontextprotocol.io/specification/) — shared protocol layer, not shared host installation.
 - [GitHub Copilot support matrix](https://docs.github.com/en/copilot/reference/custom-instructions-support), [Copilot Agent Skills](https://docs.github.com/en/copilot/how-tos/copilot-on-github/customize-copilot/customize-cloud-agent/add-skills) — optional fourth-host evidence.
 
-**Research integrity:** current feature support is backed by first-party docs; the proposed Wayfinder adapter arrangement and support tiers are **design recommendations**. No Codex/Cursor/Claude installation, live multi-host execution, PBIP model validation, private authentication test or plugin packaging integration test was performed. Do not turn this R7 report into an implementation-complete claim.
+**Research integrity:** current feature support is backed by first-party docs; the proposed Architect adapter arrangement and support tiers are **design recommendations**. No Codex/Cursor/Claude installation, live multi-host execution, PBIP model validation, private authentication test or plugin packaging integration test was performed. Do not turn this R7 report into an implementation-complete claim.

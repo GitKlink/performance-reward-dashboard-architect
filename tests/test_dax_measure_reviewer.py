@@ -160,6 +160,7 @@ class CsvAndIntegrationTests(unittest.TestCase):
             self.assertTrue((out / "review.md").exists())
             report = json.loads((out / "review.json").read_text(encoding="utf-8"))
             self.assertEqual(report["status"], "partial_review_only")
+            self.assertEqual(report["schema_version"], "power-bi-fabric-architect-dax-measure-review-v1")
             self.assertEqual(report["measures"], 1)
 
     def test_report_cannot_be_written_in_standards(self):

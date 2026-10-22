@@ -1,24 +1,24 @@
 ---
 name: dax-measure-standards-review
-description: Review exported Power BI DAX measures against the private canonical Semantic Measure Standard, producing a read-only findings report and human-approved refactor proposal. Use for measure naming, folders, descriptions, formatting, hidden/technical measures, and DAX measure inventory audits.
+description: Review exported Power BI DAX measures against the canonical Semantic Measure Standard, producing a read-only findings report and human-approved refactor proposal. Use for measure naming, folders, descriptions, formatting, hidden/technical measures, and DAX measure inventory audits.
 ---
 
 # DAX Measure Standards Review — v0
 
-**Purpose:** review a Power BI semantic-model measure inventory and propose changes **without editing DAX, TMDL, model files or standards**. This is the first vertical slice of the Wayfinder architect, not a full validator.
+**Purpose:** review a Power BI semantic-model measure inventory and propose changes **without editing DAX, TMDL, model files or standards**. This is the first vertical slice of the Power BI / Fabric Architect, not a full validator.
 
 ## Required sources and order
 
 1. Identify the **actual PBIP/product repository** (write owner for a future authorised change) and the user's requested domain.
-2. Locate the local clone of the **private** Git repository `GitKlink/power-bi-fabric-standards`; do not substitute web search, an HTML explorer or a copied prompt.
+2. Locate the local clone of the **public canonical** Git repository `GitKlink/power-bi-fabric-standards`; do not substitute web search, an HTML explorer or a copied prompt.
 3. Verify its `HEAD` equals the reviewed baseline SHA `2d6eb0c2dd627b7607c0ad28a4ea6866e5427aa9`. The checker blocks any different revision. Do not switch an existing checkout without user approval; use a separate pinned clone if necessary.
-4. Read, in order, directly from that private clone:
+4. Read, in order, directly from that local Git clone:
    - `semantic-model/README.md`
    - `semantic-model/semantic_measure_standard.md`
    - `semantic-model/business_glossary.md`
    - `semantic-model/domains/semantic_measure_standard_<selected-domain>.md` if relevant.
 5. Do **not** turn `semantic_measure_standard_improvement_backlog.md` into a rule source; it is proposal material.
-6. Separately seek an **approved domain business contract** for eligibility, calculations, grain, time basis and metric meaning. A semantic-model domain file alone does not authorise changes to business semantics; Wayfinder [Issue #6](https://github.com/GitKlink/performance-reward-dashboard-architect/issues/6) is still relevant.
+6. Separately seek an **approved domain business contract** for eligibility, calculations, grain, time basis and metric meaning. A semantic-model domain file alone does not authorise changes to business semantics; Architect [Issue #6](https://github.com/GitKlink/performance-reward-dashboard-architect/issues/6) is still relevant.
 
 If the source is unavailable or mismatched, **stop and report the precise missing source/revision** rather than claiming compliance.
 
@@ -39,7 +39,7 @@ An existing export with equivalent columns is acceptable; inspect its header and
 
 ## Run the deterministic checker
 
-From the **Wayfinder repository root**, with Python 3.10+ and Git available:
+From the **Architect repository root**, with Python 3.10+ and Git available:
 
 ~~~powershell
 python .agents/skills/dax-measure-standards-review/scripts/review_measures.py --input "C:\private\measure-inventory.csv" --standards-root "C:\analytics\power-bi-fabric-standards" --domain variable_reward --out-dir "C:\private\dax-measure-review"
@@ -61,8 +61,8 @@ A return code of **0** means the partial review ran, **not** that the model is c
 
 ## Safety and privacy
 
-- Do not write in the private standards clone, DAX/M library or unrelated workspace roots.
-- Do not store the export or resulting report in the public Wayfinder repository. Keep them in a private workspace and review permissions.
+- Do not write in the standards clone, DAX/M library or unrelated workspace roots.
+- Do not store the export or resulting report in the public Architect repository. Keep them in a private workspace and review permissions.
 - Do not report employee, pay, rating or incentive data. This skill reviews model metadata, not underlying workforce rows.
 - If local standards diverge from the pinned baseline, do not bypass the checker by editing the SHA. Propose a reviewed profile update with tests.
 - Do not claim a blank expression means the measure is blank: `INFO.VIEW.MEASURES()` may suppress expressions depending on permissions.

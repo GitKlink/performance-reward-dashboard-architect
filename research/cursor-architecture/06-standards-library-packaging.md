@@ -1,5 +1,7 @@
 # Research R6 — Standards and reusable-library packaging
 
+> **Terminology correction (2026-10-22):** The project is the **Power BI / Fabric Architect**. **Wayfinder** is Matt Pocock's planning skill used during research, not the project name. Original issue/PR titles may retain historical wording. The evidence and technical conclusions are unchanged. References to private standards describe the repository's earlier visibility; it became public on 2026-10-22.
+
 **Research ticket:** R6  
 **Evidence snapshot:** 2026-09-16; **Power BI domain-fit review:** 2026-10-22  
 **Status:** Research recommendation; not yet a normative implementation standard. October review narrows JS/npm claims to applicable runtime components; see the mandatory §20 correction.  
@@ -7,7 +9,7 @@
 
 ## 1. Executive summary
 
-The ORIGINAL candidate architecture was **registry-first, content-aware, and ESM-first**; **for Wayfinder's actual DAX/M/Python/Deneb-first library, this is not the universal recommendation**. The domain-specific correction in §20 supersedes the executable-package and public-registry generalisation below:
+The ORIGINAL candidate architecture was **registry-first, content-aware, and ESM-first**; **for Architect's actual DAX/M/Python/Deneb-first library, this is not the universal recommendation**. The domain-specific correction in §20 supersedes the executable-package and public-registry generalisation below:
 
 > **Canonical standards remain canonical content; reusable executable assets become conventional packages; Cursor receives only a thin discovery/routing layer.**
 
@@ -885,7 +887,7 @@ These references justify asset-type-specific packaging; they do **not** demonstr
 | Python helpers | `library/python`; Python source/modules | Git source at pinned SHA with recorded Python dependency versions | Normal `pyproject.toml`/wheel package **if** imports/release consumers justify | Python interpreter/dependency matrix and unit tests |
 | Deneb / Vega / Vega-Lite | `library/deneb`; JSON specs/templates | Pinned JSON template + declared data role/schema assumptions | Native JSON/asset bundle | Vega/Vega-Lite schema, data shape and render/visual checks |
 | JS/TS adapter, UI or tool | Separate true JS/TS module(s), **if created** | Source or versioned JS package | ESM, typed exports, npm as appropriate | Package exports, build, runtime and dependency tests |
-| Wayfinder Skill/adapter | Canonical procedural SKILL.md and host adapter | Host-compatible, progressively loaded from pinned source | Agent Plugin/host packaging if installation value demonstrated | Host discovery + exact authoritative source/version read + validation evidence |
+| Architect Skill/adapter | Canonical procedural SKILL.md and host adapter | Host-compatible, progressively loaded from pinned source | Agent Plugin/host packaging if installation value demonstrated | Host discovery + exact authoritative source/version read + validation evidence |
 
 **Research conclusion:** native artifacts require a **catalogue/manifest and compatibility contract**, not necessarily a JavaScript package. A stable logical `asset_id` / `asset_version`, description, language/format, entrypoint, owner, dependencies, model compatibility, required parameters, examples, licence and validation references is a better *candidate* common layer; the schema is not yet approved.
 
@@ -896,7 +898,7 @@ Prototype retrieval should follow:
 1. The PBIP project declares or resolves **approved immutable source revisions** for standards and library.
 2. A small router/Skill identifies task, affected semantic area and required domains; it reads only applicable canonical files.
 3. An asset index returns matching reusable DAX/M/Python/Deneb records, preserving their **original native source format**.
-4. Wayfinder/host tools inspect the actual model/project, resolve real dependencies and produce a target-local plan, not a blind copy.
+4. Architect/host tools inspect the actual model/project, resolve real dependencies and produce a target-local plan, not a blind copy.
 5. Execute host-independent validators where possible; compare measure outputs/reconciliations when business meaning or DAX changes are involved.
 6. Log resolved SHAs, asset IDs, domain/standards authority, unsupported assumptions and results.
 

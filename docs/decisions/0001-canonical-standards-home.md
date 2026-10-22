@@ -10,9 +10,11 @@ implementation_issue: 21
 
 # ADR-0001 — Canonical Power BI / Fabric engineering standards home
 
+> **Terminology clarification (2026-10-22):** This is an Architect architecture decision; **Wayfinder** is the name of Matt Pocock's planning skill, not this product. Repository visibility changed from private to public on 2026-10-22, after this ADR was accepted. The accepted source-of-truth decision is unchanged.
+
 ## Context
 
-Wayfinder is a Power BI/Fabric-focused end-to-end analytical-product architect. Its work spans source extraction, historical/analytical transformations, Power Query, semantic modelling, DAX, reports and validation. Its engineering standards must not be silently duplicated across the architect, reusable library and project repositories.
+The Power BI / Fabric Architect is a Power BI/Fabric-focused end-to-end analytical-product architect. Its work spans source extraction, historical/analytical transformations, Power Query, semantic modelling, DAX, reports and validation. Its engineering standards must not be silently duplicated across the architect, reusable library and project repositories.
 
 Issue #4 established the conceptual authority map. Issue #5 asked for a physical standards authority. On 16 October 2026 the dedicated-standards-repository option was selected for this project.
 
@@ -36,7 +38,7 @@ The standards repository is **not** a universal enterprise architecture or all-p
 | Owner | Authority | Non-goal |
 |---|---|---|
 | `power-bi-fabric-standards` | Generic Power BI/Fabric-facing engineering policy, naming, metadata, quality and governance | Domain-specific business truth; generic reusable runtime implementations |
-| Wayfinder / architect | Orchestration: find/apply policy, select workflows, delegate capability, coordinate domains and projects | Duplicate full normative standards |
+| Architect | Orchestration: find/apply policy, select workflows, delegate capability, coordinate domains and projects | Duplicate full normative standards |
 | Performance & Reward domain pack | Business meaning, KPI semantics, populations, lifecycle, data/analytical contracts, business decisions | Define generic DAX/semantic-model engineering convention |
 | `dax-m-query-library` | Reusable executable DAX, M, Python and Deneb assets, examples and tests | Be the engineering standards authority |
 | Microsoft-maintained Power BI/Fabric skills | Upstream platform operations and technical validation where suitable | Replace our engineering-policy or domain authority |
@@ -76,7 +78,7 @@ Now that migration parity is verified, issue #6 should decide how current domain
 
 ## Alternatives considered
 
-- **Place standards inside Wayfinder:** simpler initial checkout but blurs reusable engineering-policy ownership and leads to standards following one orchestrator.
+- **Place standards inside Architect:** simpler initial checkout but blurs reusable engineering-policy ownership and leads to standards following one orchestrator.
 - **Place standards inside `dax-m-query-library`:** conflicts with the agreed implementation-only boundary.
 - **Maintain standards only in the File Library:** preserves existing drafts but lacks a single versioned, reviewable engineering policy home.
 
@@ -85,11 +87,11 @@ A dedicated repository is the selected authority model for the current Power BI 
 ## Status and next actions
 
 - **Decision:** accepted — dedicated standards repository at `GitKlink/power-bi-fabric-standards`.
-- **Implementation:** completed in standards [PR #1](https://github.com/GitKlink/power-bi-fabric-standards/pull/1), merged 16 October 2026. All eleven migrated originals verified on `main`. Wayfinder #21 is closed.
+- **Implementation:** completed in standards [PR #1](https://github.com/GitKlink/power-bi-fabric-standards/pull/1), merged 16 October 2026. All eleven migrated originals verified on `main`. Architect #21 is closed.
 - **Authority:** the root README of the standards repository identifies the canonical engineering-policy home. File Library originals remain a historical source snapshot, not a competing version-controlled authority.
 - **Domain separation:** issue #6 governs post-migration allocation of business meaning vs generic semantic-model conventions.
 - **Architecture research:** issue #17 remains open; it governs how the sources are installed/loaded/composed and their version/pinning mechanics, not the settled physical-home decision.
-- **Decision tracking:** close issue #5 when this ADR is merged. This ADR does not claim the Wayfinder agent has a standards-loading integration yet.
+- **Decision tracking:** close issue #5 when this ADR is merged. This ADR does not claim the Architect capability has a standards-loading integration yet.
 
 ## References
 

@@ -1,7 +1,9 @@
 # Research R2 — Harness vs agent vs skill vs plugin architecture
 
+> **Terminology correction (2026-10-22):** The project is the **Power BI / Fabric Architect**. **Wayfinder** is Matt Pocock's planning skill used during research, not the project name. Original issue/PR titles may retain historical wording. The evidence and technical conclusions are unchanged. References to private standards describe the repository's earlier visibility; it became public on 2026-10-22.
+
 **Research ticket:** GitHub issue #12 — *Research R2: Harness vs agent vs skill vs plugin architecture*  
-**Programme:** Wayfinder architecture — Power BI / Fabric analytical-product architect ecosystem  
+**Programme:** Power BI / Fabric Architect architecture — Power BI / Fabric analytical-product architect ecosystem  
 **Evidence snapshot:** 16 September 2026  
 **Durable target:** `research/cursor-architecture/02-harness-agent-skill-plugin.md`  
 **Status:** Architectural research and classification. **Not the final target-architecture decision.**
@@ -29,7 +31,7 @@ The most important separation is:
 | **How are common interactive entry points exposed?** | Skills and, where appropriate, **commands/workflows** |
 | **How is the system shipped?** | Potentially a **plugin/bundle** |
 | **How is it materialised across projects/hosts?** | Potentially an **installer/bootstrap layer** |
-| **What provides the underlying agent loop?** | Initially **Cursor's harness**, not a Wayfinder-built replacement |
+| **What provides the underlying agent loop?** | Initially **Cursor's harness**, not a Architect-built replacement |
 
 This directly extends rather than reopens R1. R1 already concluded that Cursor separates instruction, capability, delegated cognition, deterministic control, external capability and distribution, and explicitly warned R2 not to treat “plugin”, “skill”, “subagent”, “harness” and related terms as choices at one abstraction level. fileciteturn15file0L2-L2 fileciteturn17file0L2-L2
 
@@ -41,21 +43,21 @@ There is, however, an important evidence-state problem. Issue #12 declares both 
 
 The terms become much less ambiguous when classified by the problem each one solves.
 
-| Architecture type | Precise architectural meaning | It owns | It does **not** inherently own | Wayfinder implication |
+| Architecture type | Precise architectural meaning | It owns | It does **not** inherently own | Architect implication |
 |---|---|---|---|---|
-| **Agent** | A reasoning/acting unit: an LLM configured with instructions, capabilities and runtime behaviour | Decision-making for a task, tool selection, iterative reasoning | Distribution, canonical standards, an entire runtime platform | The Architect may **behave as** an agent role without Wayfinder implementing its own agent runtime |
+| **Agent** | A reasoning/acting unit: an LLM configured with instructions, capabilities and runtime behaviour | Decision-making for a task, tool selection, iterative reasoning | Distribution, canonical standards, an entire runtime platform | The Architect may **behave as** an agent role without Architect implementing its own agent runtime |
 | **Subagent** | A delegated specialist agent, normally with its own context and task boundary | Isolated specialist reasoning, parallel work, independent verification | General reusable knowledge storage or distribution | Use selectively for architecture analysis, independent validation, specialised long-running work |
 | **Agent harness** | The runtime envelope in which an agent operates | Model + instructions/context + tools; commonly the loop/runtime machinery that drives execution | Domain standards or product packaging as such | **Cursor already provides this layer** initially |
 | **Orchestration layer** | Logic/policy coordinating the sequence, routing and interaction of agents, capabilities, tools and artifacts | “What happens next?”, delegation, routing, workflow control | Necessarily the model runtime or package format | This is the strongest description of the **Architect's core responsibility** |
 | **Skill** | A portable, progressively loaded capability package | Task-specific instructions plus optional scripts, references and assets | Full agent runtime; canonical ownership of every standard it cites | Preferred unit for modular analytical capabilities |
-| **Skill library** | A curated collection/taxonomy of skills | Capability catalogue, reuse, discoverability, shared conventions | Central runtime or guaranteed end-to-end orchestration | Wayfinder will almost certainly contain or consume several |
-| **Plugin** | An installable composition/distribution package | Bundling and installation of rules, skills, agents, hooks, MCP and other assets | The semantic role of those contained assets; an agent loop by itself | Likely a **shipping format**, not the answer to “what is Wayfinder?” |
+| **Skill library** | A curated collection/taxonomy of skills | Capability catalogue, reuse, discoverability, shared conventions | Central runtime or guaranteed end-to-end orchestration | Architect will almost certainly contain or consume several |
+| **Plugin** | An installable composition/distribution package | Bundling and installation of rules, skills, agents, hooks, MCP and other assets | The semantic role of those contained assets; an agent loop by itself | Likely a **shipping format**, not the answer to “what is Architect?” |
 | **Rules / instruction system** | Persistent or scoped behavioural guidance injected into agent operation | Invariants, policies, routing hints, behavioural constraints | Large canonical standards corpora; deterministic enforcement | Keep thin; use as guardrails/routes to authority |
 | **Command / workflow system** | Named entry point for an explicit procedure | User-triggered workflow initiation and sequencing | General automatic expertise or hard runtime guarantees | Useful façade for high-value procedures, but richer workflows can be skills |
 | **Knowledge / reference repository** | Passive canonical information retrieved when required | Facts, explanations, architecture references, examples and source material | Enforcement, reasoning loop, autonomous action | Appropriate for substantial knowledge that should remain outside persistent context |
 | **Standards repository** | A knowledge repository with **normative authority** | Engineering policy, definitions, compliance expectations and governance | Agent runtime or reusable production code | Engineering standards should remain an authority distinct from both Architect and implementation library |
 | **Tool / MCP capability** | A callable execution/data boundary connecting the agent to systems | Actions, live data and external services | Normative policy or orchestration strategy | Fabric/Power BI APIs, model inspection/editing and services belong here where suitable |
-| **Installer / bootstrap layer** | A deterministic deployment/materialisation mechanism | Selecting, adapting, copying/linking and configuring runtime assets for a host/project | Reasoning or domain expertise | Useful if Wayfinder must support many project repos or multiple agent hosts |
+| **Installer / bootstrap layer** | A deterministic deployment/materialisation mechanism | Selecting, adapting, copying/linking and configuring runtime assets for a host/project | Reasoning or domain expertise | Useful if Architect must support many project repos or multiple agent hosts |
 
 ### Agent and subagent
 
@@ -80,11 +82,11 @@ Cursor's own current learning material gives a particularly useful definition: a
 
 That yields a useful R2 test:
 
-> **If Wayfinder supplies content and configuration to Cursor but Cursor still owns model invocation, the agent loop, core tool execution, context machinery, runtime and execution environment, Wayfinder is not an independent agent harness.**
+> **If Architect supplies content and configuration to Cursor but Cursor still owns model invocation, the agent loop, core tool execution, context machinery, runtime and execution environment, Architect is not an independent agent harness.**
 
-Wayfinder may **extend or configure a harness**. It may add orchestration, hooks, instructions, MCP tools and capabilities around that harness. But calling the whole repository “the agent harness” would imply more runtime ownership than the current model warrants. Cursor itself explicitly speaks of ongoing “Cursor Harness Improvements”, reinforcing that Cursor regards the harness as part of its product runtime. citeturn10search0
+Architect may **extend or configure a harness**. It may add orchestration, hooks, instructions, MCP tools and capabilities around that harness. But calling the whole repository “the agent harness” would imply more runtime ownership than the current model warrants. Cursor itself explicitly speaks of ongoing “Cursor Harness Improvements”, reinforcing that Cursor regards the harness as part of its product runtime. citeturn10search0
 
-This distinction is strategically important. A future Wayfinder runtime that directly owns model calls, state transitions, context assembly, tool execution, retries, sandbox lifecycle and cross-agent scheduling **could** properly be called its own harness. R2 does not provide evidence that such a replacement runtime is currently required.
+This distinction is strategically important. A future Architect runtime that directly owns model calls, state transitions, context assembly, tool execution, retries, sandbox lifecycle and cross-agent scheduling **could** properly be called its own harness. R2 does not provide evidence that such a replacement runtime is currently required.
 
 ### Orchestration layer
 
@@ -182,7 +184,7 @@ Commands occupy yet another boundary: R1 found them best suited to explicit repe
 
 MCP is currently an open standard for connecting AI applications to external systems, data sources, tools and workflows. Cursor supports MCP tools, prompts and resources. citeturn6search2turn9search3 The boundary is therefore primarily **capability access**, not architecture policy.
 
-For Wayfinder:
+For Architect:
 
 ```text
 "Use star schema unless..."      → standard/rule
@@ -218,11 +220,11 @@ One R1 detail has evolved enough to note without reopening the broader conclusio
 
 Because the durable R3 report was not accessible, these are direct observations from the R3 reference corpus rather than claims about R3's unpublished conclusions.
 
-**Microsoft `skills-for-fabric` is the closest domain analogue.** It is emphatically compositional. Microsoft distributes Fabric and Power BI capabilities as skill/plugin bundles, includes agents and MCP integration, supports cross-host installation, and separates live MCP capability from skill guidance. fileciteturn19file0L2-L6 This argues strongly against modelling Wayfinder as one giant Power BI agent.
+**Microsoft `skills-for-fabric` is the closest domain analogue.** It is emphatically compositional. Microsoft distributes Fabric and Power BI capabilities as skill/plugin bundles, includes agents and MCP integration, supports cross-host installation, and separates live MCP capability from skill guidance. fileciteturn19file0L2-L6 This argues strongly against modelling Architect as one giant Power BI agent.
 
 The especially important implication is:
 
-> **Microsoft Skills should be treated as upstream capabilities the Architect can consume, not as evidence that Wayfinder must reproduce Microsoft's platform expertise.**
+> **Microsoft Skills should be treated as upstream capabilities the Architect can consume, not as evidence that Architect must reproduce Microsoft's platform expertise.**
 
 That aligns with the project's stated strategy of **delegate first, augment second, replace/fork only for genuine gaps**.
 
@@ -257,7 +259,7 @@ Spec Kit is therefore useful evidence for what **a bootstrap/harness-like projec
 
 Across the inspected reference implementations, the recurrent pattern is therefore **composition**, not one monolithic abstraction.
 
-## Mapping the Wayfinder ecosystem
+## Mapping the Architect ecosystem
 
 The project context maps cleanly once the system is divided into authority, reasoning, capability, execution and distribution planes.
 
@@ -326,9 +328,9 @@ Those are orchestration responsibilities, not reasons to embed DAX, M, semantic 
 
 The best initial implementation hypothesis is therefore a **thin orchestration capability operating through Cursor's main Agent**, potentially expressed as one or several orchestration Skills and supported by specialist Subagents where context isolation genuinely helps. Cursor can already delegate to subagents automatically and gives each one a clean context window. citeturn7search1
 
-The Architect may consequently be described informally as “the Wayfinder agent”, but architecturally that statement should be qualified:
+The Architect may consequently be described informally as “the Architect agent”, but architecturally that statement should be qualified:
 
-> **It is an agent role/persona hosted by Cursor, not evidence that Wayfinder owns an independent agent runtime.**
+> **It is an agent role/persona hosted by Cursor, not evidence that Architect owns an independent agent runtime.**
 
 ### Domain packs
 
@@ -429,7 +431,7 @@ R1 had already recommended normal source/scripts/libraries as the canonical home
 
 Microsoft's Skills are best classified as an **upstream platform capability library**, potentially delivered through plugin/skill mechanisms and supplemented with MCP. Microsoft itself distinguishes skill guidance from MCP's live API/system access. fileciteturn19file0L2-L6
 
-Wayfinder therefore should not conceptually claim ownership of a capability merely because its orchestrator invokes it.
+Architect therefore should not conceptually claim ownership of a capability merely because its orchestrator invokes it.
 
 For example:
 
@@ -444,18 +446,18 @@ Microsoft capability
 
              ↓
 
-Wayfinder augmentation
+Architect augmentation
     adds company/domain engineering requirements
 
              ↓
 
-Wayfinder validation
+Architect validation
     tests result against canonical standards
 ```
 
 This is an important architectural inversion:
 
-> Wayfinder's value is not “knowing every Fabric command better than Microsoft”. Its differentiated value is **turning business ambiguity into a governed analytical product by composing platform capability, domain meaning and engineering authority**.
+> Architect's value is not “knowing every Fabric command better than Microsoft”. Its differentiated value is **turning business ambiguity into a governed analytical product by composing platform capability, domain meaning and engineering authority**.
 
 ### Project repositories
 
@@ -485,9 +487,9 @@ The evidence supports several genuine alternatives, but they are not equally goo
 | Candidate | Description | Strengths | Structural problems | R2 assessment |
 |---|---|---|---|---|
 | **Monolithic Architect agent** | One custom agent prompt owns orchestration, domain knowledge and engineering expertise | Simple mental model; one visible persona | Context growth, duplicated authority, coupling of domains/standards/runtime, poor composability | **Poor fit** |
-| **Independent Wayfinder agent harness** | Build own model loop/runtime/tools/state/orchestration | Maximum runtime control, host independence | Rebuilds capability already supplied by Cursor; large engineering/ops burden; prematurely binds architecture to runtime decisions | **Not justified by current evidence** |
+| **Independent Architect agent harness** | Build own model loop/runtime/tools/state/orchestration | Maximum runtime control, host independence | Rebuilds capability already supplied by Cursor; large engineering/ops burden; prematurely binds architecture to runtime decisions | **Not justified by current evidence** |
 | **Skill library only** | Everything decomposed into independently selected skills | Modular, portable, context-efficient, easy reuse | Weak system-level coordination; users/agent must reconstruct end-to-end analytical process | **Necessary component, insufficient whole** |
-| **Plugin-first architecture** | Treat “Wayfinder plugin” as the main product abstraction | Cohesive installation/update experience | Confuses packaging with semantics; risks Cursor lock-in and hides authority boundaries | **Good packaging option, bad system definition** |
+| **Plugin-first architecture** | Treat “Architect plugin” as the main product abstraction | Cohesive installation/update experience | Confuses packaging with semantics; risks Cursor lock-in and hides authority boundaries | **Good packaging option, bad system definition** |
 | **Bootstrap/process framework** | Spec-Kit-style installer materialises workflows/artifacts into each target project | Multi-host adaptation, persistent process artifacts, deterministic setup | Adds installer/versioning complexity; still requires host runtime/capabilities | **Potential supporting layer** |
 | **Layered hosted orchestration ecosystem** | Cursor provides harness; Architect coordinates modular skills/subagents; standards/domain/reuse remain independent authorities; plugin/bootstrap handles distribution | Strong separation of concerns, progressive context, delegate-first platform use, portable core assets, replaceable domains | More interfaces and version contracts to govern | **Best-supported conceptual classification** |
 
@@ -528,7 +530,7 @@ That is **one product experience over many architectural components**.
 
 ### Why not build our own harness now
 
-Building a Wayfinder harness becomes rational when requirements demand control the existing host cannot provide—for example, if the project must directly own cross-host model execution, durable run state, custom retry/approval semantics, sandbox scheduling or agent-loop behaviour.
+Building a Architect harness becomes rational when requirements demand control the existing host cannot provide—for example, if the project must directly own cross-host model execution, durable run state, custom retry/approval semantics, sandbox scheduling or agent-loop behaviour.
 
 The current evidence instead shows that Cursor already provides the host agent, context management, subagents, tools, MCP, hooks and plugin surfaces. citeturn7search0turn7search1turn9search2turn9search3
 
@@ -546,7 +548,7 @@ Nothing in R2 demonstrates that B is required to solve A.
 
 ### Why skills alone are not enough
 
-The opposite extreme—“Wayfinder is just a skill collection”—also loses something important.
+The opposite extreme—“Architect is just a skill collection”—also loses something important.
 
 The project has an explicit system-level flow:
 
@@ -577,7 +579,7 @@ Cursor's Plugin system can package Rules, Skills, Agents, Commands, MCP and Hook
 
 Therefore the statement:
 
-> “Wayfinder should be a Cursor Plugin”
+> “Architect should be a Cursor Plugin”
 
 can eventually be a valid **distribution decision**, but it is not a sufficient architecture decision.
 
@@ -589,7 +591,7 @@ The evidence supports a **compositional, layered classification** rather than ch
 
 The most accurate durable description is:
 
-> **Wayfinder is an AI-assisted analytical-product architecture and orchestration ecosystem that composes domain authority, engineering standards, platform capabilities, reusable implementation assets and validation around a host coding-agent runtime.**
+> **Architect is an AI-assisted analytical-product architecture and orchestration ecosystem that composes domain authority, engineering standards, platform capabilities, reusable implementation assets and validation around a host coding-agent runtime.**
 
 This says what the system **does and owns** without prematurely fixing how every component must be packaged.
 
@@ -599,7 +601,7 @@ A shorter working label would be:
 
 “Agent harness” should **not** be the primary name at this stage, because the initial system relies on the Cursor harness rather than owning the whole execution loop. citeturn11search0
 
-“Skill library” is too narrow because Wayfinder also needs cross-capability orchestration, standards authority, domain authority, tools and validation.
+“Skill library” is too narrow because Architect also needs cross-capability orchestration, standards authority, domain authority, tools and validation.
 
 “Plugin” is too low-level because it answers distribution rather than system identity.
 
@@ -716,7 +718,7 @@ LAYER: Architect / orchestration
     reconciliation
 
 LAYER: Capability
-    Wayfinder skills
+    Architect skills
     Microsoft Fabric / Power BI skills
     selected subagents
     workflows
@@ -760,7 +762,7 @@ This model preserves the project's intended authority boundaries while allowing 
 
 ### Architectural risks
 
-**Misnaming the system as a harness.** This risks gradually rebuilding model/runtime infrastructure simply because the project adopted the term “harness”. The operational test should be runtime ownership: until Wayfinder actually owns the model/agent execution loop rather than configuring Cursor's, classify it as an orchestration layer **on** a harness. citeturn11search0turn8search9
+**Misnaming the system as a harness.** This risks gradually rebuilding model/runtime infrastructure simply because the project adopted the term “harness”. The operational test should be runtime ownership: until Architect actually owns the model/agent execution loop rather than configuring Cursor's, classify it as an orchestration layer **on** a harness. citeturn11search0turn8search9
 
 **Misnaming the system as a plugin.** This risks letting Cursor's packaging layout dictate conceptual boundaries. Cursor itself treats Plugins as containers for multiple primitive families. citeturn7search0
 
@@ -770,7 +772,7 @@ This model preserves the project's intended authority boundaries while allowing 
 
 **Treating every procedure as a Skill.** Some controls should not depend on an LLM remembering to invoke instructions. Cursor Hooks exist specifically to observe, block or modify agent-loop behaviour at defined events, including tool and subagent use. citeturn9search2
 
-**Duplicating Microsoft capabilities.** Microsoft's current Fabric repository already combines platform skills, agents, MCP integration and Power BI-specific authoring bundles. fileciteturn19file0L2-L6 Wayfinder should preserve the planned delegate-first boundary so that platform evolution does not become an internal maintenance burden without a demonstrated gap.
+**Duplicating Microsoft capabilities.** Microsoft's current Fabric repository already combines platform skills, agents, MCP integration and Power BI-specific authoring bundles. fileciteturn19file0L2-L6 Architect should preserve the planned delegate-first boundary so that platform evolution does not become an internal maintenance burden without a demonstrated gap.
 
 **Confusing standards with reusable implementation.** Issue #5 has already identified this as a governance problem and explicitly prohibits making the DAX/M implementation library the standards authority. fileciteturn14file0L3-L6
 
@@ -786,7 +788,7 @@ R2 should not prematurely settle:
 
 **Cross-repository consumption mechanism.** Whether canonical standards/domain packs are installed, vendored, linked, fetched through tools, retrieved through MCP, packaged into releases or otherwise consumed needs separate evaluation.
 
-**How much Architect state should be durable.** A long analytical-product journey may need decision/state artifacts that outlive a single agent context. Spec Kit demonstrates one pattern—persistent repository artifacts—but R2 does not establish that its exact method is right for Wayfinder. fileciteturn23file0L2-L6
+**How much Architect state should be durable.** A long analytical-product journey may need decision/state artifacts that outlive a single agent context. Spec Kit demonstrates one pattern—persistent repository artifacts—but R2 does not establish that its exact method is right for Architect. fileciteturn23file0L2-L6
 
 **Where model-driven orchestration ends and deterministic workflow begins.** Some transitions may remain agent-selected; critical conformance gates may deserve executable state machines, scripts or Hooks. OpenAI's orchestration model explicitly allows both model-driven and programmatic coordination, while Cursor provides hooks around its loop. citeturn8search0turn9search2
 
@@ -815,7 +817,7 @@ No direct evidence gathered from those reference repositories contradicted R1. I
 
 The durable architectural answer that R5, R6 and R8 should consume is:
 
-> **Wayfinder should not be classified as exclusively a harness, agent, skill library or plugin. These terms belong to different architectural dimensions.**
+> **Architect should not be classified as exclusively a harness, agent, skill library or plugin. These terms belong to different architectural dimensions.**
 >
 > **The system itself is best classified as a layered analytical-product orchestration ecosystem.**
 >
@@ -831,6 +833,6 @@ The durable architectural answer that R5, R6 and R8 should consume is:
 >
 > **Therefore: we are building several of these things together—but in distinct layers, with distinct ownership.**
 
-That conclusion answers issue #12 without deciding the later physical repository topology or committing Wayfinder to a bespoke runtime before evidence shows one is needed. It is also consistent with issue #12's stated non-goal of avoiding premature installation/topology decisions. fileciteturn13file0L3-L6
+That conclusion answers issue #12 without deciding the later physical repository topology or committing Architect to a bespoke runtime before evidence shows one is needed. It is also consistent with issue #12's stated non-goal of avoiding premature installation/topology decisions. fileciteturn13file0L3-L6
 
 **Repository persistence state:** this research is structured for `research/cursor-architecture/02-harness-agent-skill-plugin.md`, but the GitHub connector available in this session exposed repository read/search operations and no create/update-file or commit operation. Consequently, the report could not be made durable in GitHub from this session. Until it is committed there—and reconciled with the missing R3 artifact—the repository does **not yet contain this R2 result as its long-term source of truth**.
