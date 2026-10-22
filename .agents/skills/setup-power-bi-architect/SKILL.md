@@ -12,6 +12,8 @@ Only install the **first usable DAX measure-review vertical slice**, not a hypot
 
 ## 0. Source, scope and prerequisites
 
+Read these files from the **existing local Architect checkout**, typically inside the user's `clones` directory, before making changes. Resolve paths relative to the open workspace: `performance-reward-dashboard-architect/SETUP.md` if Cursor opened the parent `clones` folder, or `SETUP.md` if it opened the Architect repository itself. Do not fetch the hosted GitHub copy when a local version exists; GitHub is only a bootstrap fallback for a missing clone. Confirm the local checkout/branch state and do not update it without approval.
+
 Read these files from the **Architect repository** before making changes:
 1. [`SETUP.md`](../../../SETUP.md) (root relative to this skill).
 2. [DAX reviewer instructions](../dax-measure-standards-review/SKILL.md).
