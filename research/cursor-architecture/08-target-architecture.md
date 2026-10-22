@@ -1,14 +1,16 @@
 # R8 — Target Architecture Synthesis for the Power BI/Fabric Architect
 
+> **Terminology correction (2026-10-22):** The project is the **Power BI / Fabric Architect**. **Wayfinder** is Matt Pocock's planning skill used during research, not the project name. Original issue/PR titles may retain historical wording. The evidence and technical conclusions are unchanged. References to private standards describe the repository's earlier visibility; it became public on 2026-10-22.
+
 **Research ticket:** [#17 — R8 synthesis](https://github.com/GitKlink/performance-reward-dashboard-architect/issues/17)  
 **Synthesis date:** 2026-10-22  
 **Status:** **PROPOSED TARGET DESIGN FOR REVIEW**. Not yet an approved architecture ADR, not proof of an installed product, and not a mandate to merge/ship every proposed component.  
 **Inputs:** [R1](01-cursor-primitives.md) · [R2](02-harness-agent-skill-plugin.md) · [R3](03-reference-repo-benchmark.md) · [R4](04-cross-repo-composition.md) · [R5](05-installation-bootstrap.md) · [R6](06-standards-library-packaging.md) · [R7](07-cross-agent-portability.md).
 
-**Prior normative decision that this report must not reopen:** [ADR-0001](../../docs/decisions/0001-canonical-standards-home.md) establishes `GitKlink/power-bi-fabric-standards` as the canonical engineering-policy home. [Wayfinder Issue #5](https://github.com/GitKlink/performance-reward-dashboard-architect/issues/5) has already been closed. This R8 paper proposes the *implementation/composition* architecture that consumes that authority, not another home for standards.
+**Prior normative decision that this report must not reopen:** [ADR-0001](../../docs/decisions/0001-canonical-standards-home.md) establishes `GitKlink/power-bi-fabric-standards` as the canonical engineering-policy home. [Architect Issue #5](https://github.com/GitKlink/performance-reward-dashboard-architect/issues/5) has already been closed. This R8 paper proposes the *implementation/composition* architecture that consumes that authority, not another home for standards.
 
 The statements below use:
-- **ESTABLISHED:** already accepted Wayfinder authority boundary or a material documented product constraint.
+- **ESTABLISHED:** already accepted Architect authority boundary or a material documented product constraint.
 - **RESEARCH-SUPPORTED:** recommended by a named R1–R7 research artifact but not adopted as production architecture.
 - **PROPOSED:** concrete R8 design selection awaiting review/ADR.
 - **UNVALIDATED:** requires a real tool, user-workstation, CI or PBIP test.
@@ -19,7 +21,7 @@ The statements below use:
 
 ### Decision proposed
 
-**Build Wayfinder as a Cursor-first, Power BI-focused, cross-repository *composed capability system*, hosted by an existing coding-agent runtime.** Do **not** build a new independent LLM/agent harness at this stage. Do **not** put all knowledge in one always-loaded prompt, or treat a Cursor Plugin as the complete architecture.
+**Build Architect as a Cursor-first, Power BI-focused, cross-repository *composed capability system*, hosted by an existing coding-agent runtime.** Do **not** build a new independent LLM/agent harness at this stage. Do **not** put all knowledge in one always-loaded prompt, or treat a Cursor Plugin as the complete architecture.
 
 **First useful product slice:** a standards-aware **Power BI semantic-model measure review**, operating on a real PBIP/TMDL repository. It should read the approved naming standard and relevant domain/asset context, inspect existing measures, propose a safe refactor, and produce independent validation evidence. This is the acceptance test for the architecture, not a side demonstration.
 
@@ -30,7 +32,7 @@ The statements below use:
 | **Architect / router** | Identify task, audience, domain, required standards, relevant skills and write destination | Concise host-neutral `AGENTS.md` plus small Cursor-specific routing Rule where needed | R1/R2/R7: keep permanent context and duplicated instructions small |
 | **Procedural capabilities** | Steps for model discovery, semantic design, DAX review, M transformation, report UX and QA | Focused `SKILL.md` with progressive reference retrieval | R1/R3/R7: skill is a good reusable procedure, not full normative content |
 | **Canonical engineering standards** | Rules and policy: naming, folders, DAX/M engineering, modelling, UX, conformance | **Private standards repo** at approved pinned revision | ADR-0001 and R6 correction |
-| **Domain authority** | What Performance & Reward entities, populations and KPIs actually mean | Domain pack, initially co-located with Wayfinder if practical | ADR-0001 / #6: business semantics separate from generic naming |
+| **Domain authority** | What Performance & Reward entities, populations and KPIs actually mean | Domain pack, initially co-located with Architect if practical | ADR-0001 / #6: business semantics separate from generic naming |
 | **Reusable implementations** | DAX, M, Python, Deneb native patterns/functions/templates | Existing `dax-m-query-library`, indexed by stable IDs and pinned revisions | R6 correction: not obligatorily wrapped in JS/npm |
 | **Platform execution** | Power BI/Fabric operations and compatible model checks | Prefer **Microsoft-maintained skills and existing tools**, augment with our policy | #4/R3 delegate first, fork only if needed |
 | **Product execution** | Real analytical output, model and report code | PBIP repository owns edits, tests, local config and result | R4 write authority |
@@ -66,7 +68,7 @@ The **smallest end-to-end pilot** must, on a fixture PBIP repo with synthetic da
 |---|---|---|---|
 | [R1 — Cursor primitives](01-cursor-primitives.md), §§2, 4–13 | Instructions, Skills, agents, hooks, MCP, plugins and ordinary docs have different loading/roles; full standards do not belong in persistent Rules | Small routing instructions + progressively loaded Skills + canonical reference docs | Exact discovery and precedence need installed-build tests |
 | [R2 — architecture classification](02-harness-agent-skill-plugin.md), executive finding / vocabulary / recommendation | Architect is an orchestration role; Cursor owns core agent execution loop; plugin is distribution, not runtime | Compose capabilities in existing host, do not build custom harness | Future needs could change this |
-| [R3 — reference benchmark](03-reference-repo-benchmark.md), §§14–20 | Spec Kit shows managed bootstrap lifecycle; Matt distinguishes managed/editable; Addy uses host adapters; Microsoft composes skills/MCP | Single canonical source, thin host adapters, careful managed state | Reference repositories are examples, not a complete Wayfinder installer |
+| [R3 — reference benchmark](03-reference-repo-benchmark.md), §§14–20 | Spec Kit shows managed bootstrap lifecycle; Matt distinguishes managed/editable; Addy uses host adapters; Microsoft composes skills/MCP | Single canonical source, thin host adapters, careful managed state | Reference repositories are examples, not a complete Architect installer |
 | [R4 — repo composition](04-cross-repo-composition.md), §§3–10 | Side-by-side independent clones + Cursor multi-root are good locally; Cloud Agent multi-root unsupported; dependency pins separate from editor view | Local multi-root **pilot** and explicit single-root cloud path | Multi-root Rule activation and private auth must be tested |
 | [R5 — bootstrap](05-installation-bootstrap.md), §§2–10 | Manual pilot before a lightweight pinned resolver; clear ownership, idempotence, rollback and no silent updates | Phase-0 runbook; Python-based `doctor/plan/apply/verify` implementation candidate | No actual installer exists yet |
 | [R6 — standards/library packaging](06-standards-library-packaging.md), §§1, 18, **20** | One canonical source; stable asset IDs; **native DAX/M/Python/Deneb** first; npm/ESM only when a genuine JS/TS API exists | Git-pinned standards and native library retrieval with catalogue/compatibility metadata | September npm-first executive claims are superseded by October domain-fit correction |
@@ -116,18 +118,18 @@ USER / ANALYTICAL QUESTION / PBIP PROJECT
   REVIEW / HUMAN APPROVAL / PR
 ~~~
 
-The diagram does **not** imply that Wayfinder is a new external process orchestrating every host. The first orchestration layer may live as the coding agent's active skill plus project instructions, with deterministic scripts and tools around it. R2 specifically distinguishes that from owning an agent harness.
+The diagram does **not** imply that Architect is a new external process orchestrating every host. The first orchestration layer may live as the coding agent's active skill plus project instructions, with deterministic scripts and tools around it. R2 specifically distinguishes that from owning an agent harness.
 
 ### Ownership boundaries and their enforcement implications
 
 | Authority | What it decides | What it may generate/execute | What it **must not** overwrite silently |
 |---|---|---|---|
-| Wayfinder | Workflow choices, loading route, acceptance contract, recommended tools | Small host adapters, candidate project plan, validation orchestration | Normative engineering standards, P&R KPI truth |
+| Architect | Workflow choices, loading route, acceptance contract, recommended tools | Small host adapters, candidate project plan, validation orchestration | Normative engineering standards, P&R KPI truth |
 | Engineering standards | Generic Power BI-focused policy; schema/metadata conventions | Conformance specifications and examples | Business definition or specific project data |
 | P&R domain pack | KPI definition, grain, eligibility, reporting periods, meaning, interpretations, reconciliations | Domain checks/contracts/fixtures | Generic technical engineering grammar |
 | DAX/M library | Reusable native executable implementations, dependencies and examples | Approved patterns/UDFs/M functions/scripts, tests | Generic standards or product-specific KPI ownership |
 | PBIP project | Actual model/report content, local accepted exceptions | Project-side change, test output, documentation, PR | Upstream authorities |
-| Microsoft capabilities | Platform-specific tool-supported operations and QA mechanics | Inspections, model changes where authorised, technical validations | Business semantics or Wayfinder-specific governance |
+| Microsoft capabilities | Platform-specific tool-supported operations and QA mechanics | Inspections, model changes where authorised, technical validations | Business semantics or Architect-specific governance |
 
 **Conflict handling:** domain meaning overrides a *guess* made from folder names. A true conflict between domain contract and generic policy becomes an explicit exception or upstream issue. An installer cannot settle it by copying one source over another.
 
@@ -148,24 +150,24 @@ Only the first and quality-evidence subset are required for the initial pilot. M
 
 | Asset | Proposed physical home | Activation/use | Owns |
 |---|---|---|---|
-| Accepted repo authority ADR | Wayfinder `docs/decisions/0001-canonical-standards-home.md` (**exists**) | Referenced by architect docs | Physical standards home |
+| Accepted repo authority ADR | Architect `docs/decisions/0001-canonical-standards-home.md` (**exists**) | Referenced by architect docs | Physical standards home |
 | Thin project router | PBIP `AGENTS.md` (generated/adapted only with approval) | Host project instructions | Project write-scope, dependency route |
-| Core architect instructions | Wayfinder `AGENTS.md` / ordinary architecture docs | Host instruction when relevant | General orchestration invariants only |
-| Cursor-specific project rule | Wayfinder or PBIP `.cursor/rules/semantic-model-review.mdc` | Scoped/intelligent routing | Trigger and pointer, not copied standard |
-| Portable semantic review Skill | Wayfinder `.agents/skills/semantic-model-review/SKILL.md` | On-demand discovery/explicit invocation | Procedure, required evidence and missing-input failure |
+| Core architect instructions | Architect `AGENTS.md` / ordinary architecture docs | Host instruction when relevant | General orchestration invariants only |
+| Cursor-specific project rule | Architect or PBIP `.cursor/rules/semantic-model-review.mdc` | Scoped/intelligent routing | Trigger and pointer, not copied standard |
+| Portable semantic review Skill | Architect `.agents/skills/semantic-model-review/SKILL.md` | On-demand discovery/explicit invocation | Procedure, required evidence and missing-input failure |
 | Supporting skill references/scripts | Beside SKILL.md under `references/`, `scripts/` | Loaded on demand | Workflow support only |
 | Power BI engineering standard | Private standards repo `semantic-model/semantic_measure_standard.md` (**exists**) | Pinned, explicit read | Normative model/measure conventions |
 | Glossary and domain representation | Private standards repo `semantic-model/business_glossary.md`, `semantic-model/domains/…` (**exist**) | Task-selected references | Current migrated representation content, pending ownership classification |
-| P&R KPI / lifecycle contracts | Wayfinder domain pack initially, `domains/performance-reward/` candidate | Domain-selected read | Business meaning and test expectations |
+| P&R KPI / lifecycle contracts | Architect domain pack initially, `domains/performance-reward/` candidate | Domain-selected read | Business meaning and test expectations |
 | Native DAX/M/Python/Deneb patterns | `dax-m-query-library/library/{dax,m,python,deneb}/` (**exist**) | Versioned source or catalogue reference | Reusable implementation |
 | Asset metadata catalogue | Library; e.g. `catalogue/` or generated index (new; TBD) | Query by asset ID, language, compatibility | Find real source; no executable wrapper required |
-| Project dependency lock | PBIP repo `wayfinder.lock.json` candidate | Deterministic resolver/doctor | Approved revisions for this product |
-| Bootstrap tool | Wayfinder `tools/bootstrap/` or script package, TBD | Explicit `doctor/plan/apply/verify` | Reversible local composition |
-| Eval fixture/validators | Wayfinder `evaluations/` + owner-specific tests | Without model prompt where possible | Independent evidence against source revisions |
+| Project dependency lock | PBIP repo `power-bi-architect.lock.json` candidate | Deterministic resolver/doctor | Approved revisions for this product |
+| Bootstrap tool | Architect `tools/bootstrap/` or script package, TBD | Explicit `doctor/plan/apply/verify` | Reversible local composition |
+| Eval fixture/validators | Architect `evaluations/` + owner-specific tests | Without model prompt where possible | Independent evidence against source revisions |
 | Generated workspace | User-local `*.code-workspace` | Cursor local IDE | View over separate repos; not source authority |
-| Host adapters | Wayfinder `adapters/cursor/`, then `adapters/codex/`, `adapters/claude/` | Installed only where host supports them | Host-specific syntax/permissions |
+| Host adapters | Architect `adapters/cursor/`, then `adapters/codex/`, `adapters/claude/` | Installed only where host supports them | Host-specific syntax/permissions |
 
-**Avoid premature empty folders:** create these assets only as part of a scoped first pilot and approved follow-on tickets. Do not transplant the entire existing semantic standards pack into Wayfinder.
+**Avoid premature empty folders:** create these assets only as part of a scoped first pilot and approved follow-on tickets. Do not transplant the entire existing semantic standards pack into Architect.
 
 ## 5. Repository/topology model
 
@@ -173,7 +175,7 @@ Only the first and quality-evidence subset are required for the initial pilot. M
 
 ~~~text
 GitKlink/
-  performance-reward-dashboard-architect/  [Wayfinder; public; source of orchestration/research]
+  performance-reward-dashboard-architect/  [Architect; public; source of orchestration/research]
   power-bi-fabric-standards/                [engineering policy; PRIVATE]
   dax-m-query-library/                     [public native implementation asset library]
   <real-product>.pbip                       [example *consumer*; do not assume exists]
@@ -181,7 +183,7 @@ GitKlink/
 
 Current `main` includes [R1–R7](README.md); the seven R-research files are evidence rather than installation assets. Standards README/core/glossary/domain extension originals were copied into the standards authority without semantic edits; do not rewrite them during bootstrap.
 
-**Important access constraint:** a public Wayfinder repo and private standards repo may be viewed by different identities and CI runners. A link in a public file does not grant access; a private source file must not be imported into a public package, Actions log or tool trace without authorisation.
+**Important access constraint:** a public Architect repo and private standards repo may be viewed by different identities and CI runners. A link in a public file does not grant access; a private source file must not be imported into a public package, Actions log or tool trace without authorisation.
 
 ### Local developer composition proposal
 
@@ -192,7 +194,7 @@ analytics-work/                             (user-selected parent; conceptual)
   power-bi-fabric-standards/                (private canonical policy)
   dax-m-query-library/                     (approved implementation assets)
   product-local.code-workspace              (generated editor view)
-  .wayfinder-state/                         (local, ignored, generated provenance)
+  .power-bi-architect-state/                         (local, ignored, generated provenance)
 ~~~
 
 **Why sibling repositories:** preserve independent Git history, private access control, PR workflow and product-specific revisions. **Why multi-root:** direct local Cursor visibility without vendoring source. **Limitations:** Cursor Cloud Agents do not currently consume multi-root workspaces, and some Cursor worktree behaviour is disabled for multi-root sessions (R4). A workspace file is **not** proof of version pinning or standards application.
@@ -211,7 +213,7 @@ Separate three things:
 
 ~~~json
 {
-  "schemaVersion": "wayfinder-proposal-0",
+  "schemaVersion": "power-bi-architect-proposal-0",
   "productId": "sample-reward-pbip",
   "writeRoot": ".",
   "dependencies": [
@@ -293,12 +295,12 @@ The first product slice can be run with documented independent Git checkouts and
 A *candidate* lightweight tool, not a finished CLI:
 
 ~~~text
-wayfinder doctor           # check Git/Python/host, repo visibility/access, permissions, project
-wayfinder plan             # show desired vs observed source versions and proposed managed writes
-wayfinder apply            # resolve exact approved refs and generate local workspace/adapters safely
-wayfinder verify           # compare SHA/digests, validate entrypoints and fixture test
-wayfinder update --check   # report options; do not update implicitly
-wayfinder uninstall        # remove only hash-verified installer-managed artifacts
+power-bi-architect doctor           # check Git/Python/host, repo visibility/access, permissions, project
+power-bi-architect plan             # show desired vs observed source versions and proposed managed writes
+power-bi-architect apply            # resolve exact approved refs and generate local workspace/adapters safely
+power-bi-architect verify           # compare SHA/digests, validate entrypoints and fixture test
+power-bi-architect update --check   # report options; do not update implicitly
+power-bi-architect uninstall        # remove only hash-verified installer-managed artifacts
 ~~~
 
 Required constraints:
@@ -341,7 +343,7 @@ No G0–G4 acceptance gate has been executed as part of R8.
 
 Do not collapse all of these into one version:
 
-- Wayfinder orchestrator and its approved Skill revision.
+- Architect orchestrator and its approved Skill revision.
 - Canonical engineering standard revision/approval state.
 - P&R domain contract revision.
 - Native implementation asset/library revision.
@@ -367,7 +369,7 @@ Do not collapse all of these into one version:
 
 ~~~json
 {
-  "schemaVersion": "wayfinder-evidence-proposal-0",
+  "schemaVersion": "power-bi-architect-evidence-proposal-0",
   "projectCommit": "<actual-project-commit>",
   "projectDirty": false,
   "standardsRevision": "<approved-git-commit>",
@@ -456,7 +458,7 @@ A Cursor-only subagent or hook should not be deleted solely to make the other ho
 | Risk/trade-off | Why it matters | Mitigation / decision gate |
 |---|---|---|
 | Multi-root good locally, not cloud | Cursor Cloud Agents cannot use the same workspace | G3 separate single-root/authenticated resolver |
-| Canonical repository is private, Wayfinder public | CI and agent tools can see different sources; leakage risk | Access preflight, scoped permissions, no copied full standards in public outputs |
+| Canonical repository is private, Architect public | CI and agent tools can see different sources; leakage risk | Access preflight, scoped permissions, no copied full standards in public outputs |
 | Rules/Skills are nondeterministic in application | File exists but model may not load correct content | Mandatory source read evidence + independent checks |
 | Monorepo simplicity vs authority | Collapsing repos blurs business/engineering/code ownership | Keep repos separate; manifest identifies source |
 | Packaging overreach | npm/ESM unfit as universal wrapper for native DAX/M/Deneb | Follow R6 §20 native-first correction |
@@ -473,13 +475,13 @@ A Cursor-only subagent or hook should not be deleted solely to make the other ho
 
 **Cost rationale:** For a small embedded Power BI team using Python, Dataflows and Cursor, the lightest sufficient runtime is the existing host plus a small number of Skills and deterministic checks. A separate runtime, package registry and full installer are costly before the first product workflow proves value.
 
-## 12. Decisions ready for Wayfinder #5 / follow-on ADR
+## 12. Decisions ready for Architect #5 / follow-on ADR
 
 ### Clarification: #5 is **already settled**
 
 At ticket creation, #17 was expected to feed a still-open standards-home decision #5. As of this synthesis, **#5 is closed** and ADR-0001 has already established the separate canonical standards repository. **Do not reopen that physical-home decision.**
 
-R8's next normative work is an **implementation/target-architecture ADR in Wayfinder**, not a change to existing standards authority. The following choices are ready for review:
+R8's next normative work is an **implementation/target-architecture ADR in Architect**, not a change to existing standards authority. The following choices are ready for review:
 
 | ID | Proposed implementation choice | Basis | Status |
 |---|---|---|---|
@@ -585,4 +587,4 @@ The canonical standards home and 11-file migration are already completed; do not
 - [Agent Skills specification](https://agentskills.io/specification)
 - [GitHub Spec Kit](https://github.com/github/spec-kit) — managed/bootstrap pattern reference, not a required dependency.
 
-**Research integrity statement:** repository state and documentation were checked; this document did **not** build/test a new Wayfinder runtime, Python installer, PBIP model/refactor, distributed agent Skill, Cloud Agent private-repo flow, or Power BI service integration. Every item described as a gate remains UNVALIDATED until executed and evidenced in an implementation ticket.
+**Research integrity statement:** repository state and documentation were checked; this document did **not** build/test a new Architect runtime, Python installer, PBIP model/refactor, distributed agent Skill, Cloud Agent private-repo flow, or Power BI service integration. Every item described as a gate remains UNVALIDATED until executed and evidenced in an implementation ticket.
