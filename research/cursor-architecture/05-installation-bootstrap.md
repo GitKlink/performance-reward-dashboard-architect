@@ -1,16 +1,18 @@
-# R5 — Installation and Bootstrap Architecture for Wayfinder
+# R5 — Installation and Bootstrap Architecture for Architect
+
+> **Terminology correction (2026-10-22):** The project is the **Power BI / Fabric Architect**. **Wayfinder** is Matt Pocock's planning skill used during research, not the project name. Original issue/PR titles may retain historical wording. The evidence and technical conclusions are unchanged. References to private standards describe the repository's earlier visibility; it became public on 2026-10-22.
 
 **Research ticket:** [#15 — Installation and bootstrap](https://github.com/GitKlink/performance-reward-dashboard-architect/issues/15)  
 **Research snapshot:** 19 October 2026  
 **Status:** RESEARCH / IMPLEMENTATION RECOMMENDATION — **not** an approved R8 target architecture, a shipped installer, or evidence of an end-to-end Cursor/PBIP test.  
 **Required prior work:** [R2](02-harness-agent-skill-plugin.md), [R4](04-cross-repo-composition.md), [R7](07-cross-agent-portability.md), [R3](03-reference-repo-benchmark.md).  
-**Authority decision:** [Wayfinder ADR-0001](../../docs/decisions/0001-canonical-standards-home.md).
+**Authority decision:** [Architect ADR-0001](../../docs/decisions/0001-canonical-standards-home.md).
 
 This document distinguishes **DOCUMENTED** (current official specification/documentation), **OBSERVED** (existing implementation studied by R3 or official repository), **RECOMMENDATION** (R5 architecture judgment), and **UNTESTED** (proposed tests not yet run on actual developer or CI machines).
 
 ## 1. Installation problem and personas
 
-Wayfinder is a Power BI/Fabric-focused *orchestration* project: it must combine upstream Microsoft platform skills, the canonical engineering standards, domain authority, reusable DAX/M/Python/Deneb patterns, and a real analytical project without turning itself into a second content authority or a new AI agent runtime.
+Architect is a Power BI/Fabric-focused *orchestration* project: it must combine upstream Microsoft platform skills, the canonical engineering standards, domain authority, reusable DAX/M/Python/Deneb patterns, and a real analytical project without turning itself into a second content authority or a new AI agent runtime.
 
 The source repositories are deliberately independent:
 
@@ -25,7 +27,7 @@ The source repositories are deliberately independent:
 
 **Personas / supported execution modes to distinguish:**
 
-1. **Architecture contributor:** edits Wayfinder/standards/library in separate authorised PRs; needs *editable* checkouts and may work on any one authority explicitly.
+1. **Architecture contributor:** edits Architect/standards/library in separate authorised PRs; needs *editable* checkouts and may work on any one authority explicitly.
 2. **P&R/PBIP developer:** works primarily in **Cursor IDE** on a PBIP model; needs reference sources available but normally **read-only** by policy; minimal setup friction.
 3. **Team consumer:** wants the approved skills and policies installed/updated without personally modifying them; needs a *managed* mode with provenance and safe upgrades.
 4. **CI/conformance runner:** must be reproducible and deterministic without Cursor; works with pinned exact inputs, machine-readable evidence and short-lived credentials.
@@ -49,7 +51,7 @@ The source repositories are deliberately independent:
 | **G — Small pinned resolver + workspace/adapter generator** | One checked setup command after prerequisites | **Strong by design**, if refs/hashes and state enforced | Portable Python/CLI or CI, with host-specific renderers | Moderate implementation cost | **Recommended phased end state**, not yet built |
 | **H — Full spec-kit-style scaffolding framework** | One polished CLI | Can be strong with a complete managed-file ledger | Extensible across hosts | Very high upfront test, trust and upgrade burden | **Too large for current Power BI slice** |
 
-**R2/R3 alignment:** a plugin is a packaging boundary, a Skill is a capability boundary, a Rule/AGENTS.md is an instruction surface, and a bootstrapper is a deterministic materialisation/lifecycle boundary. Choosing an installer does **not** turn Wayfinder into a harness.
+**R2/R3 alignment:** a plugin is a packaging boundary, a Skill is a capability boundary, a Rule/AGENTS.md is an instruction surface, and a bootstrapper is a deterministic materialisation/lifecycle boundary. Choosing an installer does **not** turn Architect into a harness.
 
 **R4 alignment:** sibling clones plus a multi-root IDE workspace are the lowest-coupling **local development** path, but not a dependency resolver. Cursor officially supports local multi-root and says **Cloud Agents do not support multi-root**; some single-root Git features such as worktrees are disabled within multi-root. See [Cursor search FAQ](https://cursor.com/docs/agent/tools/search).
 
@@ -71,7 +73,7 @@ R8 must approve the final distribution and lockfile contracts. R5 should not dec
 
 | Behaviour | `managed` — default for consumers | `editable` — contributor |
 |---|---|---|
-| Wayfinder capability/adapter files | Installed from approved pinned revision; **owned by tool** | Source checkout in normal Git repo, intentionally editable |
+| Architect capability/adapter files | Installed from approved pinned revision; **owned by tool** | Source checkout in normal Git repo, intentionally editable |
 | Standards/library reference files | Pinned, treated **read-only** except explicitly delegated authority task | Independent writable Git checkouts only when working on their own authority |
 | PBIP project files | **User-owned**, never overwritten without explicit approval | User-owned |
 | Update | Explicit new approved pin and managed-state diff; no silent HEAD | Normal Git pull/branch/PR controlled by contributor |
@@ -81,7 +83,7 @@ R8 must approve the final distribution and lockfile contracts. R5 should not dec
 
 **Terminology caveat:** a Git clone in a normal writable folder is not an OS-enforced read-only sandbox. In phase 1, "read-only dependency" is an **intent and a validation rule**; genuine enforcement requires filesystem/tool permissions and validated no-write checks. Do not overclaim protection from a prompt.
 
-A user may have **mixed roles across repositories**, e.g. Wayfinder editable and standards managed. Mode should therefore be recorded **per installed component or capability**, not as one vague global toggle.
+A user may have **mixed roles across repositories**, e.g. Architect editable and standards managed. Mode should therefore be recorded **per installed component or capability**, not as one vague global toggle.
 
 ## 4. Dependency acquisition and preflight
 
@@ -89,7 +91,7 @@ A user may have **mixed roles across repositories**, e.g. Wayfinder editable and
 
 A project-specific dependency declaration should identify each required source by:
 
-- stable logical ID (`engineering-standards`, `wayfinder`, `reusable-implementations`, optionally `domain-pr`);
+- stable logical ID (`engineering-standards`, `power-bi-architect`, `reusable-implementations`, optionally `domain-pr`);
 - GitHub repository identity, expected access class, expected content entrypoint and role (`policy`, `domain`, `library`, `architect`);
 - **immutable full commit SHA** or approved verified release resolved to a commit;
 - intended write policy and host surfaces;
@@ -113,7 +115,7 @@ A project-specific dependency declaration should identify each required source b
       "editMode": "reference"
     },
     {
-      "id": "wayfinder",
+      "id": "power-bi-architect",
       "repository": "GitKlink/performance-reward-dashboard-architect",
       "revision": "<approved-40-character-git-sha>",
       "role": "orchestration",
@@ -148,7 +150,7 @@ A project-specific dependency declaration should identify each required source b
 
 ### Local vs CI credentials
 
-**DOCUMENTED:** GitHub's `actions/checkout` notes the usual workflow `github.token` is scoped to the **current repository**; checking out a different **private** repository requires additional credentials with access (a properly scoped GitHub App installation token or fine-grained PAT, for example). See [actions/checkout README, multiple private repos](https://github.com/actions/checkout#checkout-multiple-repos-private). Do not assume a public Wayfinder repo's CI token can read private standards.
+**DOCUMENTED:** GitHub's `actions/checkout` notes the usual workflow `github.token` is scoped to the **current repository**; checking out a different **private** repository requires additional credentials with access (a properly scoped GitHub App installation token or fine-grained PAT, for example). See [actions/checkout README, multiple private repos](https://github.com/actions/checkout#checkout-multiple-repos-private). Do not assume a public Architect repo's CI token can read private standards.
 
 **RECOMMENDATION:** prefer scoped, short-lived machine/CI auth where possible; never print secrets; mask output; restrict source paths; keep independent release/supply-chain controls. A CI job in a public project that reads private standards must not publish their bodies into artifacts, PR diffs or verbose logs. Do not equate access to a reusable private *action* with general arbitrary private-repo checkout: GitHub's action/workflow sharing has its own controls and information-leak warning ([GitHub private Actions sharing](https://docs.github.com/en/actions/how-tos/reuse-automations/share-across-private-repositories)).
 
@@ -165,7 +167,7 @@ analytics-work/
   power-bi-fabric-standards/               # private policy authority
   dax-m-query-library/                     # reusable implementation authority
   reward-local.code-workspace              # generated LOCAL editor view
-  .wayfinder-install/                      # ignored/local cache/state (conceptual)
+  .power-bi-architect-install/                      # ignored/local cache/state (conceptual)
 ~~~
 
 A saved workspace may use relative paths:
@@ -174,7 +176,7 @@ A saved workspace may use relative paths:
 {
   "folders": [
     {"name": "Reward PBIP", "path": "product-reward-pbip"},
-    {"name": "Wayfinder", "path": "performance-reward-dashboard-architect"},
+    {"name": "Architect", "path": "performance-reward-dashboard-architect"},
     {"name": "Engineering Standards", "path": "power-bi-fabric-standards"},
     {"name": "Implementation Library", "path": "dax-m-query-library"}
   ]
@@ -199,7 +201,7 @@ The workspace is an **editor view**. It cannot prove dependencies are pinned, ho
 - Modify authoritative standards, P&R business definitions or reusable library source.
 - Overwrite any existing AGENTS.md, CLAUDE.md, Rule, Skill, hook or editor configuration without seeing and respecting ownership.
 - Install/enable arbitrary third-party packages, executable hooks or MCP servers merely because metadata references them.
-- Commit private canonical standards text into a public PBIP or Wayfinder repository.
+- Commit private canonical standards text into a public PBIP or Architect repository.
 - Modify user-wide Cursor/Codex/Claude configuration without a separate explicit opt-in and reversible install record.
 
 ### Path, idempotence and collisions
@@ -224,7 +226,7 @@ There are **distinct versions**, and conflating them creates false auditability:
 
 | Version/state | Source of truth | Example |
 |---|---|---|
-| Wayfinder orchestrator | Git commit/release of Wayfinder | Architect integration behaviour |
+| Architect orchestrator | Git commit/release of Architect | Architect integration behaviour |
 | Canonical standards | Git revision/release of standards repo | Measure naming policy |
 | Domain contract | Its independent approved revision | Variable Reward / eligibility meaning |
 | Implementation library | Git revision or package/asset ID/release | Reusable DAX function |
@@ -248,21 +250,21 @@ There are **distinct versions**, and conflating them creates false auditability:
 ### Suggested CLI lifecycle (illustrative, not implemented)
 
 ~~~text
-wayfinder doctor
-wayfinder init --project <pbip-path> --host cursor --mode managed
-wayfinder plan
-wayfinder apply
-wayfinder update --check
-wayfinder update --plan
-wayfinder update --apply
-wayfinder uninstall --managed-only
+power-bi-architect doctor
+power-bi-architect init --project <pbip-path> --host cursor --mode managed
+power-bi-architect plan
+power-bi-architect apply
+power-bi-architect update --check
+power-bi-architect update --plan
+power-bi-architect update --apply
+power-bi-architect uninstall --managed-only
 ~~~
 
 These are **proposed command names**, not commands the user can run today. `doctor` must make its own results machine-readable and must not require an AI model call to check hashes, paths or credentials.
 
 ## 7. Failure handling and rollback
 
-**OBSERVED:** [Spec Kit integration implementation](https://github.com/github/spec-kit/blob/main/docs/reference/integrations.md) and [integration design](https://github.com/github/spec-kit/blob/main/design/integration.md) go beyond a simple "copy files" operation: content hash tracking, status, modified-file preservation, transaction rollback, explicit trust boundaries and directory/ownership validation. **RECOMMENDATION:** borrow the *principles*, not the complete complex framework, for a small first-party Wayfinder installer.
+**OBSERVED:** [Spec Kit integration implementation](https://github.com/github/spec-kit/blob/main/docs/reference/integrations.md) and [integration design](https://github.com/github/spec-kit/blob/main/design/integration.md) go beyond a simple "copy files" operation: content hash tracking, status, modified-file preservation, transaction rollback, explicit trust boundaries and directory/ownership validation. **RECOMMENDATION:** borrow the *principles*, not the complete complex framework, for a small first-party Architect installer.
 
 ### Failure matrix
 
@@ -289,7 +291,7 @@ These are **proposed command names**, not commands the user can run today. `doct
 - **Rollback:** restore *verified prior managed bytes* and remove newly created managed files and empty owned directories. Preserve pre-existing/user-modified files. If rollback itself fails, retain recovery snapshots and disclose their paths.
 - **Uninstall:** remove only matching-hash managed files; warn for modified/unknown files. Never remove PBIP, standards or library Git checkouts without an explicit separate operation.
 
-The real installer should use path canonicalisation, symlink checks, safe temporary files, file locks and Windows/macOS/Linux test cases. There is no evidence these have been implemented for Wayfinder.
+The real installer should use path canonicalisation, symlink checks, safe temporary files, file locks and Windows/macOS/Linux test cases. There is no evidence these have been implemented for Architect.
 
 ## 8. Security and trust considerations
 
@@ -301,7 +303,7 @@ The real installer should use path canonicalisation, symlink checks, safe tempor
 4. **Cross-repository write policy:** project task writes to PBIP only by default; upgrades to normative policy or shared patterns require independent named authority, branch and PR.
 5. **Supply chain:** verify versions and hashes; distinguish arbitrary upstream plugin download from source-controlled trusted content; obtain explicit consent before running hooks/scripts or registering live MCP services.
 6. **User configuration:** installer-managed code must not take over all user-level agent settings; isolated per-project defaults are safer to reason about.
-7. **Public/private composition:** Wayfinder is public and engineering standards are currently private. A public GitHub Actions run or PR can reveal logs/artifacts even if only a restricted token can clone a private dependency; perform an explicit classification/review before enabling automated jobs.
+7. **Public/private composition:** Architect is public and engineering standards are currently private. A public GitHub Actions run or PR can reveal logs/artifacts even if only a restricted token can clone a private dependency; perform an explicit classification/review before enabling automated jobs.
 8. **Capability degradation:** if a host lacks a private-repo or model-inspection tool, stop or mark that workflow unsupported; do not fabricate standards compliance.
 
 **UNTESTED:** actual GitHub/enterprise sharing policy, selected Windows workstation auth, availability of a private dependency from Cursor Cloud Agents, runtime host plugin/skill distribution and data governance approvals. These are implementation gates.
@@ -333,7 +335,7 @@ Scores are **qualitative, not measured performance results**. "Strong" means sup
 Deliver a **single reproducible manual runbook** and small PBIP test fixture:
 
 - Use independent Git clones and a local Cursor multi-root workspace (B).
-- Record exact Wayfinder/standards/library SHA values in a *prototype checked project manifest*.
+- Record exact Architect/standards/library SHA values in a *prototype checked project manifest*.
 - Demonstrate ability to read a named measure standard, inspect a test PBIP/TMDL measure, propose a change only in PBIP and compare independent checks.
 - Document the current manual auth requirements for the private standards repo.
 - Record which parts of the proposed manifest/adapter contract are missing.
@@ -374,10 +376,10 @@ A small Python command-line utility, no always-running server and no required na
 
 ### Recommended first implementation ticket after R8
 
-**"Prototype Wayfinder bootstrap: doctor + pinned dependency manifest + Cursor local workspace"**. Scope intentionally excludes plugin marketplace, general package registry, remote cloud deployments, generated large AGENTS.md, auto-changing production PBIP models and DAX refactors.
+**"Prototype Architect bootstrap: doctor + pinned dependency manifest + Cursor local workspace"**. Scope intentionally excludes plugin marketplace, general package registry, remote cloud deployments, generated large AGENTS.md, auto-changing production PBIP models and DAX refactors.
 
 Suggested acceptance criteria:
-1. Accept an existing PBIP repo and an immutable standards/library/Wayfinder SHA set.
+1. Accept an existing PBIP repo and an immutable standards/library/Architect SHA set.
 2. Verify access to the private standards repo and required semantic-model README/measure-standard path.
 3. Generate one relative-path workspace and identify the PBIP **write root**; no changes to the source repos.
 4. Produce a machine-readable `doctor` report and installed-state manifest with content digests.
@@ -392,8 +394,8 @@ This prototype is **not started** by R5; it is a candidate for R8/implementation
 
 ### For R8 — final architecture synthesis (#17)
 
-- Does Wayfinder truly need a Python CLI in the initial release, or should documented manual phase 0 remain until two pilot consumers prove the pain? R5 **recommends** CLI, but this is a value/cost decision.
-- Precisely where do the resolver and lifecycle state live: Wayfinder repo tooling, a separately distributed package, or a minimal project-side bridge?
+- Does Architect truly need a Python CLI in the initial release, or should documented manual phase 0 remain until two pilot consumers prove the pain? R5 **recommends** CLI, but this is a value/cost decision.
+- Precisely where do the resolver and lifecycle state live: Architect repo tooling, a separately distributed package, or a minimal project-side bridge?
 - How does the single-root Cursor Cloud Agent access pinned **private** normative policy without unsafe public materialisation?
 - Which subset of Skills/Rules/AGENTS.md ships by default, and which native Cursor enhancements are optional?
 - How much of managed materialisation is required before public/team release?
@@ -417,14 +419,14 @@ This prototype is **not started** by R5; it is a candidate for R8/implementation
 - Whether existing corporate GitHub/Cursor auth can read the private standards repo from supported remote hosts.
 - Whether product repositories will be private/public and who can access their CI logs/artifacts.
 - The minimum portable model-inspection capability for PBIP/TMDL and accepted deterministic validation toolset.
-- Actual collision behaviour among Microsoft-maintained skills, Wayfinder skills and a user's existing agent customisations.
+- Actual collision behaviour among Microsoft-maintained skills, Architect skills and a user's existing agent customisations.
 - Whether a local `.code-workspace` can provide the right developer ergonomics without disabling a critical Cursor worktree workflow.
 
-**Research conclusion:** Wayfinder should treat bootstrap as a **small, reversible source-and-adapter provisioning utility**, not as the normative content author, plugin marketplace or an alternative model runtime. Begin with sibling checkouts and a local Cursor multi-root pilot; advance to a pinned, Python-based `doctor/plan/apply/verify` utility after validation. Support managed and editable modes explicitly, and use a separate, tested single-root path for cloud/CI. The final decision remains R8's.
+**Research conclusion:** Architect should treat bootstrap as a **small, reversible source-and-adapter provisioning utility**, not as the normative content author, plugin marketplace or an alternative model runtime. Begin with sibling checkouts and a local Cursor multi-root pilot; advance to a pinned, Python-based `doctor/plan/apply/verify` utility after validation. Support managed and editable modes explicitly, and use a separate, tested single-root path for cloud/CI. The final decision remains R8's.
 
 ## 12. Evidence register
 
-**Stored Wayfinder research and constraints:**
+**Stored Architect research and constraints:**
 
 - [R2 — Harness, agent, skill, plugin classification](02-harness-agent-skill-plugin.md).
 - [R3 — Benchmark of six reference repositories](03-reference-repo-benchmark.md), especially §§14–16: managed vs editable, Spec Kit, installer state and release/versioning.
@@ -446,4 +448,4 @@ This prototype is **not started** by R5; it is a candidate for R8/implementation
 - [Matt Pocock canonical install guidance](https://github.com/mattpocock/skills/blob/main/.agents/install-block.md): managed/plugin vs editable skills installation, duplicate-installation warning.
 - [Git Submodules](https://git-scm.com/book/en/v2/Git-Tools-Submodules): gitlinks and explicit recursive dependency initialization.
 
-**Research integrity:** this work reviewed official docs, the prior durable R1–R4/R7 research and reference implementation mechanisms. No Wayfinder installer, manifest validator, multi-root setup script, private CI checkout, Cloud Agent launch, Codex/Claude installation, or real PBIP validation was executed. All installer commands and data schemas above are **illustrative recommendations** only.
+**Research integrity:** this work reviewed official docs, the prior durable R1–R4/R7 research and reference implementation mechanisms. No Architect installer, manifest validator, multi-root setup script, private CI checkout, Cloud Agent launch, Codex/Claude installation, or real PBIP validation was executed. All installer commands and data schemas above are **illustrative recommendations** only.
